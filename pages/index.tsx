@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 
 import { useAppSelector, useAppDispatch } from './hooks';
@@ -13,11 +13,15 @@ import {
   signUserOut,
   onAuthStateChangedListener,
   createUserDocFromAuth,
+  addNewData,
+  getUserGames,
 } from '../firebase/firebase.utils';
 
 export default function Home() {
   const currentUser = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
+
+  const [currData, setCurrData] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener((user: UserInterface) => {
@@ -25,13 +29,35 @@ export default function Home() {
       // otherwise get the current user from firestore and set it to currentUser
       if (user) createUserDocFromAuth(user);
 
-      dispatch(setCurrentUser(user));
+      const { uid, email, displayName, photoURL } = user;
+
+      dispatch(setCurrentUser({ uid, email, displayName, photoURL }));
     });
 
     return () => unsubscribe();
   }, []);
 
-  console.log(currentUser);
+  useEffect(() => {
+    async function getData() {
+      const apiKey = process.env.RAWG_API_KEY;
+      const data = await fetch(`https://rawg.io/api/games?token&key=${apiKey}`);
+
+      const { results } = await data.json();
+
+      setCurrData(results);
+    }
+
+    getData();
+  }, []);
+
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (currentUser.uid) {
+      const unsub = getUserGames(currentUser?.uid);
+
+      return () => unsub();
+    }
+  }, [currentUser?.uid]);
 
   return (
     <div>
@@ -52,7 +78,17 @@ export default function Home() {
           Sign Out
         </button>
 
-        {currentUser && <h1>{currentUser?.email}</h1>}
+        {currentUser && (
+          <>
+            <h1>{currentUser?.email}</h1>
+            <button
+              type="button"
+              onClick={() => addNewData(currentUser.uid, currData[0]?.name)}
+            >
+              Add new data
+            </button>
+          </>
+        )}
       </main>
     </div>
   );

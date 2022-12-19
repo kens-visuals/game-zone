@@ -18,7 +18,6 @@ export const createUserDocFromAuth = async (userAuth) => {
   if (!userAuth) return;
 
   const userDocRef = doc(db, 'users', userAuth.uid);
-  //   const usersCollectionRef = collection(db, 'users', userAuth.uid, 'markdowns');
 
   const userSnapshot = await getDoc(userDocRef);
 
@@ -61,3 +60,38 @@ export const signUserOut = async () => {
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+export const getUserData = (callback, uid) => {
+  const usersCollectionRef = collection(db, 'users', `${uid}`, 'data');
+
+  const q = query(usersCollectionRef, orderBy('createdAt', 'desc'));
+
+  return onSnapshot(q, callback);
+};
+
+export const addNewData = async (uid, name) => {
+  const usersCollectionRef = collection(db, 'users', `${uid}`, 'data');
+  const createdAt = serverTimestamp();
+
+  try {
+    await addDoc(usersCollectionRef, {
+      name,
+      createdAt,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getUserGames = (uid) => {
+  const usersCollectionRef = collection(db, 'users', `${uid}`, 'data');
+
+  // const q = query(usersCollectionRef, orderBy('createdAt', 'desc'));
+
+  // return onSnapshot(q, callback);
+
+  const callback = (docsSnap) =>
+    docsSnap.forEach((doc) => console.log(doc.data()));
+
+  return onSnapshot(usersCollectionRef, callback);
+};

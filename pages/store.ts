@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+// eslint-disable-next-line import/no-cycle
 import userReducer from './features/userSlice';
 
 export const store = configureStore({
