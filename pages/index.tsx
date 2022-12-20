@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
-
-import { useAppSelector, useAppDispatch } from './hooks';
 import {
-  selectCurrentUser,
-  setCurrentUser,
-  UserInterface,
-} from './features/userSlice';
+  useAuthSignInWithRedirect,
+  useAuthSignOut,
+  useAuthUser,
+} from '@react-query-firebase/auth';
+import { auth } from '../firebase/firebase.config';
+
+// import { useAppSelector, useAppDispatch } from './hooks';
+// import {
+//   selectCurrentUser,
+//   setCurrentUser,
+//   UserInterface,
+// } from './features/userSlice';
 
 import {
   signInWithGoogle,
@@ -18,46 +24,52 @@ import {
 } from '../firebase/firebase.utils';
 
 export default function Home() {
-  const currentUser = useAppSelector(selectCurrentUser);
-  const dispatch = useAppDispatch();
+  // const currentUser = useAppSelector(selectCurrentUser);
+  // const dispatch = useAppDispatch();
 
-  const [currData, setCurrData] = useState([]);
+  // const [currData, setCurrData] = useState([]);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener((user: UserInterface) => {
-      // when a new user signs in call createUserDocFromAuth(),
-      // otherwise get the current user from firestore and set it to currentUser
-      if (user) createUserDocFromAuth(user);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChangedListener((user: UserInterface) => {
+  //     // when a new user signs in call createUserDocFromAuth(),
+  //     // otherwise get the current user from firestore and set it to currentUser
+  //     if (user) createUserDocFromAuth(user);
 
-      const { uid, email, displayName, photoURL } = user;
+  //     const { uid, email, displayName, photoURL } = user;
 
-      dispatch(setCurrentUser({ uid, email, displayName, photoURL }));
-    });
+  //     dispatch(setCurrentUser({ uid, email, displayName, photoURL }));
+  //   });
 
-    return () => unsubscribe();
-  }, []);
+  //   return () => unsubscribe();
+  // }, []);
 
-  useEffect(() => {
-    async function getData() {
-      const apiKey = process.env.RAWG_API_KEY;
-      const data = await fetch(`https://rawg.io/api/games?token&key=${apiKey}`);
+  // useEffect(() => {
+  //   async function getData() {
+  //     const apiKey = process.env.RAWG_API_KEY;
+  //     const data = await fetch(`https://rawg.io/api/games?token&key=${apiKey}`);
 
-      const { results } = await data.json();
+  //     const { results } = await data.json();
 
-      setCurrData(results);
-    }
+  //     setCurrData(results);
+  //   }
 
-    getData();
-  }, []);
+  //   getData();
+  // }, []);
 
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (currentUser.uid) {
-      const unsub = getUserGames(currentUser?.uid);
+  // // eslint-disable-next-line consistent-return
+  // useEffect(() => {
+  //   if (currentUser.uid) {
+  //     const unsub = getUserGames(currentUser?.uid);
 
-      return () => unsub();
-    }
-  }, [currentUser?.uid]);
+  //     return () => unsub();
+  //   }
+  // }, [currentUser?.uid]);
+
+  const currentUser = useAuthUser(['user'], auth);
+
+  if (currentUser.isLoading) {
+    return <div />;
+  }
 
   return (
     <div>
@@ -68,7 +80,9 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className="text-3xl font-bold underline">Hello world! </h1>
+        {currentUser.data && <div>Welcome {currentUser.data.displayName}!</div>}
+
+        <h1 className="text-3xl font-bold underline">Hello world!</h1>
 
         <button type="button" onClick={signInWithGoogle}>
           Sign In
@@ -78,7 +92,7 @@ export default function Home() {
           Sign Out
         </button>
 
-        {currentUser && (
+        {/* {currentUser && (
           <>
             <h1>{currentUser?.email}</h1>
             <button
@@ -88,7 +102,7 @@ export default function Home() {
               Add new data
             </button>
           </>
-        )}
+        )} */}
       </main>
     </div>
   );
