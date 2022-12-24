@@ -69,29 +69,29 @@ export const getUserData = (callback, uid) => {
   return onSnapshot(q, callback);
 };
 
-export const addNewData = async (uid, name) => {
-  const usersCollectionRef = collection(db, 'users', `${uid}`, 'data');
-  const createdAt = serverTimestamp();
+// export const addNewData = async (uid, name) => {
+//   const usersCollectionRef = collection(db, 'users', `${uid}`, 'data');
+//   const createdAt = serverTimestamp();
 
-  try {
-    await addDoc(usersCollectionRef, {
-      name,
-      createdAt,
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
+//   try {
+//     await addDoc(usersCollectionRef, {
+//       name,
+//       createdAt,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
-export const getUserGames = (uid) => {
-  const usersCollectionRef = collection(db, 'users', `${uid}`, 'data');
+// export const getUserGames = (uid) => {
+//   const usersCollectionRef = collection(db, 'users', `${uid}`, 'data');
 
-  // const q = query(usersCollectionRef, orderBy('createdAt', 'desc'));
+//   // const q = query(usersCollectionRef, orderBy('createdAt', 'desc'));
 
-  // return onSnapshot(q, callback);
+//   // return onSnapshot(q, callback);
 
-  const callback = (docsSnap) =>
-    docsSnap.forEach((doc) => console.log(doc.data()));
+//   const callback = (docsSnap) =>
+//     docsSnap.docs.map((doc) => console.log(doc.data()));
 
-  return onSnapshot(usersCollectionRef, callback);
-};
+//   return onSnapshot(usersCollectionRef, callback);
+// };

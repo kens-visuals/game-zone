@@ -1,74 +1,54 @@
-import { useEffect, useState } from 'react';
 import Head from 'next/head';
+
 import {
-  useAuthSignInWithRedirect,
+  useFirestoreCollectionMutation,
+  useFirestoreDocument,
+  useFirestoreQuery,
+  useFirestoreQueryData,
+} from '@react-query-firebase/firestore';
+import {
+  useAuthSignInWithPopup,
   useAuthSignOut,
   useAuthUser,
 } from '@react-query-firebase/auth';
-import { auth } from '../firebase/firebase.config';
-
-// import { useAppSelector, useAppDispatch } from './hooks';
-// import {
-//   selectCurrentUser,
-//   setCurrentUser,
-//   UserInterface,
-// } from './features/userSlice';
-
-import {
-  signInWithGoogle,
-  signUserOut,
-  onAuthStateChangedListener,
-  createUserDocFromAuth,
-  addNewData,
-  getUserGames,
-} from '../firebase/firebase.utils';
+import { GoogleAuthProvider } from 'firebase/auth';
+import { collection, query, where } from 'firebase/firestore';
+import { useCollection } from 'react-query-firestore';
+import { auth, db } from '../firebase/firebase.config';
+import { options } from '../lib/react-query-firebase.utils';
 
 export default function Home() {
-  // const currentUser = useAppSelector(selectCurrentUser);
-  // const dispatch = useAppDispatch();
+  const user = useAuthUser(['user'], auth, options);
+  const signOutMutation = useAuthSignOut(auth);
+  const signInMutation = useAuthSignInWithPopup(auth);
+  const { data } = useCollection(`users`);
 
-  // const [currData, setCurrData] = useState([]);
+  console.log(data);
 
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChangedListener((user: UserInterface) => {
-  //     // when a new user signs in call createUserDocFromAuth(),
-  //     // otherwise get the current user from firestore and set it to currentUser
-  //     if (user) createUserDocFromAuth(user);
+  // const usersCollectionRef = collection(db, 'data');
 
-  //     const { uid, email, displayName, photoURL } = user;
-
-  //     dispatch(setCurrentUser({ uid, email, displayName, photoURL }));
-  //   });
-
-  //   return () => unsubscribe();
-  // }, []);
-
-  // useEffect(() => {
-  //   async function getData() {
-  //     const apiKey = process.env.RAWG_API_KEY;
-  //     const data = await fetch(`https://rawg.io/api/games?token&key=${apiKey}`);
-
-  //     const { results } = await data.json();
-
-  //     setCurrData(results);
+  // const q = useFirestoreQueryData(
+  //   ['data'],
+  //   usersCollectionRef,
+  //   { subscribe: true },
+  //   {
+  //     onSuccess(snapshot) {
+  //       console.log(snapshot);
+  //     },
+  //     onError(error) {
+  //       console.log(error);
+  //     },
   //   }
+  // );
 
-  //   getData();
-  // }, []);
+  // console.log(q);
 
-  // // eslint-disable-next-line consistent-return
-  // useEffect(() => {
-  //   if (currentUser.uid) {
-  //     const unsub = getUserGames(currentUser?.uid);
+  if (user.isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  //     return () => unsub();
-  //   }
-  // }, [currentUser?.uid]);
-
-  const currentUser = useAuthUser(['user'], auth);
-
-  if (currentUser.isLoading) {
-    return <div />;
+  if (user.error) {
+    <div>Not signed in.</div>;
   }
 
   return (
@@ -80,20 +60,33 @@ export default function Home() {
       </Head>
 
       <main>
-        {currentUser.data && <div>Welcome {currentUser.data.displayName}!</div>}
+        <div>Welcome {user.data && user.data.email}!</div>
 
         <h1 className="text-3xl font-bold underline">Hello world!</h1>
 
-        <button type="button" onClick={signInWithGoogle}>
+        <button
+          type="button"
+          onClick={() =>
+            signInMutation.mutate({
+              provider: new GoogleAuthProvider(),
+            })
+          }
+        >
           Sign In
         </button>
         <br />
-        <button type="button" onClick={signUserOut}>
+        <button type="button" onClick={() => signOutMutation.mutate()}>
           Sign Out
         </button>
 
+        {/* {query?.data &&
+          query.data.map((document) => (
+            <div key={document.createdAt}>{document.title}</div>
+          ))} */}
+
         {/* {currentUser && (
           <>
+            
             <h1>{currentUser?.email}</h1>
             <button
               type="button"
