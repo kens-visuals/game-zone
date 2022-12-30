@@ -1,47 +1,54 @@
 import Head from 'next/head';
 
-import {
-  useFirestoreCollectionMutation,
-  useFirestoreDocument,
-  useFirestoreQuery,
-  useFirestoreQueryData,
-} from '@react-query-firebase/firestore';
+import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
 import {
   useAuthSignInWithPopup,
   useAuthSignOut,
   useAuthUser,
 } from '@react-query-firebase/auth';
 import { GoogleAuthProvider } from 'firebase/auth';
-import { collection, query, where } from 'firebase/firestore';
-import { useCollection } from 'react-query-firestore';
+import { collection, orderBy, serverTimestamp } from 'firebase/firestore';
+import { useFirestore, useFirestoreCollectionData } from 'reactfire';
+import { query } from 'firebase/database';
+import { useState } from 'react';
 import { auth, db } from '../firebase/firebase.config';
 import { options } from '../lib/react-query-firebase.utils';
+import Link from 'next/link';
 
 export default function Home() {
   const user = useAuthUser(['user'], auth, options);
   const signOutMutation = useAuthSignOut(auth);
   const signInMutation = useAuthSignInWithPopup(auth);
-  const { data } = useCollection(`users`);
 
-  console.log(data);
+  const firestore = useFirestore();
+  const gamesCollection = collection(
+    firestore,
+    `users/${user?.data?.uid}/data`
+  );
+  const queriedGames =
+    gamesCollection && query(gamesCollection, orderBy('title', 'desc'));
 
-  // const usersCollectionRef = collection(db, 'data');
+  const { status, data } = useFirestoreCollectionData(queriedGames, {
+    idField: 'id',
+  });
 
-  // const q = useFirestoreQueryData(
-  //   ['data'],
-  //   usersCollectionRef,
-  //   { subscribe: true },
-  //   {
-  //     onSuccess(snapshot) {
-  //       console.log(snapshot);
-  //     },
-  //     onError(error) {
-  //       console.log(error);
-  //     },
-  //   }
-  // );
+  const ref = collection(db, `users/${user?.data?.uid}/data`);
+  const addNewDataMutation = useFirestoreCollectionMutation(ref);
 
-  // console.log(q);
+  const addNewData = () => {
+    const createdAt = serverTimestamp();
+
+    addNewDataMutation.mutate({
+      title: 'New product!',
+      createdAt,
+    });
+  };
+
+  console.log(user);
+
+  if (status === 'loading') {
+    return <span>loading...</span>;
+  }
 
   if (user.isLoading) {
     return <div>Loading...</div>;
@@ -60,42 +67,40 @@ export default function Home() {
       </Head>
 
       <main>
-        <div>Welcome {user.data && user.data.email}!</div>
+        <div>Welcome {user?.data?.email}!</div>
 
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <Link href="/games">View Games</Link>
 
-        <button
-          type="button"
-          onClick={() =>
-            signInMutation.mutate({
-              provider: new GoogleAuthProvider(),
-            })
-          }
-        >
-          Sign In
-        </button>
+        <ul>
+          {data?.map((d) => (
+            <li key={d.createdAt}>{d.title}</li>
+          ))}
+        </ul>
+
+        {!user?.data ? (
+          <button
+            type="button"
+            onClick={() =>
+              signInMutation.mutate({
+                provider: new GoogleAuthProvider(),
+              })
+            }
+          >
+            Sign In
+          </button>
+        ) : (
+          <button type="button" onClick={() => signOutMutation.mutate()}>
+            Sign Out
+          </button>
+        )}
+
         <br />
-        <button type="button" onClick={() => signOutMutation.mutate()}>
-          Sign Out
-        </button>
 
-        {/* {query?.data &&
-          query.data.map((document) => (
-            <div key={document.createdAt}>{document.title}</div>
-          ))} */}
-
-        {/* {currentUser && (
-          <>
-            
-            <h1>{currentUser?.email}</h1>
-            <button
-              type="button"
-              onClick={() => addNewData(currentUser.uid, currData[0]?.name)}
-            >
-              Add new data
-            </button>
-          </>
-        )} */}
+        {user?.data && (
+          <button type="button" onClick={() => addNewData()}>
+            Add new data
+          </button>
+        )}
       </main>
     </div>
   );

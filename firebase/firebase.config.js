@@ -3,7 +3,7 @@ import { getApps, getApp, initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: 'AIzaSyDWotcGdnRmNIwdonM_YSRdqFn_3qPHykw',
   authDomain: 'book-test-c365d.firebaseapp.com',
   projectId: 'book-test-c365d',
