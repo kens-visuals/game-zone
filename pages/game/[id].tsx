@@ -6,7 +6,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 const fetchGame = (id: string) =>
   axios
     .get(
-      `https://api.rawg.io/api/games/${id}?key=aa76b771907042489b43c2ed574953c9`
+      `https://api.rawg.io/api/games/${id}?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}`
     )
     .then(({ data }) => data);
 
@@ -22,8 +22,6 @@ export default function Pokemon() {
   } = useQuery(['getGame', gameID], () => fetchGame(gameID), {
     enabled: gameID.length > 0,
   });
-
-  console.log(game);
 
   if (isSuccess) {
     return (
@@ -42,7 +40,7 @@ export default function Pokemon() {
   if (isError) {
     return (
       <div className="center">
-        We couldn't find your pokemon{' '}
+        We could not find your pokemon{' '}
         <span role="img" aria-label="sad">
           😢
         </span>

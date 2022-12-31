@@ -1,54 +1,29 @@
 import Head from 'next/head';
-
-import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
-import {
-  useAuthSignInWithPopup,
-  useAuthSignOut,
-  useAuthUser,
-} from '@react-query-firebase/auth';
-import { GoogleAuthProvider } from 'firebase/auth';
-import { collection, orderBy, serverTimestamp } from 'firebase/firestore';
-import { useFirestore, useFirestoreCollectionData } from 'reactfire';
-import { query } from 'firebase/database';
-import { useState } from 'react';
-import { auth, db } from '../firebase/firebase.config';
-import { options } from '../lib/react-query-firebase.utils';
 import Link from 'next/link';
 
+// import { collection, serverTimestamp } from 'firebase/firestore';
+
+// Hooks
+import useUser from '../hooks/useUser';
+
+// Components
+import Sidebar from '../components/Sidebar';
+import Bookmarks from '../components/Bookmarks';
+
 export default function Home() {
-  const user = useAuthUser(['user'], auth, options);
-  const signOutMutation = useAuthSignOut(auth);
-  const signInMutation = useAuthSignInWithPopup(auth);
+  const user = useUser();
 
-  const firestore = useFirestore();
-  const gamesCollection = collection(
-    firestore,
-    `users/${user?.data?.uid}/data`
-  );
-  const queriedGames =
-    gamesCollection && query(gamesCollection, orderBy('title', 'desc'));
+  // const ref = collection(db, `users/${user?.data?.uid}/data`);
+  // const addNewDataMutation = useFirestoreCollectionMutation(ref);
 
-  const { status, data } = useFirestoreCollectionData(queriedGames, {
-    idField: 'id',
-  });
+  // const addNewData = () => {
+  //   const createdAt = serverTimestamp();
 
-  const ref = collection(db, `users/${user?.data?.uid}/data`);
-  const addNewDataMutation = useFirestoreCollectionMutation(ref);
-
-  const addNewData = () => {
-    const createdAt = serverTimestamp();
-
-    addNewDataMutation.mutate({
-      title: 'New product!',
-      createdAt,
-    });
-  };
-
-  console.log(user);
-
-  if (status === 'loading') {
-    return <span>loading...</span>;
-  }
+  //   addNewDataMutation.mutate({
+  //     title: 'New product!',
+  //     createdAt,
+  //   });
+  // };
 
   if (user.isLoading) {
     return <div>Loading...</div>;
@@ -71,36 +46,17 @@ export default function Home() {
 
         <Link href="/games">View Games</Link>
 
-        <ul>
-          {data?.map((d) => (
-            <li key={d.createdAt}>{d.title}</li>
-          ))}
-        </ul>
+        <Sidebar />
 
-        {!user?.data ? (
-          <button
-            type="button"
-            onClick={() =>
-              signInMutation.mutate({
-                provider: new GoogleAuthProvider(),
-              })
-            }
-          >
-            Sign In
-          </button>
-        ) : (
-          <button type="button" onClick={() => signOutMutation.mutate()}>
-            Sign Out
-          </button>
-        )}
+        <Bookmarks />
 
         <br />
 
-        {user?.data && (
+        {/* {user?.data && (
           <button type="button" onClick={() => addNewData()}>
             Add new data
           </button>
-        )}
+        )} */}
       </main>
     </div>
   );

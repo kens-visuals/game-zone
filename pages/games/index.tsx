@@ -6,7 +6,7 @@ import Link from 'next/link';
 const fetchGames = () =>
   axios
     .get(
-      `https://api.rawg.io/api/games?key=aa76b771907042489b43c2ed574953c9&page_size=30`
+      `https://api.rawg.io/api/games?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}&page_size=30`
     )
     .then(({ data }) => data.results);
 
@@ -19,8 +19,6 @@ export default function Pokemon() {
   } = useQuery('getGames', fetchGames, {
     refetchOnWindowFocus: false,
   });
-
-  console.log(games);
 
   if (isSuccess) {
     return (
@@ -44,7 +42,7 @@ export default function Pokemon() {
   if (isError) {
     return (
       <div className="center">
-        We couldn't find your pokemon{' '}
+        We could not find your pokemon{' '}
         <span role="img" aria-label="sad">
           😢
         </span>

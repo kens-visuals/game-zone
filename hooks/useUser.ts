@@ -1,6 +1,6 @@
-// Firebase config and utils
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase.config';
+import { useAuthUser } from '@react-query-firebase/auth';
+import { db, auth } from '../firebase/firebase.config';
 
 export interface UserInterface {
   email: string;
@@ -9,8 +9,7 @@ export interface UserInterface {
   displayName: string;
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export const options = {
+const options = {
   async onSuccess(newUser: any) {
     if (newUser) {
       const { displayName, email, uid } = newUser;
@@ -42,3 +41,9 @@ export const options = {
     );
   },
 };
+
+export default function useUser() {
+  const user = useAuthUser(['user'], auth, options);
+
+  return user;
+}
