@@ -10,13 +10,13 @@ import Bookmarks from '../components/Bookmarks';
 import SearchResults from '../components/SearchResults';
 
 export default function Home() {
-  const user = useUser();
+  const { data: user, isError, isLoading } = useUser();
 
-  if (user.isLoading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (user.error) {
+  if (isError) {
     <div>Not signed in.</div>;
   }
 
@@ -29,7 +29,8 @@ export default function Home() {
       </Head>
 
       <main>
-        <div>Welcome {user?.data?.email}!</div>
+        <div>Welcome {user?.email}!</div>
+        <img src={user?.photoURL} alt="" referrerPolicy="no-referrer" />
 
         <Link href="/games">View Games</Link>
 

@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import RAWG from '../lib/rawg';
 
 // Interfaces
-import { Game } from '../pages/game/[id]';
+import { Game } from '../pages/game/[slug]';
 
 interface SearchGame {
   results: Game[];
@@ -13,13 +13,13 @@ interface SearchGame {
 export default function SearchResults() {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchSearchedGame = async (): Promise<SearchGame> => {
+  const fetchSearchedGame = async (): Promise<Game[]> => {
     const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
     const { data } = await RAWG.get<SearchGame>(
       `/games?key=${apiKey}&search=${searchTerm}`
     );
 
-    return data;
+    return data.results;
   };
 
   const {
@@ -52,11 +52,9 @@ export default function SearchResults() {
       ) : (
         <ul>
           {data &&
-            data?.results.map((game) => (
-              <li key={game.id}>
-                <Link key={game.id} href={`/game/${game.id}`}>
-                  {game.name}
-                </Link>
+            data?.map((game) => (
+              <li key={game.slug}>
+                <Link href={`/game/${game.slug}`}>{game.name}</Link>
               </li>
             ))}
         </ul>

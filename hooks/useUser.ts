@@ -7,30 +7,32 @@ export interface UserInterface {
   uid: string;
   createdAt: string;
   displayName: string;
+  photoURL: string;
 }
 
 const options = {
-  async onSuccess(newUser: any) {
-    if (newUser) {
-      const { displayName, email, uid } = newUser;
-      const userDocRef = doc(db, 'users', uid);
+  async onSuccess(newUser: UserInterface) {
+    if (!newUser) return;
 
-      const userSnapshot = await getDoc(userDocRef);
+    const { displayName, email, uid, photoURL } = newUser;
+    const userDocRef = doc(db, 'users', uid);
 
-      if (!userSnapshot.exists()) {
-        const createdAt = serverTimestamp();
+    const userSnapshot = await getDoc(userDocRef);
 
-        try {
-          // Create user doc
-          await setDoc(userDocRef, {
-            email,
-            id: uid,
-            createdAt,
-            displayName,
-          });
-        } catch (error) {
-          console.error(error);
-        }
+    if (!userSnapshot.exists()) {
+      const createdAt = serverTimestamp();
+
+      try {
+        // Create user doc
+        await setDoc(userDocRef, {
+          email,
+          id: uid,
+          photoURL,
+          createdAt,
+          displayName,
+        });
+      } catch (error) {
+        console.error(error);
       }
     }
   },

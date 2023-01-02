@@ -5,16 +5,20 @@ import RAWG from '../../lib/rawg';
 
 // Hooks
 import useUser from '../../hooks/useUser';
-import useBookmarkData from '../../hooks/useBookmarkData';
+import useBookmarkData from '../../hooks/useAddBookmark';
 
 // Interface
-import { Game } from '../game/[id]';
+import { Game } from '../game/[slug]';
+
+interface Games {
+  results: Game[];
+}
 
 const fetchGames = async (): Promise<Game[]> => {
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
-  const { data } = await RAWG.get(`/games?key=${apiKey}&page_size=30`);
+  const { data } = await RAWG.get<Games>(`/games?key=${apiKey}&page_size=30`);
 
-  return data.results;
+  return data?.results;
 };
 
 export default function Pokemon() {
@@ -37,11 +41,11 @@ export default function Pokemon() {
         <h2>Welcome {user?.data?.email}!</h2>
 
         {games?.map((el) => (
-          <div key={el.id}>
-            <Link href={`/game/${el.id}`} key={el.id}>
+          <div key={el.slug}>
+            <Link href={`/game/${el.slug}`}>
               <span>{el.name}</span>{' '}
             </Link>
-            <button type="button" onClick={() => addNewData(el.name, el.id)}>
+            <button type="button" onClick={() => addNewData(el.name, el.slug)}>
               Add new data
             </button>
           </div>
@@ -71,7 +75,6 @@ export default function Pokemon() {
 
 export const getStaticProps: GetStaticProps = async () => {
   const queryClient = new QueryClient();
-
   await queryClient.prefetchQuery('getGames', fetchGames);
 
   return {

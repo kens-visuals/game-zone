@@ -1,38 +1,53 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { GetStaticPaths, GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 // Helpers
 import RAWG from '../../lib/rawg';
 
 export interface Game {
-  id: number;
+  slug: string;
   name: string;
   released: string;
   background_image?: string;
 }
 
-const fetchGame = async (id: string): Promise<Game> => {
+const fetchGame = async (slug: string): Promise<Game> => {
   const { data } = await RAWG.get<Game>(
-    `games/${id}?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}`
+    `games/${slug}?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}`
   );
 
   return data;
 };
 
+const fetchScreenshots = async (slug: string) => {
+  const { data } = await RAWG.get(
+    `games/${slug}/screenshots?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}`
+  );
+
+  return data.results;
+};
+
 export default function Pokemon() {
   const router = useRouter();
-  const gameID = typeof router.query?.id === 'string' ? router.query.id : '';
+  const gameSlug =
+    typeof router.query?.slug === 'string' ? router.query.slug : '';
 
   const {
     data: game,
     isSuccess,
     isLoading,
     isError,
-  } = useQuery(['getGame', gameID], () => fetchGame(gameID), {
-    enabled: gameID.length > 0,
+  } = useQuery(['getGame', gameSlug], () => fetchGame(gameSlug), {
+    enabled: !!gameSlug,
   });
+
+  const { data: screens } = useQuery(['getScreens', gameSlug], () =>
+    fetchScreenshots(gameSlug)
+  );
+
+  console.log(screens);
 
   if (isLoading) {
     return <div className="center">Loading...</div>;
@@ -56,6 +71,10 @@ export default function Pokemon() {
         <h1>Game</h1>
         <span>{game.name}</span>
         <img src={game.background_image} alt="" />
+
+        {screens?.map(({ image }) => (
+          <img src={image} alt="" />
+        ))}
         <Link href="/">Go back</Link>
       </div>
     )
@@ -63,10 +82,10 @@ export default function Pokemon() {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const id = context.params?.id as string;
+  const slug = context.params?.slug as string;
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery(['getGame', id], () => fetchGame(id));
+  await queryClient.prefetchQuery(['getGame', slug], () => fetchGame(slug));
 
   return {
     props: {

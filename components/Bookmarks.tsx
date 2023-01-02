@@ -17,7 +17,7 @@ export default function Bookmarks() {
       {user &&
         data?.map((d) => (
           <li key={d.createdAt}>
-            <Link href={`/game/${d.gameID}`}>{d.name}</Link>
+            <Link href={`/game/${d.slug}`}>{d.name}</Link>
           </li>
         ))}
     </ul>

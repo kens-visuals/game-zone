@@ -5,7 +5,7 @@ import { useFirestore } from 'reactfire';
 // Hooks
 import useUser from './useUser';
 
-export default function addBookmarkData() {
+export default function useAddBookmark() {
   const user = useUser();
 
   const firestore = useFirestore();
@@ -15,12 +15,12 @@ export default function addBookmarkData() {
   );
   const addNewDataMutation = useFirestoreCollectionMutation(userBookmarkRef);
 
-  const addNewData = (name: string, gameID: number) => {
+  const addNewData = (name: string, slug: string) => {
     const createdAt = serverTimestamp();
 
     addNewDataMutation.mutate({
       name,
-      gameID,
+      slug,
       createdAt,
     });
   };
