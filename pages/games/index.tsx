@@ -1,16 +1,26 @@
-import axios from 'axios';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
+import RAWG from '../../lib/rawg';
 
-const fetchGames = () =>
-  axios
-    .get(
-      `https://api.rawg.io/api/games?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}&page_size=30`
-    )
-    .then(({ data }) => data.results);
+// Hooks
+import useUser from '../../hooks/useUser';
+import useBookmarkData from '../../hooks/useBookmarkData';
+
+// Interface
+import { Game } from '../game/[id]';
+
+const fetchGames = async (): Promise<Game[]> => {
+  const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
+  const { data } = await RAWG.get(`/games?key=${apiKey}&page_size=30`);
+
+  return data.results;
+};
 
 export default function Pokemon() {
+  const user = useUser();
+  const { addNewData } = useBookmarkData();
+
   const {
     isSuccess,
     data: games,
@@ -24,11 +34,16 @@ export default function Pokemon() {
     return (
       <div className="container">
         <h1>Games</h1>
+        <h2>Welcome {user?.data?.email}!</h2>
+
         {games?.map((el) => (
-          <div>
+          <div key={el.id}>
             <Link href={`/game/${el.id}`} key={el.id}>
-              <div className="pokemon-card">{el.name}</div>
+              <span>{el.name}</span>{' '}
             </Link>
+            <button type="button" onClick={() => addNewData(el.name, el.id)}>
+              Add new data
+            </button>
           </div>
         ))}
       </div>

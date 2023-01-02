@@ -1,29 +1,16 @@
 import Head from 'next/head';
 import Link from 'next/link';
 
-// import { collection, serverTimestamp } from 'firebase/firestore';
-
 // Hooks
 import useUser from '../hooks/useUser';
 
 // Components
 import Sidebar from '../components/Sidebar';
 import Bookmarks from '../components/Bookmarks';
+import SearchResults from '../components/SearchResults';
 
 export default function Home() {
   const user = useUser();
-
-  // const ref = collection(db, `users/${user?.data?.uid}/data`);
-  // const addNewDataMutation = useFirestoreCollectionMutation(ref);
-
-  // const addNewData = () => {
-  //   const createdAt = serverTimestamp();
-
-  //   addNewDataMutation.mutate({
-  //     title: 'New product!',
-  //     createdAt,
-  //   });
-  // };
 
   if (user.isLoading) {
     return <div>Loading...</div>;
@@ -52,11 +39,7 @@ export default function Home() {
 
         <br />
 
-        {/* {user?.data && (
-          <button type="button" onClick={() => addNewData()}>
-            Add new data
-          </button>
-        )} */}
+        <SearchResults />
       </main>
     </div>
   );

@@ -3,6 +3,7 @@ import { getApps, getApp, initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 
+// NOTE: Replace with new config
 export const firebaseConfig = {
   apiKey: 'AIzaSyDWotcGdnRmNIwdonM_YSRdqFn_3qPHykw',
   authDomain: 'book-test-c365d.firebaseapp.com',

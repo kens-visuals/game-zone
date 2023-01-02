@@ -1,37 +1,38 @@
-import axios from 'axios';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
 
-const fetchGame = (id: string) =>
-  axios
-    .get(
-      `https://api.rawg.io/api/games/${id}?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}`
-    )
-    .then(({ data }) => data);
+// Helpers
+import RAWG from '../../lib/rawg';
+
+export interface Game {
+  id: number;
+  name: string;
+  released: string;
+  background_image?: string;
+}
+
+const fetchGame = async (id: string): Promise<Game> => {
+  const { data } = await RAWG.get<Game>(
+    `games/${id}?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}`
+  );
+
+  return data;
+};
 
 export default function Pokemon() {
   const router = useRouter();
   const gameID = typeof router.query?.id === 'string' ? router.query.id : '';
 
   const {
-    isSuccess,
     data: game,
+    isSuccess,
     isLoading,
     isError,
   } = useQuery(['getGame', gameID], () => fetchGame(gameID), {
     enabled: gameID.length > 0,
   });
-
-  if (isSuccess) {
-    return (
-      <div className="container">
-        <h1>Game</h1>
-        <span>{game.name}</span>
-        <img src={game.background_image} alt="" />
-      </div>
-    );
-  }
 
   if (isLoading) {
     return <div className="center">Loading...</div>;
@@ -49,7 +50,16 @@ export default function Pokemon() {
   }
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <></>;
+  return (
+    isSuccess && (
+      <div className="container">
+        <h1>Game</h1>
+        <span>{game.name}</span>
+        <img src={game.background_image} alt="" />
+        <Link href="/">Go back</Link>
+      </div>
+    )
+  );
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {

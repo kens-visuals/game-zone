@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 // Hooks
 import useUser from '../hooks/useUser';
 import useUserData from '../hooks/useUserData';
@@ -11,6 +13,13 @@ export default function Bookmarks() {
   }
 
   return (
-    <ul>{user && data?.map((d) => <li key={d.createdAt}>{d.title}</li>)}</ul>
+    <ul>
+      {user &&
+        data?.map((d) => (
+          <li key={d.createdAt}>
+            <Link href={`/game/${d.gameID}`}>{d.name}</Link>
+          </li>
+        ))}
+    </ul>
   );
 }
