@@ -1,5 +1,10 @@
 import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
-import { collection, serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { useFirestore } from 'reactfire';
 
 // Hooks
@@ -11,7 +16,7 @@ export default function useAddBookmark() {
   const firestore = useFirestore();
   const userBookmarkRef = collection(
     firestore,
-    `users/${user?.data?.uid}/data`
+    `users/${user?.data?.uid}/bookmarks`
   );
   const addNewDataMutation = useFirestoreCollectionMutation(userBookmarkRef);
 
@@ -22,7 +27,18 @@ export default function useAddBookmark() {
       name,
       slug,
       createdAt,
+      isBookmarked: true,
     });
   };
-  return { addNewData };
+
+  const removeData = async (docId: string) => {
+    try {
+      const markdownRef = doc(userBookmarkRef, docId);
+      await deleteDoc(markdownRef);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return { addNewData, removeData };
 }

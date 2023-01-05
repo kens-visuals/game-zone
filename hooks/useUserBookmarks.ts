@@ -4,13 +4,13 @@ import { useFirestore, useFirestoreCollectionData } from 'reactfire';
 // Hooks
 import useUser from './useUser';
 
-export default function useUserData() {
+export default function useUserBookmarks() {
   const user = useUser();
 
   const firestore = useFirestore();
   const gamesCollection = collection(
     firestore,
-    `users/${user?.data?.uid}/data`
+    `users/${user?.data?.uid}/bookmarks`
   );
 
   const { status, data } = useFirestoreCollectionData(gamesCollection, {
