@@ -7,10 +7,12 @@ import { dehydrate, QueryClient, useQuery } from 'react-query';
 import RAWG from '../../lib/rawg';
 
 export interface Game {
+  id: string;
   slug: string;
   name: string;
   released: string;
-  background_image?: string;
+  background_image: string;
+  genres?: [{ name: string }];
 }
 
 const fetchGame = async (slug: string): Promise<Game> => {
@@ -46,8 +48,6 @@ export default function Pokemon() {
   const { data: screens } = useQuery(['getScreens', gameSlug], () =>
     fetchScreenshots(gameSlug)
   );
-
-  console.log(screens);
 
   if (isLoading) {
     return <div className="center">Loading...</div>;
