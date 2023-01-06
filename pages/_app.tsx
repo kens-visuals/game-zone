@@ -5,8 +5,9 @@ import { QueryClient, QueryClientProvider, Hydrate } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { FirebaseAppProvider, FirestoreProvider } from 'reactfire';
 import { db, firebaseConfig } from '../firebase/firebase.config';
+import Layout from '../components/Layout';
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
@@ -14,7 +15,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <FirestoreProvider sdk={db}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
             <ReactQueryDevtools initialIsOpen={false} />
           </Hydrate>
         </QueryClientProvider>
