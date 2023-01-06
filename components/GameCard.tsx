@@ -13,7 +13,7 @@ export interface Details extends Game {
 
 interface Props {
   details: Details;
-  isFromBookmark: boolean;
+  isFromBookmark?: boolean;
 }
 
 export default function GameCard({ details, isFromBookmark = false }: Props) {
@@ -36,6 +36,9 @@ export default function GameCard({ details, isFromBookmark = false }: Props) {
 
     if (!hasBeenBookmarked) addNewData(bookmarkObj);
   };
+
+  const handleClick = () =>
+    isFromBookmark ? removeData(id) : handleAddBookmark(details);
 
   return (
     <div className="mb-4 h-full w-full max-w-md overflow-hidden rounded-lg bg-primary-light/20">
@@ -65,9 +68,7 @@ export default function GameCard({ details, isFromBookmark = false }: Props) {
 
         <button
           type="button"
-          onClick={() =>
-            isFromBookmark ? removeData(id) : handleAddBookmark(details)
-          }
+          onClick={handleClick}
           className="absolute top-0 left-2 hidden items-center justify-center gap-2 rounded-b-md bg-black/20 p-2  backdrop-blur-xl backdrop-filter transition-all duration-300 hover:backdrop-blur-sm md:flex md:text-h2-light"
         >
           {isFromBookmark ? (
@@ -134,9 +135,7 @@ export default function GameCard({ details, isFromBookmark = false }: Props) {
 
       <button
         type="button"
-        onClick={() =>
-          isFromBookmark ? removeData(id) : handleAddBookmark(details)
-        }
+        onClick={handleClick}
         className="flex w-full items-center justify-center gap-2 bg-black/20 p-2 backdrop-blur-lg backdrop-filter transition-all duration-300 hover:backdrop-blur-sm md:hidden md:text-h2-light"
       >
         Add
