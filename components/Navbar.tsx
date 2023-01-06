@@ -14,9 +14,9 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="flex justify-end ">{isDrawerOpen && <Drawer />}</div>
+      {isDrawerOpen && <Drawer />}
 
-      <nav className="fixed z-50 flex w-full items-center justify-between bg-primary-dark p-4">
+      <nav className="fixed z-50 flex w-full items-center justify-between bg-primary-dark/50 p-4 backdrop-blur-2xl  backdrop-filter">
         {/* Logo */}
         <svg width="33" height="27" xmlns="http://www.w3.org/2000/svg">
           <path
