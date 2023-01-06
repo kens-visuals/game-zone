@@ -6,6 +6,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { useFirestore } from 'reactfire';
+import { Game } from '../pages/game/[slug]';
 
 // Hooks
 import useUser from './useUser';
@@ -20,14 +21,18 @@ export default function useAddBookmark() {
   );
   const addNewDataMutation = useFirestoreCollectionMutation(userBookmarkRef);
 
-  const addNewData = (name: string, slug: string) => {
+  const addNewData = (bookmarkObj: Game) => {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { name, slug, background_image, released, genres } = bookmarkObj;
     const createdAt = serverTimestamp();
 
     addNewDataMutation.mutate({
       name,
       slug,
+      genres,
+      released,
       createdAt,
-      isBookmarked: true,
+      background_image,
     });
   };
 
@@ -36,7 +41,8 @@ export default function useAddBookmark() {
       const markdownRef = doc(userBookmarkRef, docId);
       await deleteDoc(markdownRef);
     } catch (error) {
-      console.error(error);
+      // eslint-disable-next-line no-console
+      console.log(error);
     }
   };
 
