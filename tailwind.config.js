@@ -13,7 +13,7 @@ module.exports = {
       colors: {
         primary: '#10141E',
         'primary-dark': '#161D2F',
-        'primary-light': '##5A698F',
+        'primary-light': '#5A698F',
         secondary: '#FC4747',
       },
       fontSize: {
