@@ -1,51 +1,66 @@
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-
 // Hooks
 import useUser from '../../hooks/useUser';
-import useUserData from '../../hooks/useUserData';
+import useUserBookmarks from '../../hooks/useUserBookmarks';
+import GamesListContainer from '../../components/GamesListContainer';
+import GameCard from '../../components/GameCard';
 
 export default function Bookmarks() {
   const user = useUser();
-  const { status, data } = useUserData();
+  const { status, data: bookmarks } = useUserBookmarks();
 
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<any[]>([]);
+  //   const [query, setQuery] = useState('');
+  //   const [results, setResults] = useState<any[]>([]);
 
-  useEffect(() => {
-    const filteredResults = data?.filter((item) =>
-      item.name.toLowerCase().includes(query.toLowerCase())
-    );
+  //   useEffect(() => {
+  //     const filteredResults = bookmarks?.filter((item) =>
+  //       item.name.toLowerCase().includes(query.toLowerCase())
+  //     );
 
-    setResults(filteredResults);
-  }, [data, query]);
+  //     setResults(filteredResults);
+  //   }, [bookmarks, query]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-  };
+  //   useEffect(() => setResults([]), [bookmarks]);
+
+  //   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     setQuery(event.target.value);
+  //   };
 
   if (status === 'loading') {
     return <span>loading...</span>;
   }
 
-  return (
-    <>
-      <input type="text" value={query} onChange={handleChange} />
+  if (status === 'error') {
+    return <span>Error</span>;
+  }
 
-      <ul>
-        {results
+  return (
+    <GamesListContainer>
+      {/* <input type="text" value={query} onChange={handleChange} /> */}
+      {user && bookmarks
+        ? bookmarks?.map((bookmark) => (
+            <div key={bookmark.createdAt}>
+              <GameCard details={bookmark} isFromBookmark />
+            </div>
+          ))
+        : null}
+      {/* {!results
           ? results.map((d) => (
-              <li key={d.createdAt}>
-                <Link href={`/game/${d.slug}`}>{d.name}</Link>
+              <li key={createdAt}>
+                <Link href={`/game/${slug}`}>{name}</Link>{' '}
+                <button type="button" onClick={() => removeData(id)}>
+                  Del
+                </button>
               </li>
             ))
           : user &&
-            data?.map((d) => (
-              <li key={d.createdAt}>
-                <Link href={`/game/${d.slug}`}>{d.name}</Link>
+            bookmarks?.map((d) => (
+              <li key={createdAt}>
+                <Link href={`/game/${slug}`}>{name}</Link>
+                <button type="button" onClick={() => removeData(id)}>
+                  Del
+                </button>
               </li>
-            ))}
-      </ul>
-    </>
+            ))} */}
+    </GamesListContainer>
   );
 }
