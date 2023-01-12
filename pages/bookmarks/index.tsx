@@ -34,33 +34,35 @@ export default function Bookmarks() {
   }
 
   return (
-    <GamesListContainer>
-      {/* <input type="text" value={query} onChange={handleChange} /> */}
-      {user && bookmarks
-        ? bookmarks?.map((bookmark) => (
-            <div key={bookmark.createdAt}>
-              <GameCard details={bookmark} isFromBookmark />
-            </div>
-          ))
-        : null}
-      {/* {!results
-          ? results.map((d) => (
-              <li key={createdAt}>
-                <Link href={`/game/${slug}`}>{name}</Link>{' '}
-                <button type="button" onClick={() => removeData(id)}>
-                  Del
-                </button>
-              </li>
+    <div className="p-4">
+      <GamesListContainer>
+        {/* <input type="text" value={query} onChange={handleChange} /> */}
+        {user && bookmarks
+          ? bookmarks?.map((bookmark) => (
+              <div key={bookmark.createdAt}>
+                <GameCard details={bookmark} isFromBookmark />
+              </div>
             ))
-          : user &&
-            bookmarks?.map((d) => (
-              <li key={createdAt}>
-                <Link href={`/game/${slug}`}>{name}</Link>
-                <button type="button" onClick={() => removeData(id)}>
-                  Del
-                </button>
-              </li>
-            ))} */}
-    </GamesListContainer>
+          : null}
+        {/* {!results
+              ? results.map((d) => (
+                  <li key={createdAt}>
+                    <Link href={`/game/${slug}`}>{name}</Link>{' '}
+                    <button type="button" onClick={() => removeData(id)}>
+                      Del
+                    </button>
+                  </li>
+                ))
+              : user &&
+                bookmarks?.map((d) => (
+                  <li key={createdAt}>
+                    <Link href={`/game/${slug}`}>{name}</Link>
+                    <button type="button" onClick={() => removeData(id)}>
+                      Del
+                    </button>
+                  </li>
+                ))} */}
+      </GamesListContainer>
+    </div>
   );
 }

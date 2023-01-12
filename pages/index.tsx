@@ -13,8 +13,6 @@ export default function Home() {
       </Head>
 
       <div>
-        <h1 className="my-4 text-h1">All Games</h1>
-
         <GamesList />
       </div>
     </div>
