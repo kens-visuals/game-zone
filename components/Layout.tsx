@@ -12,7 +12,7 @@ export default function Layout({ children }: Props) {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-primary p-4 pt-16 font-outfit text-white">
+      <main className="min-h-screen bg-primary pt-16 font-outfit text-white">
         <SearchResults />
         {children}
       </main>
