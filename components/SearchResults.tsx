@@ -4,16 +4,16 @@ import { useQuery } from 'react-query';
 import RAWG from '../lib/rawg';
 
 // Interfaces
-import { Game } from '../pages/game/[slug]';
+import { GameInterface } from '../pages/game/[slug]';
 
 interface SearchGame {
-  results: Game[];
+  results: GameInterface[];
 }
 
 export default function SearchResults() {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchSearchedGame = async (): Promise<Game[]> => {
+  const fetchSearchedGame = async (): Promise<GameInterface[]> => {
     const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
     const { data } = await RAWG.get<SearchGame>(
       `/games?key=${apiKey}&search=${searchTerm}`
@@ -35,7 +35,7 @@ export default function SearchResults() {
 
   return (
     <>
-      <form action="#" className="w-full bg-primary py-4">
+      <form action="#" className="w-full bg-primary p-4">
         <label htmlFor="search" className="flex gap-4">
           <span className="sr-only">Search games</span>
           <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">

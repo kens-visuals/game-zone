@@ -9,13 +9,13 @@ import GamesListContainer from './GamesListContainer';
 import RAWG from '../lib/rawg';
 
 // Interfaces
-import { Game } from '../pages/game/[slug]';
+import { GameInterface } from '../pages/game/[slug]';
 
 interface Games {
-  results: Game[];
+  results: GameInterface[];
 }
 
-const fetchGames = async ({ pageParam = 1 }): Promise<Game[]> => {
+const fetchGames = async ({ pageParam = 1 }): Promise<GameInterface[]> => {
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
   const { data } = await RAWG.get<Games>(
     `/games/lists/main?key=${apiKey}&discover=true&ordering=-relevance&page_size=40&page=${pageParam}`
@@ -40,13 +40,11 @@ export default function GamesList() {
     },
   });
 
-  console.log(games?.pages);
-
   if (isLoading) {
     const emptyArray = Array.from({ length: 30 }, () => Math.random());
 
     return (
-      <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-3">
+      <div className="grid w-full grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
         {emptyArray.map((el) => (
           <div
             key={el}
@@ -137,7 +135,9 @@ export default function GamesList() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 pb-14">
+    <div className="flex flex-col items-center gap-4 p-4 pb-14">
+      <h1 className="my-4 self-start text-h1">All Games</h1>
+
       <GamesListContainer>
         {games?.pages?.map((page) =>
           page.map((details) => (

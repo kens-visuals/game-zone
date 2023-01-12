@@ -5,20 +5,16 @@ import Link from 'next/link';
 import useBookmarkMutation from '../hooks/useBookmarkMutation';
 import useUserBookmarks from '../hooks/useUserBookmarks';
 
-import { Game } from '../pages/game/[slug]';
-
-export interface Details extends Game {
-  genres?: [{ name: string }];
-}
+import { GameInterface } from '../pages/game/[slug]';
 
 interface Props {
-  details: Details;
+  details: GameInterface;
   isFromBookmark?: boolean;
 }
 
 export default function GameCard({ details, isFromBookmark = false }: Props) {
   const { data: bookmarks } = useUserBookmarks();
-  const { addNewData, removeData } = useBookmarkMutation();
+  const { handleAddBookmark, removeData } = useBookmarkMutation();
 
   const {
     id,
@@ -29,16 +25,8 @@ export default function GameCard({ details, isFromBookmark = false }: Props) {
     genres,
   } = details;
 
-  const handleAddBookmark = (bookmarkObj: Game) => {
-    const hasBeenBookmarked = bookmarks
-      .map((bookmark) => bookmark.name)
-      .includes(bookmarkObj.name);
-
-    if (!hasBeenBookmarked) addNewData(bookmarkObj);
-  };
-
   const handleClick = () =>
-    isFromBookmark ? removeData(id) : handleAddBookmark(details);
+    isFromBookmark ? removeData(id) : handleAddBookmark(bookmarks, details);
 
   return (
     <div className="mb-4 h-full w-full max-w-md overflow-hidden rounded-lg bg-primary-light/20">
@@ -109,7 +97,7 @@ export default function GameCard({ details, isFromBookmark = false }: Props) {
         <div className="flex w-full flex-col justify-between gap-2 md:flex-row">
           <Link
             href={`/game/${slug}`}
-            className="inline-block border-b border-b-transparent transition-all duration-100 hover:border-b hover:border-b-secondary"
+            className="inline-block w-fit border-b border-b-transparent transition-all duration-100 hover:border-b hover:border-b-secondary"
           >
             {name}
           </Link>
@@ -124,9 +112,9 @@ export default function GameCard({ details, isFromBookmark = false }: Props) {
             {genres?.slice(0, 3).map((genre) => (
               <li
                 key={genre.name}
-                className="px-2 text-xs text-white/70 first:pl-0"
+                className="px-2 text-xs text-white/70 underline first:pl-0"
               >
-                {genre.name}
+                <Link href={`/genre/${genre.slug}`}>{genre.name}</Link>
               </li>
             ))}
           </ul>
@@ -138,37 +126,42 @@ export default function GameCard({ details, isFromBookmark = false }: Props) {
         onClick={handleClick}
         className="flex w-full items-center justify-center gap-2 bg-black/20 p-2 backdrop-blur-lg backdrop-filter transition-all duration-300 hover:backdrop-blur-sm md:hidden md:text-h2-light"
       >
-        Add
         {isFromBookmark ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+          <>
+            Remove
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </>
         ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+          <>
+            Add
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </>
         )}
       </button>
     </div>
