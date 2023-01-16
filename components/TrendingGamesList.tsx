@@ -10,6 +10,10 @@ import LoadingMsg from './LoadingMsg';
 // Helpers
 import RAWG from '../lib/rawg';
 
+// Hooks
+import useUserBookmarks from '../hooks/useUserBookmarks';
+import useBookmarkMutation from '../hooks/useBookmarkMutation';
+
 // Interfaces
 import { GameInterface } from '../pages/game/[slug]';
 
@@ -27,6 +31,9 @@ const fetchGames = async ({ pageParam = 1 }): Promise<GameInterface[]> => {
 };
 
 export default function TrendingGamesList() {
+  const { data: bookmarks } = useUserBookmarks();
+  const { handleAddBookmark } = useBookmarkMutation();
+
   const {
     data: games,
     isError,
@@ -55,11 +62,11 @@ export default function TrendingGamesList() {
     <div className="p-4">
       <span className="mb-4 inline-block text-h1">New and upcoming games</span>
 
-      <ul className="grid grid-flow-col items-center gap-4 overflow-x-scroll">
+      <ul className="grid snap-x snap-proximity grid-flow-col items-center gap-4 overflow-x-scroll">
         {games?.pages.map((page) =>
           page.map((details) => (
-            <li key={details.slug}>
-              <div className="relative h-full w-80 max-w-xl overflow-hidden rounded-md">
+            <li key={details.slug} className="snap-start ">
+              <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-md">
                 <Image
                   src={details.background_image}
                   alt={details.name}
@@ -68,17 +75,37 @@ export default function TrendingGamesList() {
                   className="h-48 w-full object-cover object-top"
                 />
 
-                <div className="absolute bottom-0 flex w-full items-center justify-between gap-6 p-4 backdrop-blur-md backdrop-filter">
-                  <Link
-                    href={`/game/${details.slug}`}
-                    className="truncate text-ellipsis border-b border-b-transparent text-h3 transition-all duration-100 hover:border-b hover:border-b-secondary"
-                  >
-                    {details.name}
-                  </Link>
+                <div className="absolute bottom-0 w-full p-4 backdrop-blur-md backdrop-filter">
+                  <div className="flex items-center justify-between gap-6">
+                    <Link
+                      href={`/game/${details.slug}`}
+                      className="truncate text-ellipsis border-b border-b-transparent text-h3 transition-all duration-100 hover:border-b hover:border-b-secondary"
+                    >
+                      {details.name}
+                    </Link>
 
-                  <span className="text-body-1 opacity-50">
-                    {details.released.slice(0, 4)}
-                  </span>
+                    <button
+                      type="button"
+                      onClick={() => handleAddBookmark(bookmarks, details)}
+                      className="flex w-fit items-center justify-center gap-2 md:hidden md:text-h2-light"
+                    >
+                      Add
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="h-5 w-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </li>
