@@ -10,9 +10,14 @@ import { GameInterface } from '../pages/game/[slug]';
 interface Props {
   details: GameInterface;
   isFromBookmark?: boolean;
+  isTrending?: boolean;
 }
 
-export default function GameCard({ details, isFromBookmark = false }: Props) {
+export default function GameCard({
+  details,
+  isFromBookmark = false,
+  isTrending = false,
+}: Props) {
   const { data: bookmarks } = useUserBookmarks();
   const { handleAddBookmark, removeData } = useBookmarkMutation();
 
@@ -29,7 +34,11 @@ export default function GameCard({ details, isFromBookmark = false }: Props) {
     isFromBookmark ? removeData(id) : handleAddBookmark(bookmarks, details);
 
   return (
-    <div className="mb-4 h-full w-full max-w-md overflow-hidden rounded-lg bg-primary-light/20">
+    <div
+      className={`mb-4 h-full w-full max-w-md overflow-hidden rounded-lg bg-primary-light/20 ${
+        isTrending && 'w-80 max-w-xl'
+      }`}
+    >
       <div className="relative">
         {!backgroundImage ? (
           <div className="flex flex-col items-center justify-center p-10">
@@ -50,7 +59,7 @@ export default function GameCard({ details, isFromBookmark = false }: Props) {
             alt={name}
             width={200}
             height={200}
-            className="w-full"
+            className={`w-full ${isTrending && 'h-32 object-cover object-top'}`}
           />
         )}
 
