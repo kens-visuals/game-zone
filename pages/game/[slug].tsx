@@ -5,11 +5,16 @@ import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
+// Components
+import GameSeriesList from '../../components/GameSeriesList';
+
 // Helpers
 import RAWG from '../../lib/rawg';
 
 // Hooks
 import useBookmarkMutation from '../../hooks/useBookmarkMutation';
+import LoadingMsg from '../../components/LoadingMsg';
+import ErrorMsg from '../../components/ErrorMsg';
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
@@ -32,6 +37,10 @@ type ParentPlatform = {
   };
 }[];
 
+type Tags = {
+  name: string;
+}[];
+
 export interface GameInterface {
   id: string;
   slug: string;
@@ -47,6 +56,7 @@ export interface GameInterface {
   rating_top?: string;
   metacritic?: number;
   parent_platforms?: ParentPlatform;
+  tags: Tags;
 }
 
 export interface Screenshots {
@@ -101,20 +111,9 @@ export default function Game() {
 
   const emptyArray = Array.from({ length: 6 }, () => Math.random());
 
-  if (isLoading) {
-    return <div className="center">Loading...</div>;
-  }
+  if (isLoading) return <LoadingMsg size={1} />;
 
-  if (isError) {
-    return (
-      <div className="center">
-        We could not find your pokemon{' '}
-        <span role="img" aria-label="sad">
-          😢
-        </span>
-      </div>
-    );
-  }
+  if (isError) return <ErrorMsg />;
 
   return (
     isSuccess && (
@@ -172,15 +171,15 @@ export default function Game() {
             </svg>
           </button>
 
-          <div className="grid grid-cols-2 gap-2">
+          <ul className="grid grid-flow-dense grid-cols-2 gap-2">
             {isScreenLoading && isScreenFetching
               ? emptyArray.map((el) => (
-                  <div
+                  <li
                     key={el}
                     role="status"
                     className="animate-pulse space-y-8 md:flex md:items-center md:space-y-0 md:space-x-8"
                   >
-                    <div className="flex h-48 w-full items-center justify-center rounded bg-gray-300 dark:bg-gray-700 sm:w-96">
+                    <div className="flex h-24 w-full items-center justify-center rounded bg-gray-300 dark:bg-gray-700 sm:w-96">
                       <svg
                         className="h-12 w-12 text-gray-200"
                         xmlns="http://www.w3.org/2000/svg"
@@ -191,55 +190,63 @@ export default function Game() {
                         <path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z" />
                       </svg>
                     </div>
-
                     <span className="sr-only">Loading...</span>
-                  </div>
+                  </li>
                 ))
               : screens?.map(({ image }) => (
-                  <Image
-                    key={image}
-                    src={image}
-                    width={1000}
-                    height={1000}
-                    alt="game screenshot"
-                    className="w-full rounded-md"
-                  />
+                  <li>
+                    <Image
+                      key={image}
+                      src={image}
+                      width={1000}
+                      height={1000}
+                      alt="game screenshot"
+                      className="w-full rounded-md"
+                    />
+                  </li>
                 ))}
-          </div>
+          </ul>
 
           <div className="mt-4 rounded-md bg-primary-dark p-4">
             <h2 className="text-h2-medium">Details</h2>
             <div className="mt-4 flex flex-wrap items-center gap-4">
               {game?.parent_platforms && (
-                <div className="flex gap-2">
+                <div className="flex items-baseline gap-2">
                   <span className="text-primary-light">Platforms:</span>
-                  {game.parent_platforms.map(({ platform }) => (
-                    <span key={platform.name} className="text-body-1">
-                      {platform.name}
-                    </span>
-                  ))}
+                  <ul className="flex gap-1">
+                    {game.parent_platforms.map(({ platform }, idx, arr) => (
+                      <li key={platform.name} className="text-body-1 underline">
+                        {platform.name}
+                        {idx === arr.length - 1 ? '.' : ','}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 
               {game?.genres && (
-                <div className="flex gap-2">
+                <div className="flex items-baseline gap-2">
                   <span className="text-primary-light">Genres:</span>
-                  {game.genres.map((genre) => (
-                    <span key={genre.name} className="text-body-1">
-                      {genre.name}
-                    </span>
-                  ))}
+                  <ul className="flex gap-1">
+                    {game.genres.map((genre) => (
+                      <span key={genre.name} className="text-body-1">
+                        {genre.name}
+                      </span>
+                    ))}
+                  </ul>
                 </div>
               )}
 
-              <div>
-                <span className="mr-2 inline-block text-primary-light">
-                  Released:{' '}
-                </span>
-                <span className="text-body-1">
-                  {formatDate(game?.released)}
-                </span>
-              </div>
+              {game?.released && (
+                <div>
+                  <span className="mr-2 inline-block text-primary-light">
+                    Released:{' '}
+                  </span>
+                  <span className="text-body-1">
+                    {formatDate(game?.released)}
+                  </span>
+                </div>
+              )}
 
               {game?.metacritic && (
                 <div>
@@ -250,14 +257,16 @@ export default function Game() {
                 </div>
               )}
 
-              <div>
-                <span className="mr-2 inline-block text-primary-light">
-                  Rating:{' '}
-                </span>
-                <span className="text-body-1">
-                  {game?.rating} / {game?.rating_top}
-                </span>
-              </div>
+              {game?.rating && (
+                <div>
+                  <span className="mr-2 inline-block text-primary-light">
+                    Rating:{' '}
+                  </span>
+                  <span className="text-body-1">
+                    {game?.rating} / {game?.rating_top}
+                  </span>
+                </div>
+              )}
 
               <div className="flex gap-2">
                 <h3 className="text-primary-light">Links:</h3>
@@ -267,7 +276,7 @@ export default function Game() {
                   </a>
 
                   {game?.website && (
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 border-b">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -289,6 +298,22 @@ export default function Game() {
                   )}
                 </div>
               </div>
+
+              {game?.tags && (
+                <div className="flex items-baseline gap-2">
+                  <span className="inline-block text-primary-light">
+                    Tags:{' '}
+                  </span>
+                  <ul className="flex flex-wrap gap-1 text-body-1">
+                    {game?.tags.slice(0, 6).map((tag, idx, arr) => (
+                      <li className="underline">
+                        {tag.name}
+                        {idx === arr.length - 1 ? '.' : ','}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             <div className="mt-4  flex w-full overflow-hidden rounded-md">
@@ -317,6 +342,8 @@ export default function Game() {
                 ))}
             </div>
           </div>
+
+          <GameSeriesList gameSlug={gameSlug} />
 
           <div className="mt-4 flex items-center gap-2">
             <button
