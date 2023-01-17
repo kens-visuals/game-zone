@@ -39,7 +39,7 @@ export default function Drawer() {
           </button>
         ) : (
           user && (
-            <div className="flex flex-col  items-end gap-2">
+            <div className="flex flex-col items-end gap-2">
               <Image
                 alt="user"
                 width={50}
