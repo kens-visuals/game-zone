@@ -1,9 +1,11 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 // Hooks
-import useBookmarkMutation from '../hooks/useBookmarkMutation';
+import useUser from '../hooks/useUser';
 import useUserBookmarks from '../hooks/useUserBookmarks';
+import useBookmarkMutation from '../hooks/useBookmarkMutation';
 
 import { GameInterface } from '../pages/game/[slug]';
 
@@ -18,6 +20,8 @@ export default function GameCard({
   isFromBookmark = false,
   isTrending = false,
 }: Props) {
+  const user = useUser();
+  const router = useRouter();
   const { data: bookmarks } = useUserBookmarks();
   const { handleAddBookmark, removeData } = useBookmarkMutation();
 
@@ -30,8 +34,13 @@ export default function GameCard({
     genres,
   } = details;
 
-  const handleClick = () =>
-    isFromBookmark ? removeData(id) : handleAddBookmark(bookmarks, details);
+  const handleClick = () => {
+    if (!user?.data) return router.push('/bookmarks');
+
+    return isFromBookmark
+      ? removeData(id)
+      : handleAddBookmark(bookmarks, details);
+  };
 
   return (
     <div
