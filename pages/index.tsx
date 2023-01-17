@@ -2,8 +2,21 @@ import Head from 'next/head';
 
 // Componentns
 import GamesList from '../components/GamesList';
+import TrendingGamesList from '../components/TrendingGamesList';
+
+// Hooks
+// import useFollow from '../hooks/useFollow';
+// import useUser from '../hooks/useUser';
+// import useUsers from '../hooks/useUsers';
 
 export default function Home() {
+  // const currentUser = useUser();
+  // const { data: users } = useUsers();
+  // const { manageFollow, followers } = useFollow();
+
+  // console.log(currentUser?.data);
+  // console.log(users?.map((el) => console.log(el.followers)));
+
   return (
     <div>
       <Head>
@@ -13,6 +26,77 @@ export default function Home() {
       </Head>
 
       <div>
+        {/*   {users &&
+          users.map((user) => (
+            <div key={user.displayName} className="flex items-center gap-2">
+              <div>
+                <img
+                  src={user.photoURL}
+                  alt=""
+                  className="w-10 rounded"
+                  referrerPolicy="no-referrer"
+                />
+                <h1>{user.displayName}</h1>
+              </div>
+
+              <button
+                type="button"
+                // onClick={() => addNewFollower(currentUser.data, user.id)}
+                onClick={() =>
+                  currentUser?.data &&
+                  manageFollow('follow', currentUser?.data?.uid, user.id)
+                }
+              >
+                Follow
+              </button>
+            </div>
+          ))}
+
+        <h1>Followers</h1>
+        {currentUser.data?.following &&
+          currentUser.data?.following.map((user) => (
+            <div key={user.displayName} className="flex items-center gap-2">
+              <div>
+                <img
+                  src={user.photoURL}
+                  alt=""
+                  className="w-10 rounded"
+                  referrerPolicy="no-referrer"
+                />
+                <h1>{user.displayName}</h1>
+                <span>{user.id}</span>
+              </div>
+
+              <button
+                type="button"
+                // onClick={() => currentUser?.data && removeuser(user.id)}
+                onClick={() =>
+                  currentUser?.data &&
+                  manageFollow('unfollow', currentUser?.data?.uid, user.id)
+                }
+              >
+                Unfollow
+              </button>
+            </div>
+          ))} */}
+
+        <TrendingGamesList />
+
+        <div className="mt-4 grid gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
+            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
+          </div>
+          <div className="relative">
+            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
+            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
+          </div>
+          <div className="relative">
+            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
+            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
+          </div>
+        </div>
+
         <GamesList />
       </div>
     </div>
