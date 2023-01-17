@@ -1,8 +1,11 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
+
+// Componentns
+import LoadingMsg from '../../components/LoadingMsg';
+import ErrorMsg from '../../components/ErrorMsg';
 
 // Helpers
 import RAWG from '../../lib/rawg';
@@ -26,13 +29,9 @@ export default function Genres() {
     isLoading,
   } = useQuery(['getGenres'], fetchGenres);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading) return <LoadingMsg size={20} />;
 
-  if (isError) {
-    return <div>Error</div>;
-  }
+  if (isError) return <ErrorMsg />;
 
   return (
     <div className="grid grid-cols-2 gap-2 rounded-md p-4 md:grid-cols-3 lg:grid-cols-4">
@@ -54,8 +53,6 @@ export default function Genres() {
               Games count: {genre?.games_count}
             </span>
           </div>
-
-          {/* <div>{genres.games}</div> */}
         </div>
       ))}
     </div>
