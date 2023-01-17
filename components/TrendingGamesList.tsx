@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 import { useInfiniteQuery } from 'react-query';
 
@@ -11,6 +12,7 @@ import LoadingMsg from './LoadingMsg';
 import RAWG from '../lib/rawg';
 
 // Hooks
+import useUser from '../hooks/useUser';
 import useUserBookmarks from '../hooks/useUserBookmarks';
 import useBookmarkMutation from '../hooks/useBookmarkMutation';
 
@@ -31,6 +33,8 @@ const fetchGames = async ({ pageParam = 1 }): Promise<GameInterface[]> => {
 };
 
 export default function TrendingGamesList() {
+  const user = useUser();
+  const router = useRouter();
   const { data: bookmarks } = useUserBookmarks();
   const { handleAddBookmark } = useBookmarkMutation();
 
@@ -49,6 +53,12 @@ export default function TrendingGamesList() {
     },
   });
 
+  const handleClick = (details: GameInterface) => {
+    if (!user?.data) return router.push('/bookmarks');
+
+    return handleAddBookmark(bookmarks, details);
+  };
+
   if (isLoading)
     return (
       <div className="grid grid-flow-col items-center gap-4 overflow-x-scroll p-4">
@@ -66,7 +76,7 @@ export default function TrendingGamesList() {
         {games?.pages.map((page) =>
           page.map((details) => (
             <li key={details.slug} className="snap-start ">
-              <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-md">
+              <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-lg">
                 <Image
                   src={details.background_image}
                   alt={details.name}
@@ -75,19 +85,19 @@ export default function TrendingGamesList() {
                   className="h-48 w-full object-cover object-top"
                 />
 
-                <div className="absolute bottom-0 w-full p-4 backdrop-blur-md backdrop-filter">
+                <div className="absolute bottom-0 w-full py-4 px-3 backdrop-blur-md backdrop-filter">
                   <div className="flex items-center justify-between gap-6">
                     <Link
                       href={`/game/${details.slug}`}
-                      className="truncate text-ellipsis border-b border-b-transparent text-h3 transition-all duration-100 hover:border-b hover:border-b-secondary"
+                      className="truncate text-ellipsis border-b border-b-transparent text-body-1 font-medium transition-all duration-100 hover:border-b hover:border-b-secondary"
                     >
                       {details.name}
                     </Link>
 
                     <button
                       type="button"
-                      onClick={() => handleAddBookmark(bookmarks, details)}
-                      className="flex w-fit items-center justify-center gap-2 md:hidden md:text-h2-light"
+                      onClick={() => handleClick(details)}
+                      className="flex w-fit items-center justify-center gap-1 text-body-1"
                     >
                       Add
                       <svg
@@ -96,7 +106,7 @@ export default function TrendingGamesList() {
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="h-5 w-5"
+                        className="h-4 w-4"
                       >
                         <path
                           strokeLinecap="round"
