@@ -7,7 +7,8 @@ import useUser from '../hooks/useUser';
 import useUserBookmarks from '../hooks/useUserBookmarks';
 import useBookmarkMutation from '../hooks/useBookmarkMutation';
 
-import { GameInterface } from '../pages/game/[slug]';
+// Types
+import { GameInterface } from '../lib/types/game';
 
 interface Props {
   details: GameInterface;
@@ -22,7 +23,7 @@ export default function GameCard({
 }: Props) {
   const user = useUser();
   const router = useRouter();
-  const { data: bookmarks } = useUserBookmarks();
+  const { bookmarksData } = useUserBookmarks();
   const { handleAddBookmark, removeData } = useBookmarkMutation();
 
   const {
@@ -38,8 +39,8 @@ export default function GameCard({
     if (!user?.data) return router.push('/bookmarks');
 
     return isFromBookmark
-      ? removeData(id)
-      : handleAddBookmark(bookmarks, details);
+      ? removeData(id!)
+      : handleAddBookmark(bookmarksData, details);
   };
 
   return (
@@ -142,12 +143,27 @@ export default function GameCard({
       <button
         type="button"
         onClick={handleClick}
-        className="flex w-full items-center justify-center gap-2 bg-black/20 p-2 backdrop-blur-lg backdrop-filter transition-all duration-300 hover:backdrop-blur-sm md:hidden md:text-h2-light"
+        className="group flex w-full items-center justify-center gap-2 bg-black/20 p-2 backdrop-blur-lg backdrop-filter transition-all duration-300 hover:backdrop-blur-sm md:hidden md:text-h2-light"
       >
         {isFromBookmark ? (
           <>
             Remove
             <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="h-4 w-4 fill-white group-hover:fill-none"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+              />
+            </svg>
+            {/* Minus icon */}
+            {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -160,12 +176,27 @@ export default function GameCard({
                 strokeLinejoin="round"
                 d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
               />
-            </svg>
+            </svg> */}
           </>
         ) : (
           <>
-            Add
+            Bookmark
             <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="h-4 w-4 text-white group-hover:fill-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+              />
+            </svg>
+            {/* Plus icon */}
+            {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -178,7 +209,7 @@ export default function GameCard({
                 strokeLinejoin="round"
                 d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
               />
-            </svg>
+            </svg> */}
           </>
         )}
       </button>

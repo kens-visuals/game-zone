@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import RAWG from '../lib/rawg';
 
 // Interfaces
-import { GameInterface } from '../pages/game/[slug]';
+import { GameInterface } from '../lib/types/game';
 
 interface SearchGame {
   results: GameInterface[];
@@ -35,8 +35,11 @@ export default function SearchResults() {
 
   return (
     <>
-      <form action="#" className="w-full bg-primary p-4">
-        <label htmlFor="search" className="flex gap-4">
+      <form
+        action="#"
+        className="flex w-full items-center justify-between gap-4 bg-primary p-4"
+      >
+        <label htmlFor="search" className="flex w-full gap-4">
           <span className="sr-only">Search games</span>
           <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -54,6 +57,29 @@ export default function SearchResults() {
             className="w-full bg-transparent caret-secondary outline-none placeholder:text-body-1 focus:border-b focus:border-primary-light"
           />
         </label>
+
+        {searchTerm && (
+          <button
+            type="button"
+            onClick={() => setSearchTerm('')}
+            aria-label="close"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="h-5 w-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </button>
+        )}
       </form>
 
       {/* eslint-disable-next-line no-nested-ternary */}
@@ -62,7 +88,7 @@ export default function SearchResults() {
       ) : isSearchError ? (
         <div>Error</div>
       ) : (
-        <ul>
+        <ul className="px-4">
           {data &&
             data?.map((game) => (
               <li key={game.slug}>

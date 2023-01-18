@@ -16,8 +16,8 @@ import useUser from '../hooks/useUser';
 import useUserBookmarks from '../hooks/useUserBookmarks';
 import useBookmarkMutation from '../hooks/useBookmarkMutation';
 
-// Interfaces
-import { GameInterface } from '../pages/game/[slug]';
+// Types
+import { GameInterface } from '../lib/types/game';
 
 interface Games {
   results: GameInterface[];
@@ -35,7 +35,7 @@ const fetchGames = async ({ pageParam = 1 }): Promise<GameInterface[]> => {
 export default function TrendingGamesList() {
   const user = useUser();
   const router = useRouter();
-  const { data: bookmarks } = useUserBookmarks();
+  const { bookmarksData } = useUserBookmarks();
   const { handleAddBookmark } = useBookmarkMutation();
 
   const {
@@ -56,7 +56,7 @@ export default function TrendingGamesList() {
   const handleClick = (details: GameInterface) => {
     if (!user?.data) return router.push('/bookmarks');
 
-    return handleAddBookmark(bookmarks, details);
+    return handleAddBookmark(bookmarksData, details);
   };
 
   if (isLoading)

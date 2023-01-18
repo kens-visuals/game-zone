@@ -4,14 +4,14 @@ import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 // Components
 import GameCard from './GameCard';
 import GamesListContainer from './GamesListContainer';
+import LoadingMsg from './LoadingMsg';
+import ErrorMsg from './ErrorMsg';
 
 // Helpers
 import RAWG from '../lib/rawg';
 
-// Interfaces
-import { GameInterface } from '../pages/game/[slug]';
-import LoadingMsg from './LoadingMsg';
-import ErrorMsg from './ErrorMsg';
+// Types
+import { GameInterface } from '../lib/types/game';
 
 interface Games {
   results: GameInterface[];
@@ -44,7 +44,7 @@ export default function GamesList() {
 
   if (isLoading)
     return (
-      <div className="grid w-full grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="my-4 grid w-full grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
         <LoadingMsg size={30} />
       </div>
     );
@@ -53,7 +53,7 @@ export default function GamesList() {
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 pb-14">
-      <h1 className="my-4 self-start text-h1">All Games</h1>
+      <h1 className="my-2 self-start text-h1">All Games</h1>
 
       <GamesListContainer>
         {games?.pages?.map((page) =>
