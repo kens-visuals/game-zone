@@ -8,10 +8,24 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/firebase.config';
 
-// Interfaces
-import { UserInterface } from './useUser';
+// Hooks
+import useUser, { UserInterface } from './useUser';
+import useUsers from './useUsers';
 
 export default function useFollow() {
+  const currentUser = useUser();
+  const { data: users, status: usersStatus } = useUsers();
+
+  const followList = (type: 'followers' | 'following') =>
+    usersStatus === 'success'
+      ? users
+          .filter((user) => user.uid === currentUser?.data?.uid)
+          .map((user) =>
+            type === 'following' ? user?.following : user?.followers
+          )
+          .at(0)
+      : [];
+
   async function manageFollow(
     type: 'follow' | 'unfollow',
     userId: string,
@@ -63,5 +77,5 @@ export default function useFollow() {
     await batch.commit();
   }
 
-  return { manageFollow };
+  return { manageFollow, followList };
 }
