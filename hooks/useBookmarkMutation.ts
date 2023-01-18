@@ -6,10 +6,13 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { useFirestore } from 'reactfire';
-import { GameInterface } from '../pages/game/[slug]';
 
 // Hooks
 import useUser from './useUser';
+
+// Types
+import { GameInterface } from '../lib/types/game';
+import { Bookmark } from './useUserBookmarks';
 
 export default function useAddBookmark() {
   const user = useUser();
@@ -38,17 +41,20 @@ export default function useAddBookmark() {
 
   const removeData = async (docId: string) => {
     try {
-      const markdownRef = doc(userBookmarkRef, docId);
-      await deleteDoc(markdownRef);
+      const bookmarkRef = doc(userBookmarkRef, docId);
+      await deleteDoc(bookmarkRef);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
   };
 
-  const handleAddBookmark = (bookmarks, bookmarkObj: GameInterface) => {
+  const handleAddBookmark = (
+    bookmarks: Bookmark[],
+    bookmarkObj: GameInterface
+  ) => {
     const hasBeenBookmarked = bookmarks
-      .map((bookmark) => bookmark.name)
+      .map((bookmark: Bookmark) => bookmark.name)
       .includes(bookmarkObj.name);
 
     if (!hasBeenBookmarked) addNewData(bookmarkObj);

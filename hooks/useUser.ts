@@ -6,7 +6,7 @@ export interface UserInterface {
   uid: string;
   email: string;
   photoURL: string;
-  createdAt: string;
+  createdAt?: string;
   displayName: string;
 }
 

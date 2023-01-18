@@ -4,6 +4,18 @@ import { useFirestore, useFirestoreCollectionData } from 'reactfire';
 // Hooks
 import useUser from './useUser';
 
+// Type
+import { GenresTypes } from '../lib/types/game';
+
+export interface Bookmark {
+  name: string;
+  slug: string;
+  genres: GenresTypes;
+  released: string;
+  createdAt: string;
+  background_image: string;
+}
+
 export default function useUserBookmarks() {
   const user = useUser();
 
@@ -13,9 +25,13 @@ export default function useUserBookmarks() {
     `users/${user?.data?.uid}/bookmarks`
   );
 
-  const { status, data } = useFirestoreCollectionData(gamesCollection, {
-    idField: 'id',
-  });
+  const { status, data: bookmarks } = useFirestoreCollectionData(
+    gamesCollection,
+    {
+      idField: 'id',
+    }
+  );
+  const bookmarksData = bookmarks as Bookmark[];
 
-  return { status, data };
+  return { status, bookmarksData };
 }

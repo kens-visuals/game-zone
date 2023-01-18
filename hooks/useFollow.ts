@@ -28,18 +28,16 @@ export default function useFollow() {
 
   async function manageFollow(
     type: 'follow' | 'unfollow',
-    userId: string,
     targetUserId: string,
-    userObj: UserInterface,
     targetUserObj: UserInterface
   ): Promise<void> {
     const batch = writeBatch(db);
 
     const currentUserData = {
-      uid: userObj?.uid,
-      email: userObj?.email,
-      photoURL: userObj?.photoURL,
-      displayName: userObj?.displayName,
+      uid: currentUser?.data?.uid,
+      email: currentUser?.data?.email,
+      photoURL: currentUser?.data?.photoURL,
+      displayName: currentUser?.data?.displayName,
     };
 
     const targetUserData = {
@@ -51,7 +49,7 @@ export default function useFollow() {
 
     const usersCollection = collection(db, `users`);
 
-    const userDocRef = doc(usersCollection, userId);
+    const userDocRef = doc(usersCollection, currentUser?.data?.uid);
     const targetUserDocRef = doc(usersCollection, targetUserId);
 
     if (type === 'follow') {
