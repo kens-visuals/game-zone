@@ -1,8 +1,10 @@
 import Link from 'next/link';
 
-// Bookmarks
+// Components
 import GamesListContainer from '../../components/GamesListContainer';
 import GameCard from '../../components/GameCard';
+import LoadingMsg from '../../components/LoadingMsg';
+import ErrorMsg from '../../components/ErrorMsg';
 
 // Hooks
 import useUser from '../../hooks/useUser';
@@ -11,7 +13,7 @@ import useUserBookmarks from '../../hooks/useUserBookmarks';
 
 export default function Bookmarks() {
   const user = useUser();
-  const { status, data: bookmarks } = useUserBookmarks();
+  const { status, bookmarksData } = useUserBookmarks();
   const { handleUserSignIn } = useAuth();
 
   //   const [query, setQuery] = useState('');
@@ -31,13 +33,9 @@ export default function Bookmarks() {
   //     setQuery(event.target.value);
   //   };
 
-  if (status === 'loading') {
-    return <span>loading...</span>;
-  }
+  if (status === 'loading') return <LoadingMsg size={10} />;
 
-  if (status === 'error') {
-    return <span>Error</span>;
-  }
+  if (status === 'error') return <ErrorMsg />;
 
   return (
     <div className="p-4">
@@ -71,10 +69,10 @@ export default function Bookmarks() {
       ) : (
         <GamesListContainer>
           {/* <input type="text" value={query} onChange={handleChange} /> */}
-          {!bookmarks.length ? (
+          {!bookmarksData.length ? (
             <Link href="/">Go to games</Link>
           ) : (
-            bookmarks?.map((bookmark) => (
+            bookmarksData?.map((bookmark) => (
               <div key={bookmark.createdAt}>
                 <GameCard details={bookmark} isFromBookmark />
               </div>
