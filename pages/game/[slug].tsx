@@ -16,52 +16,10 @@ import useBookmarkMutation from '../../hooks/useBookmarkMutation';
 import LoadingMsg from '../../components/LoadingMsg';
 import ErrorMsg from '../../components/ErrorMsg';
 
-const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
-
 // Interfaces
-export type GenresTypes = {
-  name: string;
-  slug: string;
-  games_count: number;
-  image_background: string;
-}[];
+import { GameInterface, Screenshots } from '../../lib/types/game';
 
-export type Ratings = {
-  title: string;
-  percent: number;
-}[];
-
-type ParentPlatform = {
-  platform: {
-    name: string;
-  };
-}[];
-
-type Tags = {
-  name: string;
-}[];
-
-export interface GameInterface {
-  id: string;
-  slug: string;
-  name: string;
-  released: string;
-  description: string;
-  background_image: string;
-  genres?: GenresTypes;
-  website?: string;
-  redditurl?: string;
-  ratings?: Ratings;
-  rating?: string;
-  rating_top?: string;
-  metacritic?: number;
-  parent_platforms?: ParentPlatform;
-  tags: Tags;
-}
-
-export interface Screenshots {
-  image: string;
-}
+const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
 const fetchGame = async (slug: string): Promise<GameInterface> => {
   const { data } = await RAWG.get<GameInterface>(
@@ -135,7 +93,7 @@ export default function Game() {
                   isShowMore && 'h-auto overflow-y-visible'
                 }`}
                 // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: game?.description }}
+                dangerouslySetInnerHTML={{ __html: game?.description! }}
               />
               <button
                 type="button"
@@ -194,7 +152,7 @@ export default function Game() {
                   </li>
                 ))
               : screens?.map(({ image }) => (
-                  <li>
+                  <li key={image}>
                     <Image
                       key={image}
                       src={image}
@@ -306,7 +264,7 @@ export default function Game() {
                   </span>
                   <ul className="flex flex-wrap gap-1 text-body-1">
                     {game?.tags.slice(0, 6).map((tag, idx, arr) => (
-                      <li className="underline">
+                      <li key={tag.name} className="underline">
                         {tag.name}
                         {idx === arr.length - 1 ? '.' : ','}
                       </li>
