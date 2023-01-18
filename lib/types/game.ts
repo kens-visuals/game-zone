@@ -21,12 +21,12 @@ export type Tags = {
 }[];
 
 export interface GameInterface {
-  id: string;
+  id?: string;
   slug: string;
   name: string;
   released: string;
-  description: string;
   background_image: string;
+  description?: string;
   genres?: GenresTypes;
   website?: string;
   redditurl?: string;
@@ -35,7 +35,7 @@ export interface GameInterface {
   rating_top?: string;
   metacritic?: number;
   parent_platforms?: ParentPlatform;
-  tags: Tags;
+  tags?: Tags;
 }
 
 export interface Screenshots {
