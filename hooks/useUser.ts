@@ -3,11 +3,11 @@ import { useAuthUser } from '@react-query-firebase/auth';
 import { db, auth } from '../firebase/firebase.config';
 
 export interface UserInterface {
-  email: string;
   uid: string;
+  email: string;
+  photoURL: string;
   createdAt: string;
   displayName: string;
-  photoURL: string;
 }
 
 const options = {
@@ -25,8 +25,8 @@ const options = {
       try {
         // Create user doc
         await setDoc(userDocRef, {
+          uid,
           email,
-          id: uid,
           photoURL,
           createdAt,
           displayName,
