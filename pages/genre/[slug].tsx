@@ -1,6 +1,3 @@
-import Link from 'next/link';
-import { useState } from 'react';
-
 import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import {
@@ -16,7 +13,9 @@ import GameCard from '../../components/GameCard';
 
 // Helpers
 import RAWG from '../../lib/rawg';
-import { GameInterface } from '../game/[slug]';
+
+// Types
+import { GameInterface } from '../../lib/types/game';
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
@@ -74,12 +73,12 @@ export default function Genre() {
     }
   );
 
-  console.log(genre);
-  console.log(games);
-
   return (
     <div>
       <h1>Genre: {genre.name}</h1>
+
+      {/* NOTE: Add genre description here */}
+
       <GamesListContainer>
         {games?.pages?.map((page) =>
           page.map((details) => (
@@ -89,6 +88,8 @@ export default function Genre() {
           ))
         )}
       </GamesListContainer>
+
+      {/* <GamesList /> */}
 
       <button
         type="button"

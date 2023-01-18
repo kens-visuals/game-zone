@@ -9,7 +9,9 @@ import ErrorMsg from '../../components/ErrorMsg';
 
 // Helpers
 import RAWG from '../../lib/rawg';
-import { GenresTypes } from '../game/[slug]';
+
+// Types
+import { GenresTypes } from '../../lib/types/game';
 
 interface GenresProps {
   results: GenresTypes;
@@ -37,6 +39,7 @@ export default function Genres() {
     <div className="grid grid-cols-2 gap-2 rounded-md p-4 md:grid-cols-3 lg:grid-cols-4">
       {genres?.map((genre) => (
         <div
+          key={genre.slug}
           style={{ backgroundImage: `url(${genre.image_background})` }}
           className="flex items-center bg-cover bg-center bg-no-repeat"
         >
@@ -44,7 +47,7 @@ export default function Genres() {
             <Link
               key={genre.slug}
               href={`/genre/${genre.slug}`}
-              className="text-h2-medium"
+              className="text-h2-light"
             >
               {genre?.name}
             </Link>
