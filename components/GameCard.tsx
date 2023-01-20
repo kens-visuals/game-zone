@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -6,6 +7,7 @@ import { useRouter } from 'next/router';
 import useUser from '../hooks/useUser';
 import useUserBookmarks from '../hooks/useUserBookmarks';
 import useBookmarkMutation from '../hooks/useBookmarkMutation';
+import useCollections from '../hooks/useCollections';
 
 // Types
 import { GameInterface } from '../lib/types/game';
@@ -21,10 +23,12 @@ export default function GameCard({
   isFromBookmark = false,
   isTrending = false,
 }: Props) {
-  const user = useUser();
+  const { user } = useUser();
   const router = useRouter();
   const { bookmarksData } = useUserBookmarks();
   const { handleAddBookmark, removeData } = useBookmarkMutation();
+  const { collections, manageCollection } = useCollections();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const {
     id,
@@ -36,7 +40,7 @@ export default function GameCard({
   } = details;
 
   const handleClick = () => {
-    if (!user?.data) return router.push('/bookmarks');
+    if (!user) return router.push('/bookmarks');
 
     return isFromBookmark
       ? removeData(id!)
@@ -213,6 +217,99 @@ export default function GameCard({
           </>
         )}
       </button>
+
+      <button
+        type="button"
+        onClick={() => setIsDropdownOpen((prevState) => !prevState)}
+        className="inline-flex w-full items-center justify-center bg-blue-700 px-4 py-2.5 text-center text-sm font-medium text-white transition-all duration-300 hover:bg-blue-800"
+      >
+        Collections{' '}
+        <svg
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          className={`ml-2 h-4 w-4 transition-all duration-300 ${
+            isDropdownOpen && 'rotate-180'
+          }`}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+
+      <div
+        className={`w-full rounded-b bg-primary-light ${
+          isDropdownOpen ? 'inline-block' : 'hidden'
+        }`}
+      >
+        <ul className="h-fit overflow-y-auto p-4 text-white">
+          {collections?.map((collection) => (
+            <li key={collection.id}>
+              {/* <img
+              className="mr-2 h-6 w-6 rounded-full"
+              src="/docs/images/people/profile-picture-1.jpg"
+              alt="Jese image"
+            /> */}
+              <button
+                type="button"
+                onClick={() =>
+                  manageCollection('add', collection.id!, {
+                    id,
+                    name,
+                    slug,
+                    background_image: backgroundImage,
+                    released,
+                    genres,
+                  })
+                }
+                className="flex w-full items-center justify-between"
+              >
+                {collection.name}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-3 w-3"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
+                  />
+                </svg>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <Link
+          href="/add-new-collection"
+          className="flex w-full items-center justify-center gap-2 bg-black/20 p-2 text-body-2 backdrop-blur-lg backdrop-filter transition-all duration-300 hover:backdrop-blur-sm md:text-body-1"
+        >
+          Create Collection
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-4 w-4 text-white"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
+            />
+          </svg>
+        </Link>
+      </div>
     </div>
   );
 }
