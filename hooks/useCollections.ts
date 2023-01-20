@@ -5,7 +5,9 @@ import {
   collection,
   deleteDoc,
   doc,
+  query,
   serverTimestamp,
+  where,
   writeBatch,
 } from 'firebase/firestore';
 import { useFirestoreCollectionData } from 'reactfire';
@@ -26,18 +28,24 @@ interface CollectionInfo {
 }
 
 export default function useCollections() {
-  const user = useUser();
+  const { user } = useUser();
 
-  const userCollectionsRef = collection(
-    db,
-    `users/${user?.data?.uid}/collections`
+  const userCollectionsRef = collection(db, `users/${user?.uid}/collections`);
+  const privateCollectionsRef = query(
+    userCollectionsRef,
+    where('isPublic', '==', false)
   );
   const addNewDataMutation = useFirestoreCollectionMutation(userCollectionsRef);
 
   const { status, data } = useFirestoreCollectionData(userCollectionsRef, {
     idField: 'id',
   });
+  const { status: privateCollectionsStatus, data: privateCollectionsData } =
+    useFirestoreCollectionData(privateCollectionsRef, {
+      idField: 'id',
+    });
   const collections = data as CollectionInfo[];
+  const privateCollections = privateCollectionsData as CollectionInfo[];
 
   const addNewCollection = (collectionInfo: CollectionInfo) => {
     const createdAt = serverTimestamp();
@@ -80,10 +88,12 @@ export default function useCollections() {
   };
 
   return {
-    addNewCollection,
-    manageCollection,
     status,
     collections,
+    privateCollectionsStatus,
+    privateCollections,
     removeCollection,
+    addNewCollection,
+    manageCollection,
   };
 }
