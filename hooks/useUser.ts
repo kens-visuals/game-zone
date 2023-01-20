@@ -48,11 +48,10 @@ const options = {
 export default function useUser() {
   const {
     data: user,
-    isError,
-    isFetching,
-    isLoading,
-    isSuccess,
+    isError: isUserError,
+    isLoading: isUserLoading,
+    isFetching: isUserFetching,
   } = useAuthUser(['user'], auth, options);
 
-  return { user, isError, isFetching, isLoading, isSuccess };
+  return { user, isUserError, isUserFetching, isUserLoading };
 }
