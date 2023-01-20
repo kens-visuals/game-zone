@@ -1,6 +1,15 @@
-import Link from 'next/link';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+
+// Hooks
+import useUsers from '../hooks/useUsers';
+import useFollow from '../hooks/useFollow';
+import useCollections from '../hooks/useCollections';
+
+// Helpers
 import RAWG from '../lib/rawg';
 
 // Interfaces
@@ -10,28 +19,49 @@ interface SearchGame {
   results: GameInterface[];
 }
 
+const fetchSearchedGame = async (
+  searchTerm: string
+): Promise<GameInterface[]> => {
+  const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
+  const { data } = await RAWG.get<SearchGame>(
+    `/games?key=${apiKey}&search=${searchTerm}&ordering=-added`
+  );
+
+  return data.results;
+};
+
 export default function SearchResults() {
+  const router = useRouter();
+  const { users } = useUsers();
+  const { manageFollow, followList } = useFollow();
+  const { collections } = useCollections();
+
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const fetchSearchedGame = async (): Promise<GameInterface[]> => {
-    const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
-    const { data } = await RAWG.get<SearchGame>(
-      `/games?key=${apiKey}&search=${searchTerm}`
-    );
+  const filteredUsers = users?.filter((user) =>
+    user.displayName.toLowerCase().includes(searchTerm)
+  );
 
-    return data.results;
-  };
+  const filteredCollections = collections?.filter((collection) =>
+    collection.name.toLowerCase().includes(searchTerm)
+  );
 
   const {
     data,
     isError: isSearchError,
     isLoading: isSearchLoading,
-  } = useQuery(['search', searchTerm], fetchSearchedGame, {
+    isFetching: isSearchFetching,
+  } = useQuery(['search', searchTerm], () => fetchSearchedGame(searchTerm), {
     enabled: !!searchTerm,
   });
 
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) =>
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+    setIsSearchOpen(true);
+  };
+
+  useEffect(() => setIsSearchOpen(false), [router.pathname]);
 
   return (
     <>
@@ -83,19 +113,99 @@ export default function SearchResults() {
       </form>
 
       {/* eslint-disable-next-line no-nested-ternary */}
-      {isSearchLoading ? (
+      {isSearchLoading || isSearchFetching ? (
         <div>Loading...</div>
       ) : isSearchError ? (
         <div>Error</div>
       ) : (
-        <ul className="px-4">
-          {data &&
-            data?.map((game) => (
-              <li key={game.slug}>
-                <Link href={`/game/${game.slug}`}>{game.name}</Link>
+        isSearchOpen &&
+        searchTerm && (
+          <div className="mx-auto w-[90%] rounded-xl bg-primary-dark p-6">
+            <ul>
+              <li className="mt-4">
+                {data?.length ? (
+                  <span>Games</span>
+                ) : (
+                  <span>No games found!</span>
+                )}
               </li>
-            ))}
-        </ul>
+              {data &&
+                data?.slice(0, 7).map((game) => (
+                  <li key={game.slug} className="mb-2 flex items-center gap-4">
+                    {game.background_image && (
+                      <Image
+                        src={game.background_image}
+                        height={50}
+                        width={50}
+                        alt={game.name}
+                        className="h-12 w-10 rounded-md object-cover"
+                      />
+                    )}
+                    <Link href={`/game/${game.slug}`}>{game.name}</Link>
+                  </li>
+                ))}
+            </ul>
+
+            <ul>
+              <li className="mt-4">
+                {filteredUsers.length ? (
+                  <span>Users</span>
+                ) : (
+                  <span>No users found!</span>
+                )}
+              </li>
+              {users &&
+                filteredUsers?.map((user) => (
+                  <li key={user.uid} className="mb-2 flex items-center gap-4">
+                    {user.photoURL && (
+                      <Image
+                        src={user.photoURL}
+                        height={50}
+                        width={50}
+                        alt={user.displayName}
+                        className="h-12 w-10 rounded-md object-cover"
+                      />
+                    )}
+                    <span>{user.displayName}</span>
+
+                    {followList('following')?.length ? (
+                      <button
+                        type="button"
+                        onClick={() => manageFollow('unfollow', user.uid, user)}
+                      >
+                        Unfollow
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => manageFollow('follow', user.uid, user)}
+                      >
+                        Follow
+                      </button>
+                    )}
+                  </li>
+                ))}
+            </ul>
+
+            <ul>
+              <li className="mt-4">
+                {filteredCollections.length ? (
+                  <span>Collections</span>
+                ) : (
+                  <span>No collections found!</span>
+                )}
+              </li>
+              {filteredCollections.map((collection) => (
+                <li
+                  key={collection.id}
+                  className="mb-2 flex items-center gap-4"
+                >
+                  <span>{collection.name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
       )}
     </>
   );
