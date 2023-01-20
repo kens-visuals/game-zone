@@ -8,8 +8,8 @@ interface Props {
 export default function GamesListContainer({ children }: Props) {
   const breakpointColumnsObj = {
     default: 4,
-    1100: 3,
-    500: 2,
+    1100: 2,
+    500: 1,
   };
 
   return (
