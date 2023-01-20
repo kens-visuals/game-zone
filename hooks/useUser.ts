@@ -32,6 +32,7 @@ const options = {
           displayName,
         });
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
       }
     }
@@ -45,7 +46,13 @@ const options = {
 };
 
 export default function useUser() {
-  const user = useAuthUser(['user'], auth, options);
+  const {
+    data: user,
+    isError,
+    isFetching,
+    isLoading,
+    isSuccess,
+  } = useAuthUser(['user'], auth, options);
 
-  return user;
+  return { user, isError, isFetching, isLoading, isSuccess };
 }
