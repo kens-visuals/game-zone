@@ -5,14 +5,14 @@ import useAuth from '../hooks/useAuth';
 import useUser from '../hooks/useUser';
 
 export default function Drawer() {
-  const { user, isLoading } = useUser();
+  const { user, isUserLoading } = useUser();
   const { handleUserSignIn, handleUserSignOut } = useAuth();
 
   return (
     <div className="fixed z-50 flex h-screen w-full flex-col items-end bg-primary-dark/75">
       {/* NOTE: ADD click outside func */}
       <div className="flex h-screen w-60 flex-col items-end gap-4 bg-primary-light/50 p-4 pt-20 backdrop-blur-lg  backdrop-filter">
-        {isLoading ? (
+        {isUserLoading ? (
           <div className="mr-2 inline-flex items-center rounded-lg border border-gray-200 bg-white py-2.5 px-5 text-sm font-medium text-gray-900">
             <svg
               aria-hidden="true"
