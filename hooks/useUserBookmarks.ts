@@ -17,19 +17,14 @@ export interface Bookmark {
 }
 
 export default function useUserBookmarks() {
-  const user = useUser();
+  const { user } = useUser();
 
   const firestore = useFirestore();
-  const gamesCollection = collection(
-    firestore,
-    `users/${user?.data?.uid}/bookmarks`
-  );
+  const gamesCollection = collection(firestore, `users/${user?.uid}/bookmarks`);
 
   const { status, data: bookmarks } = useFirestoreCollectionData(
     gamesCollection,
-    {
-      idField: 'id',
-    }
+    { idField: 'id' }
   );
   const bookmarksData = bookmarks as Bookmark[];
 

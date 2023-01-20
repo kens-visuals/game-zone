@@ -15,13 +15,10 @@ import { GameInterface } from '../lib/types/game';
 import { Bookmark } from './useUserBookmarks';
 
 export default function useAddBookmark() {
-  const user = useUser();
+  const { user } = useUser();
 
   const firestore = useFirestore();
-  const userBookmarkRef = collection(
-    firestore,
-    `users/${user?.data?.uid}/bookmarks`
-  );
+  const userBookmarkRef = collection(firestore, `users/${user?.uid}/bookmarks`);
   const addNewDataMutation = useFirestoreCollectionMutation(userBookmarkRef);
 
   const addNewData = (bookmarkObj: GameInterface) => {

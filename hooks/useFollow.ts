@@ -13,31 +13,31 @@ import useUser, { UserInterface } from './useUser';
 import useUsers from './useUsers';
 
 export default function useFollow() {
-  const currentUser = useUser();
-  const { data: users, status: usersStatus } = useUsers();
+  const { user: currentUser } = useUser();
+  const { users, status: usersStatus } = useUsers();
 
   const followList = (type: 'followers' | 'following') =>
     usersStatus === 'success'
       ? users
-          .filter((user) => user.uid === currentUser?.data?.uid)
+          .filter((user) => user.uid === currentUser?.uid)
           .map((user) =>
             type === 'following' ? user?.following : user?.followers
           )
           .at(0)
       : [];
 
-  async function manageFollow(
+  const manageFollow = async (
     type: 'follow' | 'unfollow',
     targetUserId: string,
     targetUserObj: UserInterface
-  ): Promise<void> {
+  ): Promise<void> => {
     const batch = writeBatch(db);
 
     const currentUserData = {
-      uid: currentUser?.data?.uid,
-      email: currentUser?.data?.email,
-      photoURL: currentUser?.data?.photoURL,
-      displayName: currentUser?.data?.displayName,
+      uid: currentUser?.uid,
+      email: currentUser?.email,
+      photoURL: currentUser?.photoURL,
+      displayName: currentUser?.displayName,
     };
 
     const targetUserData = {
@@ -49,7 +49,7 @@ export default function useFollow() {
 
     const usersCollection = collection(db, `users`);
 
-    const userDocRef = doc(usersCollection, currentUser?.data?.uid);
+    const userDocRef = doc(usersCollection, currentUser?.uid);
     const targetUserDocRef = doc(usersCollection, targetUserId);
 
     if (type === 'follow') {
@@ -73,7 +73,7 @@ export default function useFollow() {
     }
 
     await batch.commit();
-  }
+  };
 
   return { manageFollow, followList };
 }

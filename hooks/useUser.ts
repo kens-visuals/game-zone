@@ -2,12 +2,21 @@ import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useAuthUser } from '@react-query-firebase/auth';
 import { db, auth } from '../firebase/firebase.config';
 
+interface UserFollow {
+  uid: string;
+  email: string;
+  photoURL: string;
+  displayName: string;
+}
+
 export interface UserInterface {
   uid: string;
   email: string;
   photoURL: string;
   createdAt?: string;
   displayName: string;
+  following: UserFollow[];
+  followers: UserFollow[];
 }
 
 const options = {
