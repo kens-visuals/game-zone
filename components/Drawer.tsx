@@ -5,7 +5,7 @@ import useAuth from '../hooks/useAuth';
 import useUser from '../hooks/useUser';
 
 export default function Drawer() {
-  const { data: user, isLoading } = useUser();
+  const { user, isLoading } = useUser();
   const { handleUserSignIn, handleUserSignOut } = useAuth();
 
   return (
@@ -13,11 +13,7 @@ export default function Drawer() {
       {/* NOTE: ADD click outside func */}
       <div className="flex h-screen w-60 flex-col items-end gap-4 bg-primary-light/50 p-4 pt-20 backdrop-blur-lg  backdrop-filter">
         {isLoading ? (
-          <button
-            disabled
-            type="button"
-            className="mr-2 inline-flex items-center rounded-lg border border-gray-200 bg-white py-2.5 px-5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700"
-          >
+          <div className="mr-2 inline-flex items-center rounded-lg border border-gray-200 bg-white py-2.5 px-5 text-sm font-medium text-gray-900">
             <svg
               aria-hidden="true"
               role="status"
@@ -36,7 +32,7 @@ export default function Drawer() {
               />
             </svg>
             Loading...
-          </button>
+          </div>
         ) : (
           user && (
             <div className="flex flex-col items-end gap-2">
@@ -54,6 +50,7 @@ export default function Drawer() {
             </div>
           )
         )}
+
         {!user ? (
           <button
             type="button"
