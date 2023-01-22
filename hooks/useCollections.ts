@@ -5,6 +5,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  orderBy,
   query,
   serverTimestamp,
   where,
@@ -19,38 +20,50 @@ import useUser from './useUser';
 // Types
 import { GameInterface } from '../lib/types/game';
 
-interface CollectionInfo {
+export interface CollectionInfo {
   id?: string;
   name: string;
+  slug?: string;
   createdAt?: string;
   isPublic?: boolean;
   description?: string;
+  games?: GameInterface[] | undefined;
 }
 
 export default function useCollections() {
   const { user } = useUser();
 
   const userCollectionsRef = collection(db, `users/${user?.uid}/collections`);
-  const privateCollectionsRef = query(
+  const userCollectionsQuery = query(
     userCollectionsRef,
-    where('isPublic', '==', false)
+    orderBy('createdAt', 'desc')
   );
-  const addNewDataMutation = useFirestoreCollectionMutation(userCollectionsRef);
+  const privateCollectionsQuery = query(
+    userCollectionsRef,
+    where('isPublic', '==', false),
+    orderBy('createdAt', 'desc')
+  );
 
-  const { status, data } = useFirestoreCollectionData(userCollectionsRef, {
+  const { status, data } = useFirestoreCollectionData(userCollectionsQuery, {
     idField: 'id',
   });
   const { status: privateCollectionsStatus, data: privateCollectionsData } =
-    useFirestoreCollectionData(privateCollectionsRef, {
+    useFirestoreCollectionData(privateCollectionsQuery, {
       idField: 'id',
     });
   const collections = data as CollectionInfo[];
   const privateCollections = privateCollectionsData as CollectionInfo[];
 
+  const addNewDataMutation = useFirestoreCollectionMutation(userCollectionsRef);
+
   const addNewCollection = (collectionInfo: CollectionInfo) => {
     const createdAt = serverTimestamp();
+    const slug = collectionInfo.name
+      .toLowerCase()
+      .replace(/[^\w ]+/g, ' ')
+      .replace(/ +/g, '-');
 
-    addNewDataMutation.mutate({ ...collectionInfo, createdAt });
+    addNewDataMutation.mutate({ ...collectionInfo, createdAt, slug });
   };
 
   const removeCollection = async (docId: string) => {
