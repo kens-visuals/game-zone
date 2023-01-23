@@ -11,6 +11,9 @@ import LoadingMsg from './LoadingMsg';
 // Helpers
 import RAWG from '../lib/rawg';
 
+// Assets
+import placeholderImg from '../public/assets/placeholder.avif';
+
 // Hooks
 import useUser from '../hooks/useUser';
 import useUserBookmarks from '../hooks/useUserBookmarks';
@@ -26,14 +29,14 @@ interface Games {
 const fetchGames = async ({ pageParam = 1 }): Promise<GameInterface[]> => {
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
   const { data } = await RAWG.get<Games>(
-    `/games/lists/main?key=${apiKey}&ordering=-released&page_size=5&page=${pageParam}`
+    `/games/lists/main?key=${apiKey}&ordering=-released&page_size=10&page=${pageParam}`
   );
 
   return data?.results;
 };
 
 export default function TrendingGamesList() {
-  const user = useUser();
+  const { user } = useUser();
   const router = useRouter();
   const { bookmarksData } = useUserBookmarks();
   const { handleAddBookmark } = useBookmarkMutation();
@@ -54,7 +57,7 @@ export default function TrendingGamesList() {
   });
 
   const handleClick = (details: GameInterface) => {
-    if (!user?.data) return router.push('/bookmarks');
+    if (!user) return router.push('/bookmarks');
 
     return handleAddBookmark(bookmarksData, details);
   };
@@ -78,7 +81,7 @@ export default function TrendingGamesList() {
             <li key={details.slug} className="snap-start ">
               <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-lg">
                 <Image
-                  src={details.background_image}
+                  src={details.background_image || placeholderImg}
                   alt={details.name}
                   width={200}
                   height={200}
