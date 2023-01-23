@@ -13,7 +13,7 @@ export default function LoadingMsg({ size }: Props) {
           role="status"
           className="max-w-sm animate-pulse rounded border border-gray-200 shadow dark:border-gray-700"
         >
-          <div className=" flex h-48 items-center justify-center rounded bg-gray-300  dark:bg-gray-700">
+          <div className="flex h-48 items-center justify-center rounded bg-gray-300  dark:bg-gray-700">
             <svg
               className="h-12 w-12 text-gray-200 dark:text-gray-600"
               xmlns="http://www.w3.org/2000/svg"
