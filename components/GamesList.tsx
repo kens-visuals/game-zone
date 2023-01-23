@@ -18,14 +18,37 @@ interface Games {
   results: GameInterface[];
 }
 
+const links = [
+  {
+    name: 'Main',
+    path: '/games/lists/main?&discover=true&page_size=40',
+  },
+  {
+    name: 'Best of the Year',
+    path: '/games/lists/greatest?discover=true&page_size=40',
+    ordering: 'added',
+  },
+  {
+    name: 'Best of 2022',
+    path: '/games/lists/greatest?year=2022&discover=true&page_size=40',
+  },
+  {
+    name: 'All time top 250',
+    path: '/games/lists/popular?discover=true&page_size=40',
+  },
+];
+
 const fetchGames = async ({
+  pageIndex = 0,
   option = 'relevance',
   pageParam = 1,
 }): Promise<GameInterface[]> => {
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
   const { data } = await RAWG.get<Games>(
-    `/games/lists/main?&discover=true&ordering=-${option}&page_size=40&page=${pageParam}&key=${apiKey}`
+    `${links[pageIndex].path}&ordering=-${
+      links[pageIndex]?.ordering || option
+    }&page=${pageParam}&key=${apiKey}`
   );
 
   return data?.results;
@@ -33,7 +56,8 @@ const fetchGames = async ({
 
 export default function GamesList() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [option, setOption] = useState('name');
+  const [option, setOption] = useState('relevance');
+  const [pageIndex, setPageIndex] = useState(0);
 
   const options = [
     'relevance',
@@ -50,12 +74,13 @@ export default function GamesList() {
     data: games,
     isError,
     isLoading,
+    isFetching,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery(
-    ['getGames', option],
-    ({ pageParam = 1 }) => fetchGames({ option, pageParam }),
+    ['getGames', option, pageIndex],
+    ({ pageParam = 1 }) => fetchGames({ pageIndex, option, pageParam }),
     {
       getNextPageParam: (_, allPages) => {
         if (allPages.length < 10) return allPages.length + 1;
@@ -65,11 +90,11 @@ export default function GamesList() {
     }
   );
 
-  useEffect(() => setIsDropdownOpen(false), [isLoading]);
+  useEffect(() => setIsDropdownOpen(false), [isLoading, isFetching]);
 
   if (isLoading)
     return (
-      <div className="my-4 grid w-full grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="my-4 grid w-full grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-4">
         <LoadingMsg size={30} />
       </div>
     );
@@ -78,11 +103,29 @@ export default function GamesList() {
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 pb-14">
+      <div className="my-8 w-full overflow-y-hidden border-b border-primary-light/50 text-center text-body-1 font-medium text-white/50">
+        <ul className="-mb-[2px] flex w-full overflow-x-scroll">
+          {links.map((link, idx) => (
+            <li key={link.name}>
+              <button
+                type="button"
+                onClick={() => setPageIndex(idx)}
+                className={`w-fit border-t-2 border-transparent p-4 transition-all duration-300 hover:border-white hover:text-white ${
+                  idx === pageIndex && 'border-t-secondary text-secondary'
+                }`}
+              >
+                {link.name}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <div className="relative w-full">
         <button
           type="button"
           onClick={() => setIsDropdownOpen((prevState) => !prevState)}
-          className="inline-flex w-full items-center justify-between rounded-lg bg-secondary px-4 py-2.5 text-center text-sm font-medium capitalize text-white hover:bg-secondary/80 focus:outline-none focus:ring-4 focus:ring-secondary/20 md:w-52"
+          className="inline-flex w-full items-center justify-between rounded-lg bg-secondary p-4 text-center text-body-1 capitalize text-white hover:bg-secondary/80 focus:outline-none focus:ring-4 focus:ring-primary-light/20 md:w-52"
         >
           Order by: {option}{' '}
           <svg
@@ -105,7 +148,7 @@ export default function GamesList() {
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute top-12 z-10 w-full divide-y divide-gray-100 overflow-hidden rounded-lg bg-white shadow dark:bg-gray-700 md:w-52">
+          <div className="absolute top-16 z-10 w-full divide-y divide-gray-100 overflow-hidden rounded-lg bg-white shadow dark:bg-gray-700 md:w-52">
             <ul className="w-full divide-y divide-primary-dark text-sm text-gray-700 dark:text-gray-200">
               {options.map((opt) => (
                 <li key={opt} className="w-full">
@@ -128,7 +171,7 @@ export default function GamesList() {
       <GamesListContainer>
         {games?.pages?.map((page) =>
           page.map((details) => (
-            <div key={details.id}>
+            <div key={`${details.id}${Math.random()}`}>
               <GameCard details={details} />
             </div>
           ))
