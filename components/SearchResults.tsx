@@ -38,7 +38,7 @@ export default function SearchResults() {
 
   const { currentUser } = useUser();
   const { users } = useUsers();
-  const { manageFollow } = useFollow();
+  const { manageFollow, followList } = useFollow();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -168,8 +168,10 @@ export default function SearchResults() {
                     )}
                     <Link href={`/user/${user.uid}`}>{user.displayName}</Link>
 
-                    {user.uid !== currentUser?.uid && (
-                      <>
+                    {user.uid !== currentUser?.uid &&
+                      (followList('following')
+                        ?.map((usr) => usr.uid)
+                        .includes(user.uid) ? (
                         <button
                           type="button"
                           onClick={() =>
@@ -178,15 +180,14 @@ export default function SearchResults() {
                         >
                           Unfollow
                         </button>
-
+                      ) : (
                         <button
                           type="button"
                           onClick={() => manageFollow('follow', user.uid, user)}
                         >
                           Follow
                         </button>
-                      </>
-                    )}
+                      ))}
                   </li>
                 ))}
             </ul>
