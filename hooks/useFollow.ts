@@ -13,7 +13,7 @@ import useUser, { UserInterface } from './useUser';
 import useUsers from './useUsers';
 
 export default function useFollow() {
-  const { user: currentUser } = useUser();
+  const { currentUser } = useUser();
   const { users, status: usersStatus } = useUsers();
 
   const followList = (type: 'followers' | 'following') =>

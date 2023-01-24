@@ -36,7 +36,7 @@ const fetchGames = async ({ pageParam = 1 }): Promise<GameInterface[]> => {
 };
 
 export default function TrendingGamesList() {
-  const { user } = useUser();
+  const { currentUser } = useUser();
   const router = useRouter();
   const { bookmarksData } = useUserBookmarks();
   const { handleAddBookmark } = useBookmarkMutation();
@@ -57,7 +57,7 @@ export default function TrendingGamesList() {
   });
 
   const handleClick = (details: GameInterface) => {
-    if (!user) return router.push('/bookmarks');
+    if (!currentUser) return router.push('/bookmarks');
 
     return handleAddBookmark(bookmarksData, details);
   };

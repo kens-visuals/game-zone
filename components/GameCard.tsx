@@ -26,8 +26,8 @@ export default function GameCard({
   isFromBookmark = false,
   isTrending = false,
 }: Props) {
-  const { user } = useUser();
   const router = useRouter();
+  const { currentUser } = useUser();
   const { bookmarksData } = useUserBookmarks();
   const { handleAddBookmark, removeData } = useBookmarkMutation();
   const { collections, manageCollection } = useCollections();
@@ -43,7 +43,7 @@ export default function GameCard({
   } = details;
 
   const handleClick = () => {
-    if (!user) return router.push('/bookmarks');
+    if (!currentUser) return router.push('/bookmarks');
 
     return isFromBookmark
       ? removeData(id!)

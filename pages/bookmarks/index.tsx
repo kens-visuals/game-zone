@@ -12,9 +12,9 @@ import useAuth from '../../hooks/useAuth';
 import useUserBookmarks from '../../hooks/useUserBookmarks';
 
 export default function Bookmarks() {
-  const user = useUser();
-  const { status, bookmarksData } = useUserBookmarks();
+  const { currentUser } = useUser();
   const { handleUserSignIn } = useAuth();
+  const { status, bookmarksData } = useUserBookmarks();
 
   //   const [query, setQuery] = useState('');
   //   const [results, setResults] = useState<any[]>([]);
@@ -39,7 +39,7 @@ export default function Bookmarks() {
 
   return (
     <div className="p-4">
-      {!user.data ? (
+      {!currentUser ? (
         <div className="flex flex-col items-center justify-center gap-4">
           <h1>No bookmarks yet!</h1>
 

@@ -31,9 +31,12 @@ export interface CollectionInfo {
 }
 
 export default function useCollections() {
-  const { user } = useUser();
+  const { currentUser } = useUser();
 
-  const userCollectionsRef = collection(db, `users/${user?.uid}/collections`);
+  const userCollectionsRef = collection(
+    db,
+    `users/${currentUser?.uid}/collections`
+  );
   const userCollectionsQuery = query(
     userCollectionsRef,
     orderBy('createdAt', 'desc')
