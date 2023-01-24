@@ -3,6 +3,9 @@ import Image from 'next/image';
 // Hooks
 import { type CollectionInfo } from '../hooks/useCollections';
 
+// Assets
+import placeholderImg from '../public/assets/placeholder.avif';
+
 interface Props {
   collection: CollectionInfo;
   removeCollection: (id: string) => void;
@@ -16,7 +19,7 @@ export default function CollectionItem({
     <>
       <div className="flex w-full items-center justify-between ">
         <span className="inline-block text-body-1">{collection.name}</span>
-        <span className="inline-block text-body-1">{collection.slug}</span>
+        <span className="inline-block text-body-1">{collection.id}</span>
 
         <button
           type="button"
@@ -38,14 +41,11 @@ export default function CollectionItem({
         </button>
       </div>
 
-      <ul className="mt-2 flex items-center ">
+      <ul className="mt-2 grid grid-cols-4 ">
         {collection?.games?.map((game) => (
-          <li
-            key={game.id}
-            className="mr-0 -ml-8 h-full w-16 first-of-type:ml-0"
-          >
+          <li key={game.id} className="h-full w-16">
             <Image
-              src={game?.background_image}
+              src={game?.background_image || placeholderImg}
               height={100}
               width={100}
               alt={game.name}

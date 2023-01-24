@@ -36,9 +36,11 @@ const fetchScreenshots = async (slug: string): Promise<Screenshots[]> => {
 };
 
 export default function Game() {
-  const [isShowMore, setIsShowMore] = useState(false);
-  const { addNewData } = useBookmarkMutation();
   const router = useRouter();
+  const { addNewData } = useBookmarkMutation();
+  
+  const [isShowMore, setIsShowMore] = useState(false);
+  
   const gameSlug =
     typeof router.query?.slug === 'string' ? router.query.slug : '';
 
