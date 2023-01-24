@@ -5,12 +5,15 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 // Hooks
+import useUser from '../hooks/useUser';
 import useUsers from '../hooks/useUsers';
 import useFollow from '../hooks/useFollow';
-import useCollections from '../hooks/useCollections';
 
 // Helpers
 import RAWG from '../lib/rawg';
+
+// Assets
+import placeholderImg from '../public/assets/placeholder.avif';
 
 // Interfaces
 import { GameInterface } from '../lib/types/game';
@@ -32,19 +35,16 @@ const fetchSearchedGame = async (
 
 export default function SearchResults() {
   const router = useRouter();
+
+  const { currentUser } = useUser();
   const { users } = useUsers();
-  const { manageFollow, followList } = useFollow();
-  const { collections } = useCollections();
+  const { manageFollow } = useFollow();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const filteredUsers = users?.filter((user) =>
     user.displayName.toLowerCase().includes(searchTerm)
-  );
-
-  const filteredCollections = collections?.filter((collection) =>
-    collection.name.toLowerCase().includes(searchTerm)
   );
 
   const {
@@ -134,7 +134,7 @@ export default function SearchResults() {
                   <li key={game.slug} className="mb-2 flex items-center gap-4">
                     {game.background_image && (
                       <Image
-                        src={game.background_image}
+                        src={game.background_image || placeholderImg}
                         height={50}
                         width={50}
                         alt={game.name}
@@ -166,43 +166,29 @@ export default function SearchResults() {
                         className="h-12 w-10 rounded-md object-cover"
                       />
                     )}
-                    <span>{user.displayName}</span>
+                    <Link href={`/user/${user.uid}`}>{user.displayName}</Link>
 
-                    {followList('following')?.length ? (
-                      <button
-                        type="button"
-                        onClick={() => manageFollow('unfollow', user.uid, user)}
-                      >
-                        Unfollow
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => manageFollow('follow', user.uid, user)}
-                      >
-                        Follow
-                      </button>
+                    {user.uid !== currentUser?.uid && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            manageFollow('unfollow', user.uid, user)
+                          }
+                        >
+                          Unfollow
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => manageFollow('follow', user.uid, user)}
+                        >
+                          Follow
+                        </button>
+                      </>
                     )}
                   </li>
                 ))}
-            </ul>
-
-            <ul>
-              <li className="mt-4">
-                {filteredCollections.length ? (
-                  <span>Collections</span>
-                ) : (
-                  <span>No collections found!</span>
-                )}
-              </li>
-              {filteredCollections.map((collection) => (
-                <li
-                  key={collection.id}
-                  className="mb-2 flex items-center gap-4"
-                >
-                  <span>{collection.name}</span>
-                </li>
-              ))}
             </ul>
           </div>
         )
