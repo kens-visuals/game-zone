@@ -16,10 +16,13 @@ export default function useFollow() {
   const { currentUser } = useUser();
   const { users, status: usersStatus } = useUsers();
 
-  const followList = (type: 'followers' | 'following') =>
+  const followList = (
+    type: 'followers' | 'following',
+    currentUserId: string | undefined = currentUser?.uid
+  ) =>
     usersStatus === 'success'
       ? users
-          .filter((user) => user.uid === currentUser?.uid)
+          .filter((user) => user.uid === currentUserId)
           .map((user) =>
             type === 'following' ? user?.following : user?.followers
           )
