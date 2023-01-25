@@ -121,6 +121,7 @@ export default function AddNewCollection() {
             {collections?.map((collection) => (
               <li key={collection.id} className="rounded-lg bg-primary p-4">
                 <CollectionItem
+                  isOwner
                   collection={collection}
                   removeCollection={removeCollection}
                 />

@@ -5,6 +5,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  onSnapshot,
   orderBy,
   query,
   serverTimestamp,
@@ -56,6 +57,16 @@ export default function useCollections() {
     });
   const collections = data as CollectionInfo[];
   const privateCollections = privateCollectionsData as CollectionInfo[];
+
+  const getUserPublicCollections = (
+    userId: string,
+    callback: (d: any) => void
+  ) => {
+    const userCollRef = collection(db, `users/${userId}/collections`);
+    const userCollQuery = query(userCollRef, orderBy('createdAt', 'desc'));
+
+    return onSnapshot(userCollQuery, callback);
+  };
 
   const addNewDataMutation = useFirestoreCollectionMutation(userCollectionsRef);
 
@@ -111,5 +122,6 @@ export default function useCollections() {
     removeCollection,
     addNewCollection,
     manageCollection,
+    getUserPublicCollections,
   };
 }
