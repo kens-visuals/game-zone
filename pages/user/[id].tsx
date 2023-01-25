@@ -21,10 +21,10 @@ export default function Collection({ data: user }: Props) {
   const { currentUser } = useUser();
   const { followList } = useFollow();
 
-  const categories = {
-    Followers: [...(followList('followers', user?.uid) || [])],
-    Following: [...(followList('following', user?.uid) || [])],
-  };
+  const followersArr = [...(followList('followers', user?.uid) || [])];
+  const followingArr = [...(followList('following', user?.uid) || [])];
+
+  const followersList = [followersArr, followingArr];
 
   return (
     <div className="p-4">
@@ -50,12 +50,14 @@ export default function Collection({ data: user }: Props) {
 
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-primary-dark p-1">
-          {['Followers', 'Following'].map((category) => (
+          {[
+            { name: 'Followers', count: followersArr.length },
+            { name: 'Following', count: followingArr.length },
+          ].map((follower) => (
             <Tab
-              key={category}
+              key={follower.name}
               className={({ selected }) =>
-                `w-full rounded-lg py-2.5 font-outfit text-sm leading-5 text-white
-                  transition-all duration-300 focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-60
+                `flex w-full items-center justify-center gap-2 rounded-lg py-2.5 font-outfit text-sm leading-5 text-white transition-all duration-300 focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-60
                   ${
                     selected
                       ? 'bg-primary shadow'
@@ -63,24 +65,24 @@ export default function Collection({ data: user }: Props) {
                   }`
               }
             >
-              {category}
+              <span>{follower.name}:</span>
+              <span>{follower.count}</span>
             </Tab>
           ))}
         </Tab.List>
         <Tab.Panels className="mt-2">
-          {Object.values(categories).map((users, idx) => (
+          {followersList.map((users, idx) => (
             <Tab.Panel
               // eslint-disable-next-line react/no-array-index-key
               key={idx}
-              className={`rounded-lg bg-primary-dark p-3
-                  focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-60`}
+              className="rounded-lg bg-primary-dark p-2 focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-60"
             >
               {users.length ? (
                 <ul>
                   {users.map((usr) => (
                     <li
                       key={usr.uid}
-                      className="flex items-center gap-2 rounded-md p-3 text-white hover:bg-primary-dark"
+                      className="flex items-center gap-2 rounded-md p-2 text-white hover:bg-primary-dark"
                     >
                       {usr.photoURL && (
                         <Image
