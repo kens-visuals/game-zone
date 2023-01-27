@@ -58,7 +58,7 @@ export default function useCollections() {
   const collections = data as CollectionInfo[];
   const privateCollections = privateCollectionsData as CollectionInfo[];
 
-  const getUserPublicCollections = (
+  const getCurrentUserCollections = (
     userId: string,
     callback: (d: any) => void
   ) => {
@@ -122,6 +122,6 @@ export default function useCollections() {
     removeCollection,
     addNewCollection,
     manageCollection,
-    getUserPublicCollections,
+    getCurrentUserCollections,
   };
 }

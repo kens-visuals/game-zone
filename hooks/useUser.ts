@@ -15,8 +15,8 @@ export interface UserInterface {
   photoURL: string;
   createdAt?: string;
   displayName: string;
-  following: UserFollow[];
-  followers: UserFollow[];
+  following?: UserFollow[];
+  followers?: UserFollow[];
 }
 
 const options = {
