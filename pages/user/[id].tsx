@@ -8,12 +8,14 @@ import { db } from '../../firebase/firebase.config';
 
 // Compononents
 import Divider from '../../components/Divider';
+import GameCard from '../../components/GameCard';
 import FollowButton from '../../components/FollowButton';
 import CollectionItem from '../../components/CollectionItem';
 
 // Hooks
-import useUser, { UserInterface } from '../../hooks/useUser';
 import useFollow from '../../hooks/useFollow';
+import useUserBookmarks from '../../hooks/useUserBookmarks';
+import useUser, { UserInterface } from '../../hooks/useUser';
 import useCollections, { CollectionInfo } from '../../hooks/useCollections';
 
 interface Props {
@@ -23,30 +25,53 @@ interface Props {
 export default function User({ data: user }: Props) {
   const { currentUser } = useUser();
   const { followList } = useFollow();
-  const { collections, status, removeCollection, getUserPublicCollections } =
-    useCollections();
+  const {
+    status: bookmarkStatus,
+    bookmarksData,
+    getCurrentUserBookmarks,
+  } = useUserBookmarks();
+  const {
+    status: collectionStatus,
+    collections,
+    removeCollection,
+    getCurrentUserCollections,
+  } = useCollections();
 
   const [isOwner, setIsOwner] = useState(true);
   const [currentCollection, setCurrentCollection] = useState(collections);
+  const [currentBookmark, setCurrentBookmark] = useState(bookmarksData);
 
   useEffect(() => {
     const callback = (d: any) => {
+      // If it's not the current user then only get the public collections
+      // Otherwise the all collections
       if (currentUser?.uid !== user?.uid) {
         setCurrentCollection(
           d.docs
-            .map((doc) => ({ ...doc.data(), id: doc.id }))
+            .map((doc: any) => ({ ...doc.data(), id: doc.id }))
             .filter((coll: CollectionInfo) => coll.isPublic)
         );
         setIsOwner(false);
       } else {
         setCurrentCollection(
-          d.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+          d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
         );
         setIsOwner(true);
       }
     };
 
-    const unsub = getUserPublicCollections(user?.uid, callback);
+    const unsub = getCurrentUserCollections(user?.uid, callback);
+
+    return () => unsub();
+  }, [user?.uid]);
+
+  useEffect(() => {
+    const callback = (d: any) =>
+      setCurrentBookmark(
+        d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
+      );
+
+    const unsub = getCurrentUserBookmarks(user?.uid, callback);
 
     return () => unsub();
   }, [user?.uid]);
@@ -139,35 +164,48 @@ export default function User({ data: user }: Props) {
                   ))}
                 </ul>
               ) : (
-                <span>You don&apos;t follow anyone</span>
+                <span className="inline-block w-full p-4 text-center">
+                  You don&apos;t follow anyone
+                </span>
               )}
             </Tab.Panel>
           ))}
         </Tab.Panels>
       </Tab.Group>
 
-      {/* <div>
-        <h2>Recent Bookmarks</h2>
+      {bookmarkStatus === 'loading' ? (
+        <span>Loading bookmars...</span>
+      ) : (
+        <div className="my-8">
+          <h2 className="my-4 text-h3">Recent Bookmarks</h2>
 
-        <div className="grid w-full grid-flow-col content-start items-start gap-4 overflow-x-scroll">
-          {!bookmarksData.length ? (
-            <Link href="/">Go to games</Link>
-          ) : (
-            bookmarksData?.slice(0,3).map((bookmark) => (
-              <div className="w-full" key={bookmark.createdAt}>
-                <GameCard details={bookmark} isFromBookmark />
+          <div className="grid w-full grid-flow-col content-start items-start gap-4 overflow-x-scroll">
+            {!currentBookmark.length ? (
+              <div className="flex flex-col items-center justify-center gap-4 rounded-md bg-primary-dark p-4 py-6">
+                <span className="inline-block w-full text-center">
+                  You don&apos;t have any bookmarked games
+                </span>
+                <Link href="/" className="rounded-md bg-secondary py-2 px-4 ">
+                  Go to games
+                </Link>
               </div>
-            ))
-          )}
+            ) : (
+              currentBookmark?.slice(0, 3).map((bookmark) => (
+                <div className="w-full" key={bookmark.createdAt}>
+                  <GameCard details={bookmark} isFromUser />
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div> */}
+      )}
 
       <div>
-        {status === 'loading' ? (
+        {collectionStatus === 'loading' ? (
           <span>Loading collections...</span>
         ) : (
           <>
-            <h2>Collections</h2>
+            <h2 className="my-4 text-h3">Collections</h2>
             {collections?.length ? (
               <ul className="mt-4 flex flex-col gap-4 rounded-lg bg-primary-dark p-4 text-primary-light">
                 {currentCollection?.map((col) => (
