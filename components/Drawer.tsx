@@ -1,17 +1,27 @@
+import Link from 'next/link';
 import Image from 'next/image';
 
 // Hooks
 import useAuth from '../hooks/useAuth';
 import useUser from '../hooks/useUser';
+import useFollow from '../hooks/useFollow';
 
 export default function Drawer() {
-  const { user, isUserLoading } = useUser();
+  const { currentUser, isUserLoading } = useUser();
   const { handleUserSignIn, handleUserSignOut } = useAuth();
+  const { followList } = useFollow();
+
+  const followersCount =
+    typeof followList('followers') !== undefined &&
+    followList('followers')?.length;
+  const followingCount =
+    typeof followList('following') !== undefined &&
+    followList('following')?.length;
 
   return (
     <div className="fixed z-50 flex h-screen w-full flex-col items-end bg-primary-dark/75">
       {/* NOTE: ADD click outside func */}
-      <div className="flex h-screen w-60 flex-col items-end gap-4 bg-primary-light/50 p-4 pt-20 backdrop-blur-lg  backdrop-filter">
+      <div className="flex h-screen w-60 flex-col items-end gap-4 bg-primary-light/50 p-4 pt-24 backdrop-blur-lg backdrop-filter">
         {isUserLoading ? (
           <div className="mr-2 inline-flex items-center rounded-lg border border-gray-200 bg-white py-2.5 px-5 text-sm font-medium text-gray-900">
             <svg
@@ -34,26 +44,56 @@ export default function Drawer() {
             Loading...
           </div>
         ) : (
-          user && (
-            <div className="flex flex-col items-end gap-2">
-              <Image
-                alt="user"
-                width={50}
-                height={50}
-                src={user?.photoURL}
-                className="rounded-full border border-white "
-              />
-              <div className="text-right font-outfit text-white">
-                <span className="inline-block">{user?.displayName}</span>
-                <span className="inline-block">{user?.email}</span>
+          currentUser && (
+            <div>
+              <div className="mb-2 flex flex-col items-end gap-4">
+                <Image
+                  width={100}
+                  height={100}
+                  src={currentUser?.photoURL}
+                  alt={currentUser?.displayName}
+                  className="h-14 w-14 rounded-full"
+                />
+
+                <div className="flex flex-col items-end gap-2">
+                  <Link
+                    href={`/user/${currentUser?.uid}`}
+                    className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    {currentUser.displayName}
+                  </Link>
+
+                  <span className="text-body-2 text-white">
+                    {currentUser.email}
+                  </span>
+                </div>
               </div>
+
+              <ul className="flex items-center justify-end gap-2 text-sm font-light">
+                <li className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {followersCount || '0'}
+                  </span>
+                  <span className="text-white/50">
+                    {followersCount === 1 ? 'Follower' : 'Follower'}
+                  </span>
+                </li>
+
+                <li className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {followingCount || '0'}
+                  </span>
+                  <span className="text-white/50"> Following</span>
+                </li>
+              </ul>
             </div>
           )
         )}
 
-        {!user ? (
+        {!currentUser && !isUserLoading ? (
           <button
             type="button"
+            disabled={isUserLoading}
             onClick={handleUserSignIn}
             className="mr-2 mb-2 inline-flex items-center rounded-lg bg-[#4285F4] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#4285F4]/90 focus:outline-none focus:ring-4 focus:ring-[#4285F4]/50"
           >
@@ -78,7 +118,7 @@ export default function Drawer() {
           <button
             type="button"
             onClick={handleUserSignOut}
-            className="flex gap-2 rounded-md bg-primary-dark p-2 text-white"
+            className="mt-auto flex w-full items-center justify-center gap-2 rounded-md bg-primary-dark p-2 text-white"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
