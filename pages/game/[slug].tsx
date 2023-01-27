@@ -6,15 +6,18 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 // Components
+import ErrorMsg from '../../components/ErrorMsg';
+import GameDetail from '../../components/GameDetail';
+import LoadingMsg from '../../components/LoadingMsg';
 import GameSeriesList from '../../components/GameSeriesList';
+import CollectionsDropdown from '../../components/CollectionsDropdown';
 
 // Helpers
 import RAWG from '../../lib/rawg';
+import { formatDate } from '../../lib/helpers';
 
 // Hooks
 import useBookmarkMutation from '../../hooks/useBookmarkMutation';
-import LoadingMsg from '../../components/LoadingMsg';
-import ErrorMsg from '../../components/ErrorMsg';
 
 // Interfaces
 import { GameInterface, Screenshots } from '../../lib/types/game';
@@ -38,9 +41,10 @@ const fetchScreenshots = async (slug: string): Promise<Screenshots[]> => {
 export default function Game() {
   const router = useRouter();
   const { addNewData } = useBookmarkMutation();
-  
+
   const [isShowMore, setIsShowMore] = useState(false);
-  
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const gameSlug =
     typeof router.query?.slug === 'string' ? router.query.slug : '';
 
@@ -58,16 +62,6 @@ export default function Game() {
     isLoading: isScreenLoading,
     isFetching: isScreenFetching,
   } = useQuery(['getScreens', gameSlug], () => fetchScreenshots(gameSlug));
-
-  const formatDate = (date: string) => {
-    const newDate = new Date(date);
-
-    return newDate.toLocaleDateString('en-us', {
-      month: 'short',
-      year: 'numeric',
-      day: 'numeric',
-    });
-  };
 
   const emptyArray = Array.from({ length: 6 }, () => Math.random());
 
@@ -131,7 +125,36 @@ export default function Game() {
             </svg>
           </button>
 
-          <ul className="grid grid-flow-dense grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setIsDropdownOpen((prevState) => !prevState)}
+            className={`inline-flex w-full items-center justify-center gap-2 rounded-md border border-transparent bg-secondary p-4 text-center transition-colors duration-300 hover:border-secondary/70 hover:bg-secondary/70 ${
+              isDropdownOpen && 'bg-secondary/80'
+            } `}
+          >
+            Collections
+            <svg
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-4 w-4 transition-all duration-300 ${
+                isDropdownOpen && 'rotate-180'
+              }`}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+
+          <CollectionsDropdown game={game} isDropdownOpen={isDropdownOpen} />
+
+          <ul className="mt-4 grid grid-flow-dense grid-cols-2 gap-2">
             {isScreenLoading && isScreenFetching
               ? emptyArray.map((el) => (
                   <li
@@ -189,54 +212,40 @@ export default function Game() {
                   <span className="text-primary-light">Genres:</span>
                   <ul className="flex gap-1">
                     {game.genres.map((genre) => (
-                      <span key={genre.name} className="text-body-1">
+                      <li key={genre.name} className="text-body-1">
                         {genre.name}
-                      </span>
+                      </li>
                     ))}
                   </ul>
                 </div>
               )}
 
               {game?.released && (
-                <div>
-                  <span className="mr-2 inline-block text-primary-light">
-                    Released:{' '}
-                  </span>
-                  <span className="text-body-1">
-                    {formatDate(game?.released)}
-                  </span>
-                </div>
+                <GameDetail name="Released" info={formatDate(game?.released)} />
               )}
 
               {game?.metacritic && (
-                <div>
-                  <span className="mr-2 inline-block text-primary-light">
-                    Metacritic:{' '}
-                  </span>
-                  <span className="text-body-1">{game.metacritic}</span>
-                </div>
+                <GameDetail name="Metacritic" info={game.metacritic} />
               )}
 
               {game?.rating && (
-                <div>
-                  <span className="mr-2 inline-block text-primary-light">
-                    Rating:{' '}
-                  </span>
-                  <span className="text-body-1">
-                    {game?.rating} / {game?.rating_top}
-                  </span>
-                </div>
+                <GameDetail
+                  name="Rating"
+                  info={`${game?.rating} / ${game?.rating_top}`}
+                />
               )}
 
               <div className="flex gap-2">
                 <h3 className="text-primary-light">Links:</h3>
                 <div className="flex items-center gap-2 text-body-1">
-                  <a href={game?.redditurl} target="_blank" rel="noreferrer">
-                    Reddit
-                  </a>
+                  {game?.redditurl && (
+                    <a href={game.redditurl} target="_blank" rel="noreferrer">
+                      Reddit
+                    </a>
+                  )}
 
                   {game?.website && (
-                    <div className="flex items-center gap-1 border-b">
+                    <div className="flex items-center gap-1">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -251,7 +260,12 @@ export default function Game() {
                           d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
                         />
                       </svg>
-                      <a href={game?.website} target="_blank" rel="noreferrer">
+                      <a
+                        href={game?.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline"
+                      >
                         Website
                       </a>
                     </div>
