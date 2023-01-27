@@ -8,19 +8,22 @@ import {
 } from 'react-query';
 
 // Components
-import GamesListContainer from '../../components/GamesListContainer';
+import Banner from '../../components/Banner';
 import GameCard from '../../components/GameCard';
+import LoadingMsg from '../../components/LoadingMsg';
+import GamesListContainer from '../../components/GamesListContainer';
 
 // Helpers
 import RAWG from '../../lib/rawg';
 
 // Types
-import { GameInterface } from '../../lib/types/game';
+import { GameInterface, GenresTypes } from '../../lib/types/game';
+import ErrorMsg from '../../components/ErrorMsg';
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
-const fetchGenre = async (slug: string): Promise<any> => {
-  const { data } = await RAWG.get(`genres/${slug}?key=${API_KEY}`);
+const fetchGenre = async (slug: string): Promise<GenresTypes> => {
+  const { data } = await RAWG.get<GenresTypes>(`genres/${slug}?key=${API_KEY}`);
 
   return data;
 };
@@ -47,17 +50,16 @@ export default function Genre() {
 
   const {
     data: genre,
-    // isSuccess,
-    // isLoading,
-    // isError,
+    isError: isGenreError,
+    isLoading: isGenreLoading,
   } = useQuery(['getGenre', genreSlug], () => fetchGenre(genreSlug), {
     enabled: !!genreSlug,
   });
 
   const {
     data: games,
-    // isError,
-    // isLoading,
+    isError: isGamesError,
+    isLoading: isGamesLoading,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -73,37 +75,39 @@ export default function Genre() {
     }
   );
 
+  if (isGenreLoading || isGamesLoading) return <LoadingMsg size={30} />;
+
+  if (isGenreError || isGamesError) return <ErrorMsg />;
+
   return (
     <div>
-      <h1>Genre: {genre.name}</h1>
+      {genre && <Banner data={genre} />}
 
-      {/* NOTE: Add genre description here */}
+      <div className="p-4">
+        <GamesListContainer>
+          {games?.pages?.map((page) =>
+            page.map((details) => (
+              <div key={details.slug}>
+                <GameCard details={details} />
+              </div>
+            ))
+          )}
+        </GamesListContainer>
 
-      <GamesListContainer>
-        {games?.pages?.map((page) =>
-          page.map((details) => (
-            <div key={details.slug}>
-              <GameCard details={details} />
-            </div>
-          ))
-        )}
-      </GamesListContainer>
-
-      {/* <GamesList /> */}
-
-      <button
-        type="button"
-        disabled={!hasNextPage || isFetchingNextPage}
-        onClick={() => hasNextPage && fetchNextPage()}
-        className="rounded-md bg-primary-light px-6 py-2 text-white"
-      >
-        {/* eslint-disable-next-line no-nested-ternary */}
-        {isFetchingNextPage
-          ? 'Loading more...'
-          : hasNextPage
-          ? 'Load More'
-          : 'Nothing more to load'}
-      </button>
+        <button
+          type="button"
+          disabled={!hasNextPage || isFetchingNextPage}
+          onClick={() => hasNextPage && fetchNextPage()}
+          className="rounded-md bg-primary-light px-6 py-2 text-white"
+        >
+          {/* eslint-disable-next-line no-nested-ternary */}
+          {isFetchingNextPage
+            ? 'Loading more...'
+            : hasNextPage
+            ? 'Load More'
+            : 'Nothing more to load'}
+        </button>
+      </div>
     </div>
   );
 }

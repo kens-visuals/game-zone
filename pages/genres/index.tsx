@@ -14,10 +14,10 @@ import RAWG from '../../lib/rawg';
 import { GenresTypes } from '../../lib/types/game';
 
 interface GenresProps {
-  results: GenresTypes;
+  results: GenresTypes[];
 }
 
-const fetchGenres = async (): Promise<GenresTypes> => {
+const fetchGenres = async (): Promise<GenresTypes[]> => {
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
   const { data } = await RAWG.get<GenresProps>(`/genres?key=${apiKey}`);
 

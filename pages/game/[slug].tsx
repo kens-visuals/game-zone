@@ -6,6 +6,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 // Components
+import Banner from '../../components/Banner';
 import ErrorMsg from '../../components/ErrorMsg';
 import GameDetail from '../../components/GameDetail';
 import LoadingMsg from '../../components/LoadingMsg';
@@ -42,7 +43,6 @@ export default function Game() {
   const router = useRouter();
   const { addNewData } = useBookmarkMutation();
 
-  const [isShowMore, setIsShowMore] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const gameSlug =
@@ -72,35 +72,7 @@ export default function Game() {
   return (
     isSuccess && (
       <>
-        <div
-          style={{ backgroundImage: `url(${game?.background_image})` }}
-          className="bg-auto bg-center bg-no-repeat "
-        >
-          <div className="h-fit w-full rounded-br-lg bg-gradient-to-r from-primary-dark/90 to-primary/10 p-4 backdrop-blur-md backdrop-filter">
-            <h1 className="w-full max-w-5xl text-h1 font-medium md:text-7xl">
-              {game?.name}
-            </h1>
-
-            <div className="mt-4">
-              <h3 className="text-h2-light mix-blend-overlay">About</h3>
-
-              <div
-                className={`mt-1 h-32 max-w-lg space-y-4 overflow-y-hidden text-body-1 text-white/70 ${
-                  isShowMore && 'h-auto overflow-y-visible'
-                }`}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: game?.description! }}
-              />
-              <button
-                type="button"
-                onClick={() => setIsShowMore((prevState) => !prevState)}
-                className="mt-2 text-body-1"
-              >
-                {isShowMore ? 'Show Less' : 'Read More'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <Banner data={game} />
 
         <div className="p-4">
           <button
