@@ -1,9 +1,10 @@
 export type GenresTypes = {
   name: string;
   slug: string;
+  description: string;
   games_count: number;
   image_background: string;
-}[];
+};
 
 export type Ratings = {
   title: string;
@@ -27,7 +28,7 @@ export interface GameInterface {
   released: string;
   background_image: string;
   description?: string;
-  genres?: GenresTypes;
+  genres?: GenresTypes[];
   website?: string;
   redditurl?: string;
   ratings?: Ratings;
