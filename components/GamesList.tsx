@@ -55,9 +55,9 @@ const fetchGames = async ({
 };
 
 export default function GamesList() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [option, setOption] = useState('relevance');
   const [pageIndex, setPageIndex] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const options = [
     'relevance',

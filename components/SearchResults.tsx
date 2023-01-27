@@ -1,13 +1,15 @@
-import { ChangeEvent, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
+import { ChangeEvent, useEffect, useState } from 'react';
+
+// Components
+import FollowButton from './FollowButton';
 
 // Hooks
 import useUser from '../hooks/useUser';
 import useUsers from '../hooks/useUsers';
-import useFollow from '../hooks/useFollow';
 
 // Helpers
 import RAWG from '../lib/rawg';
@@ -38,7 +40,6 @@ export default function SearchResults() {
 
   const { currentUser } = useUser();
   const { users } = useUsers();
-  const { manageFollow, followList } = useFollow();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -168,26 +169,9 @@ export default function SearchResults() {
                     )}
                     <Link href={`/user/${user.uid}`}>{user.displayName}</Link>
 
-                    {user.uid !== currentUser?.uid &&
-                      (followList('following')
-                        ?.map((usr) => usr.uid)
-                        .includes(user.uid) ? (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            manageFollow('unfollow', user.uid, user)
-                          }
-                        >
-                          Unfollow
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => manageFollow('follow', user.uid, user)}
-                        >
-                          Follow
-                        </button>
-                      ))}
+                    {user.uid !== currentUser?.uid && (
+                      <FollowButton user={user} />
+                    )}
                   </li>
                 ))}
             </ul>

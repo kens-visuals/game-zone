@@ -17,6 +17,7 @@ export default function FollowButton({ user }: Props) {
     <button
       type="button"
       onClick={() => manageFollow('unfollow', user.uid, user)}
+      className="text-secondary"
     >
       Unfollow
     </button>
@@ -24,6 +25,7 @@ export default function FollowButton({ user }: Props) {
     <button
       type="button"
       onClick={() => manageFollow('follow', user.uid, user)}
+      className="text-white/80"
     >
       Follow
     </button>
