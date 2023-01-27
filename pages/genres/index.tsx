@@ -1,11 +1,10 @@
 import Link from 'next/link';
-
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 // Componentns
-import LoadingMsg from '../../components/LoadingMsg';
 import ErrorMsg from '../../components/ErrorMsg';
+import LoadingMsg from '../../components/LoadingMsg';
 
 // Helpers
 import RAWG from '../../lib/rawg';
@@ -36,14 +35,14 @@ export default function Genres() {
   if (isError) return <ErrorMsg />;
 
   return (
-    <div className="grid grid-cols-2 gap-2 rounded-md p-4 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2 p-4 md:grid-cols-3 lg:grid-cols-4">
       {genres?.map((genre) => (
         <div
           key={genre.slug}
           style={{ backgroundImage: `url(${genre.image_background})` }}
-          className="flex items-center bg-cover bg-center bg-no-repeat"
+          className="flex items-center rounded-lg bg-cover bg-center bg-no-repeat"
         >
-          <div className="flex h-full w-full flex-col gap-4 bg-primary/80 p-4 backdrop-blur-sm backdrop-filter">
+          <div className="flex h-full w-full flex-col gap-4 overflow-hidden rounded-md bg-primary/80 p-4 backdrop-blur-sm backdrop-filter">
             <Link
               key={genre.slug}
               href={`/genre/${genre.slug}`}
