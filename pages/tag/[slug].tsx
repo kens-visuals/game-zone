@@ -18,12 +18,12 @@ import GamesListContainer from '../../components/GamesListContainer';
 import RAWG from '../../lib/rawg';
 
 // Types
-import { GameInterface, GenresTypes } from '../../lib/types/game';
+import { GameInterface, DataType } from '../../lib/types/game';
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
-const fetchTag = async (slug: string): Promise<GenresTypes> => {
-  const { data } = await RAWG.get<GenresTypes>(`tags/${slug}?key=${API_KEY}`);
+const fetchTag = async (slug: string): Promise<DataType> => {
+  const { data } = await RAWG.get<DataType>(`tags/${slug}?key=${API_KEY}`);
 
   return data;
 };
@@ -43,7 +43,7 @@ const fetchGames = async ({
   return data?.results;
 };
 
-export default function Genre() {
+export default function Tag() {
   const router = useRouter();
   const tagSlug =
     typeof router.query?.slug === 'string' ? router.query.slug : '';

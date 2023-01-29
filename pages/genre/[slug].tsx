@@ -17,13 +17,13 @@ import GamesListContainer from '../../components/GamesListContainer';
 import RAWG from '../../lib/rawg';
 
 // Types
-import { GameInterface, GenresTypes } from '../../lib/types/game';
+import { GameInterface, DataType } from '../../lib/types/game';
 import ErrorMsg from '../../components/ErrorMsg';
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
-const fetchGenre = async (slug: string): Promise<GenresTypes> => {
-  const { data } = await RAWG.get<GenresTypes>(`genres/${slug}?key=${API_KEY}`);
+const fetchGenre = async (slug: string): Promise<DataType> => {
+  const { data } = await RAWG.get<DataType>(`genres/${slug}?key=${API_KEY}`);
 
   return data;
 };

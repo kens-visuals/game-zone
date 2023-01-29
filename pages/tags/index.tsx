@@ -11,22 +11,22 @@ import LoadingMsg from '../../components/LoadingMsg';
 import RAWG from '../../lib/rawg';
 
 // Types
-import { GenresTypes } from '../../lib/types/game';
+import { DataType } from '../../lib/types/game';
 
-interface GenresProps {
-  results: GenresTypes[];
+interface DataProps {
+  results: DataType[];
 }
 
-const fetchTags = async ({ pageParam = 1 }): Promise<GenresTypes[]> => {
+const fetchTags = async ({ pageParam = 1 }): Promise<DataType[]> => {
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
-  const { data } = await RAWG.get<GenresProps>(
+  const { data } = await RAWG.get<DataProps>(
     `/tags?page_size=40&page=${pageParam}&key=${apiKey}`
   );
 
   return data?.results;
 };
-export default function Genres() {
+export default function Tags() {
   const {
     data: tags,
     isError,

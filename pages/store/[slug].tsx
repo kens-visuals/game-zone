@@ -43,7 +43,7 @@ const fetchGames = async ({
   return data?.results;
 };
 
-export default function Genre() {
+export default function Store() {
   const router = useRouter();
   const storeSlug =
     typeof router.query?.slug === 'string' ? router.query.slug : '';

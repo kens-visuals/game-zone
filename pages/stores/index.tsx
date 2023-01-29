@@ -13,20 +13,20 @@ import RAWG from '../../lib/rawg';
 // Types
 import { DataType } from '../../lib/types/game';
 
-interface GenresProps {
+interface DataProps {
   results: DataType[];
 }
 
 const fetchStores = async ({ pageParam = 1 }): Promise<DataType[]> => {
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
-  const { data } = await RAWG.get<GenresProps>(
+  const { data } = await RAWG.get<DataProps>(
     `/stores?page_size=40&page=${pageParam}&key=${apiKey}`
   );
 
   return data?.results;
 };
-export default function Genres() {
+export default function Stores() {
   const {
     data: stores,
     isError,
