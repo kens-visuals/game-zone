@@ -1,5 +1,5 @@
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 // Components
@@ -9,6 +9,8 @@ export default function Navbar() {
   const { pathname } = useRouter();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  useEffect(() => setIsDrawerOpen(false), [pathname]);
 
   const handleDrawerClick = () =>
     setIsDrawerOpen((drawerState) => !drawerState);
@@ -32,12 +34,6 @@ export default function Navbar() {
           d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
           clipRule="evenodd"
         />
-      ),
-    },
-    {
-      path: '/genres',
-      icon: (
-        <path d="M5.625 3.75a2.625 2.625 0 100 5.25h12.75a2.625 2.625 0 000-5.25H5.625zM3.75 11.25a.75.75 0 000 1.5h16.5a.75.75 0 000-1.5H3.75zM3 15.75a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75zM3.75 18.75a.75.75 0 000 1.5h16.5a.75.75 0 000-1.5H3.75z" />
       ),
     },
     {
