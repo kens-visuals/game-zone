@@ -8,7 +8,7 @@ import { db } from '../../firebase/firebase.config';
 
 // Compononents
 import Divider from '../../components/Divider';
-import GameCard from '../../components/GameCard';
+// import GameCard from '../../components/GameCard';
 import FollowButton from '../../components/FollowButton';
 import CollectionItem from '../../components/CollectionItem';
 
@@ -17,6 +17,9 @@ import useFollow from '../../hooks/useFollow';
 import useUserBookmarks from '../../hooks/useUserBookmarks';
 import useUser, { UserInterface } from '../../hooks/useUser';
 import useCollections, { CollectionInfo } from '../../hooks/useCollections';
+
+// Assets
+import placeholderImg from '../../public/assets/placeholder.avif';
 
 interface Props {
   data: UserInterface;
@@ -179,24 +182,43 @@ export default function User({ data: user }: Props) {
         <div className="my-8">
           <h2 className="my-4 text-h3">Recent Bookmarks</h2>
 
-          <div className="grid w-full grid-flow-col content-start items-start gap-4 overflow-x-scroll">
+          <ul className="grid snap-x snap-proximity grid-flow-col items-center gap-4 overflow-x-scroll">
             {!currentBookmark.length ? (
-              <div className="flex flex-col items-center justify-center gap-4 rounded-md bg-primary-dark p-4 py-6">
+              <li className="flex flex-col items-center justify-center gap-4 rounded-md bg-primary-dark p-4 py-6">
                 <span className="inline-block w-full text-center">
                   You don&apos;t have any bookmarked games
                 </span>
                 <Link href="/" className="rounded-md bg-secondary py-2 px-4 ">
                   Go to games
                 </Link>
-              </div>
+              </li>
             ) : (
-              currentBookmark?.slice(0, 3).map((bookmark) => (
-                <div className="w-full" key={bookmark.createdAt}>
-                  <GameCard details={bookmark} isFromUser />
-                </div>
+              currentBookmark?.map((bookmark) => (
+                <li className="w-full snap-start" key={bookmark.createdAt}>
+                  <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-lg">
+                    <Image
+                      src={bookmark.background_image || placeholderImg}
+                      alt={bookmark.name}
+                      width={200}
+                      height={200}
+                      className="h-48 w-full object-cover object-top"
+                    />
+
+                    <div className="absolute bottom-0 w-full py-4 px-3 backdrop-blur-md backdrop-filter">
+                      <div className="flex items-center justify-between gap-6">
+                        <Link
+                          href={`/game/${bookmark.slug}`}
+                          className="truncate text-ellipsis border-b border-b-transparent text-body-1 font-medium transition-all duration-100 hover:border-b hover:border-b-secondary"
+                        >
+                          {bookmark.name}
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </li>
               ))
             )}
-          </div>
+          </ul>
         </div>
       )}
 
