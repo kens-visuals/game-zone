@@ -4,8 +4,8 @@ import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 // Componentns
 import PageList from '../../components/PageList';
 import PageItem from '../../components/PageItem';
-import ErrorMsg from '../../components/ErrorMsg';
-import LoadingMsg from '../../components/LoadingMsg';
+import ErrorCard from '../../components/ErrorCard';
+import LoadingCard from '../../components/LoadingCard';
 
 // Helpers
 import RAWG from '../../lib/rawg';
@@ -31,6 +31,7 @@ export default function Platforms() {
     data: platforms,
     isError,
     isLoading,
+    isFetching,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -42,9 +43,9 @@ export default function Platforms() {
     },
   });
 
-  if (isLoading) return <LoadingMsg size={20} />;
+  if (isLoading || isFetching) return <LoadingCard size={20} />;
 
-  if (isError) return <ErrorMsg />;
+  if (isError) return <ErrorCard />;
 
   return (
     <div className="flex flex-col items-center gap-4 pb-14">

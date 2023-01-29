@@ -4,8 +4,8 @@ import { dehydrate, QueryClient, useQuery } from 'react-query';
 // Componentns
 import PageList from '../../components/PageList';
 import PageItem from '../../components/PageItem';
-import ErrorMsg from '../../components/ErrorMsg';
-import LoadingMsg from '../../components/LoadingMsg';
+import ErrorCard from '../../components/ErrorCard';
+import LoadingCard from '../../components/LoadingCard';
 
 // Helpers
 import RAWG from '../../lib/rawg';
@@ -29,11 +29,12 @@ export default function Genres() {
     data: genres,
     isError,
     isLoading,
+    isFetching,
   } = useQuery(['getGenres'], fetchGenres);
 
-  if (isLoading) return <LoadingMsg size={20} />;
+  if (isLoading || isFetching) return <LoadingCard size={20} />;
 
-  if (isError) return <ErrorMsg />;
+  if (isError) return <ErrorCard />;
 
   return (
     <PageList>

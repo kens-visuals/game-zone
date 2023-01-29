@@ -10,7 +10,7 @@ import {
 // Components
 import Banner from '../../components/Banner';
 import GameCard from '../../components/GameCard';
-import LoadingMsg from '../../components/LoadingMsg';
+import LoadingCard from '../../components/LoadingCard';
 import GamesListContainer from '../../components/GamesListContainer';
 
 // Helpers
@@ -18,7 +18,7 @@ import RAWG from '../../lib/rawg';
 
 // Types
 import { GameInterface, DataType } from '../../lib/types/game';
-import ErrorMsg from '../../components/ErrorMsg';
+import ErrorCard from '../../components/ErrorCard';
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
@@ -75,9 +75,9 @@ export default function Genre() {
     }
   );
 
-  if (isGenreLoading || isGamesLoading) return <LoadingMsg size={30} />;
+  if (isGenreLoading || isGamesLoading) return <LoadingCard size={30} />;
 
-  if (isGenreError || isGamesError) return <ErrorMsg />;
+  if (isGenreError || isGamesError) return <ErrorCard />;
 
   return (
     <div>

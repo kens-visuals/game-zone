@@ -9,9 +9,9 @@ import {
 
 // Components
 import Banner from '../../components/Banner';
-import ErrorMsg from '../../components/ErrorMsg';
+import ErrorCard from '../../components/ErrorCard';
 import GameCard from '../../components/GameCard';
-import LoadingMsg from '../../components/LoadingMsg';
+import LoadingCard from '../../components/LoadingCard';
 import GamesListContainer from '../../components/GamesListContainer';
 
 // Helpers
@@ -77,9 +77,9 @@ export default function Store() {
     }
   );
 
-  if (isTagLoading || isGamesLoading) return <LoadingMsg size={30} />;
+  if (isTagLoading || isGamesLoading) return <LoadingCard size={30} />;
 
-  if (isTagError || isGamesError) return <ErrorMsg />;
+  if (isTagError || isGamesError) return <ErrorCard />;
 
   return (
     <div>

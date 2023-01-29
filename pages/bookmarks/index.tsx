@@ -3,8 +3,8 @@ import Link from 'next/link';
 // Components
 import GamesListContainer from '../../components/GamesListContainer';
 import GameCard from '../../components/GameCard';
-import LoadingMsg from '../../components/LoadingMsg';
-import ErrorMsg from '../../components/ErrorMsg';
+import LoadingCard from '../../components/LoadingCard';
+import ErrorCard from '../../components/ErrorCard';
 
 // Hooks
 import useUser from '../../hooks/useUser';
@@ -33,9 +33,9 @@ export default function Bookmarks() {
   //     setQuery(event.target.value);
   //   };
 
-  if (status === 'loading') return <LoadingMsg size={10} />;
+  if (status === 'loading') return <LoadingCard size={10} />;
 
-  if (status === 'error') return <ErrorMsg />;
+  if (status === 'error') return <ErrorCard />;
 
   return (
     <div className="p-4">

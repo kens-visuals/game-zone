@@ -7,9 +7,9 @@ import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 // Components
 import Banner from '../../components/Banner';
-import ErrorMsg from '../../components/ErrorMsg';
+import ErrorCard from '../../components/ErrorCard';
 import GameDetail from '../../components/GameDetail';
-import LoadingMsg from '../../components/LoadingMsg';
+import LoadingCard from '../../components/LoadingCard';
 import GameSeriesList from '../../components/GameSeriesList';
 import CollectionsDropdown from '../../components/CollectionsDropdown';
 
@@ -65,9 +65,9 @@ export default function Game() {
 
   const emptyArray = Array.from({ length: 6 }, () => Math.random());
 
-  if (isLoading) return <LoadingMsg size={1} />;
+  if (isLoading) return <LoadingCard size={1} />;
 
-  if (isError) return <ErrorMsg />;
+  if (isError) return <ErrorCard />;
 
   return (
     isSuccess && (

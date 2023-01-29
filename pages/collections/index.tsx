@@ -1,8 +1,8 @@
 import { FormEvent, useId, useState } from 'react';
 
 // Components
-import ErrorMsg from '../../components/ErrorMsg';
-import LoadingMsg from '../../components/LoadingMsg';
+import ErrorCard from '../../components/ErrorCard';
+import LoadingCard from '../../components/LoadingCard';
 import Divider from '../../components/Divider';
 import CollectionItem from '../../components/CollectionItem';
 
@@ -35,8 +35,8 @@ export default function AddNewCollection() {
     setIsError(true);
   };
 
-  if (status === 'loading') return <LoadingMsg size={5} />;
-  if (status === 'error') return <ErrorMsg />;
+  if (status === 'loading') return <LoadingCard size={5} />;
+  if (status === 'error') return <ErrorCard />;
 
   return (
     <>
