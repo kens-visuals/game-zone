@@ -25,6 +25,7 @@ export interface CollectionInfo {
   id?: string;
   name: string;
   slug?: string;
+  createdBy: string;
   createdAt?: string;
   isPublic?: boolean;
   description?: string;
@@ -72,12 +73,18 @@ export default function useCollections() {
 
   const addNewCollection = (collectionInfo: CollectionInfo) => {
     const createdAt = serverTimestamp();
+    const createdBy = currentUser?.displayName;
     const slug = collectionInfo.name
       .toLowerCase()
       .replace(/[^\w ]+/g, ' ')
       .replace(/ +/g, '-');
 
-    addNewDataMutation.mutate({ ...collectionInfo, createdAt, slug });
+    addNewDataMutation.mutate({
+      ...collectionInfo,
+      createdAt,
+      createdBy,
+      slug,
+    });
   };
 
   const removeCollection = async (docId: string) => {
