@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-
 import { useInfiniteQuery } from 'react-query';
 
 // Components
-import ErrorMsg from './ErrorMsg';
-import LoadingMsg from './LoadingMsg';
+import ErrorCard from './ErrorCard';
+import LoadingCard from './LoadingCard';
 
 // Helpers
 import RAWG from '../lib/rawg';
@@ -36,8 +35,8 @@ const fetchGames = async ({ pageParam = 1 }): Promise<GameInterface[]> => {
 };
 
 export default function TrendingGamesList() {
-  const { currentUser } = useUser();
   const router = useRouter();
+  const { currentUser } = useUser();
   const { bookmarksData } = useUserBookmarks();
   const { handleAddBookmark } = useBookmarkMutation();
 
@@ -62,23 +61,18 @@ export default function TrendingGamesList() {
     return handleAddBookmark(bookmarksData, details);
   };
 
-  if (isLoading)
-    return (
-      <div className="grid grid-flow-col items-center gap-4 overflow-x-scroll p-4">
-        <LoadingMsg size={5} />
-      </div>
-    );
+  if (isLoading) return <LoadingCard size={5} isHorizontal />;
 
-  if (isError) return <ErrorMsg />;
+  if (isError) return <ErrorCard />;
 
   return (
-    <div className="p-4">
+    <>
       <span className="mb-4 inline-block text-h1">New and upcoming games</span>
 
       <ul className="grid snap-x snap-proximity grid-flow-col items-center gap-4 overflow-x-scroll">
         {games?.pages.map((page) =>
           page.map((details) => (
-            <li key={details.slug} className="snap-start ">
+            <li key={details.slug} className="snap-start">
               <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-lg">
                 <Image
                   src={details.background_image || placeholderImg}
@@ -141,6 +135,6 @@ export default function TrendingGamesList() {
           </button>
         </li>
       </ul>
-    </div>
+    </>
   );
 }

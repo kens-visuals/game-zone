@@ -48,12 +48,12 @@ export default function Navbar() {
     <>
       {isDrawerOpen && <Drawer />}
 
-      <nav className="fixed z-50 flex w-full items-center justify-between bg-primary-dark/50 p-4 backdrop-blur-2xl  backdrop-filter">
+      <nav className="fixed left-4 z-50 flex w-[calc(100vw_-_2rem)] items-center justify-between rounded-lg bg-primary-dark/50 p-4 backdrop-blur-2xl backdrop-filter md:left-6 md:h-[calc(100vh_-_2rem)] md:w-20 md:flex-col">
         <span className="rounded bg-secondary p-1 text-center font-outfit text-body-2 font-medium uppercase text-white">
           Game <br /> Zone
         </span>
 
-        <ul className="flex items-center justify-between gap-4">
+        <ul className="flex items-center justify-between gap-4 md:flex-col">
           {routes.map((route) => (
             <li key={route.path}>
               <Link href={route.path}>

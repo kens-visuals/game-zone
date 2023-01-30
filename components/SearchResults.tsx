@@ -36,7 +36,7 @@ const fetchSearchedGame = async (
 };
 
 export default function SearchResults() {
-  const router = useRouter();
+  const { pathname } = useRouter();
 
   const { currentUser } = useUser();
   const { users } = useUsers();
@@ -62,13 +62,13 @@ export default function SearchResults() {
     setIsSearchOpen(true);
   };
 
-  useEffect(() => setIsSearchOpen(false), [router.pathname]);
+  useEffect(() => setIsSearchOpen(false), [pathname]);
 
   return (
     <>
       <form
         action="#"
-        className="flex w-full items-center justify-between gap-4 bg-primary p-4"
+        className="flex w-full items-center justify-between gap-4 bg-primary py-4"
       >
         <label htmlFor="search" className="flex w-full gap-4">
           <span className="sr-only">Search games</span>
@@ -115,19 +115,25 @@ export default function SearchResults() {
 
       {/* eslint-disable-next-line no-nested-ternary */}
       {isSearchLoading || isSearchFetching ? (
-        <div>Loading...</div>
+        <div className="mx-auto w-[90%] rounded-xl bg-primary-dark p-6">
+          <span className="inline-block w-full text-center">Loading...</span>
+        </div>
       ) : isSearchError ? (
-        <div>Error</div>
+        <div className="mx-auto w-[90%] rounded-xl bg-primary-dark p-6">
+          <span className="inline-block w-full text-center">Error</span>
+        </div>
       ) : (
         isSearchOpen &&
         searchTerm && (
           <div className="mx-auto w-[90%] rounded-xl bg-primary-dark p-6">
             <ul>
-              <li className="mt-4">
+              <li className="mt-4 mb-2">
                 {data?.length ? (
-                  <span>Games</span>
+                  <span className="text-h3">Games</span>
                 ) : (
-                  <span>No games found!</span>
+                  <span className="inline-block w-full text-center">
+                    No games found!
+                  </span>
                 )}
               </li>
               {data &&
@@ -148,11 +154,13 @@ export default function SearchResults() {
             </ul>
 
             <ul>
-              <li className="mt-4">
+              <li className="mt-4 mb-2">
                 {filteredUsers.length ? (
-                  <span>Users</span>
+                  <span className="text-h3">Users</span>
                 ) : (
-                  <span>No users found!</span>
+                  <span className="inline-block w-full text-center">
+                    No users found!
+                  </span>
                 )}
               </li>
               {users &&

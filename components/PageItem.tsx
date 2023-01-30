@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { GenresTypes } from '../lib/types/game';
+import { DataType } from '../lib/types/game';
 
 interface Props {
   route: string;
-  data: GenresTypes;
+  data: DataType;
 }
 
 export default function PageItem({ route, data }: Props) {

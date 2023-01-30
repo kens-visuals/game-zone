@@ -13,7 +13,10 @@ export default function GamesListContainer({ children }: Props) {
   };
 
   return (
-    <Masonry breakpointCols={breakpointColumnsObj} className="flex gap-4">
+    <Masonry
+      breakpointCols={breakpointColumnsObj}
+      className="flex w-full gap-4"
+    >
       {children}
     </Masonry>
   );

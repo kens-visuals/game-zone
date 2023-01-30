@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 
-// Interfaces
 interface Props {
   children: ReactNode;
 }

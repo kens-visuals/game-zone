@@ -5,8 +5,8 @@ import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 // Components
 import GameCard from './GameCard';
 import GamesListContainer from './GamesListContainer';
-import LoadingMsg from './LoadingMsg';
-import ErrorMsg from './ErrorMsg';
+import LoadingCard from './LoadingCard';
+import ErrorCard from './ErrorCard';
 
 // Helpers
 import RAWG from '../lib/rawg';
@@ -26,7 +26,6 @@ const links = [
   {
     name: 'Best of the Year',
     path: '/games/lists/greatest?discover=true&page_size=40',
-    ordering: 'added',
   },
   {
     name: 'Best of 2022',
@@ -46,9 +45,7 @@ const fetchGames = async ({
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
   const { data } = await RAWG.get<Games>(
-    `${links[pageIndex].path}&ordering=-${
-      links[pageIndex]?.ordering || option
-    }&page=${pageParam}&key=${apiKey}`
+    `${links[pageIndex].path}&ordering=-${option}&page=${pageParam}&key=${apiKey}`
   );
 
   return data?.results;
@@ -92,17 +89,12 @@ export default function GamesList() {
 
   useEffect(() => setIsDropdownOpen(false), [isLoading, isFetching]);
 
-  if (isLoading)
-    return (
-      <div className="my-4 grid w-full grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-4">
-        <LoadingMsg size={30} />
-      </div>
-    );
+  if (isLoading) return <LoadingCard size={30} />;
 
-  if (isError) return <ErrorMsg />;
+  if (isError) return <ErrorCard />;
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4 pb-14">
+    <div className="flex flex-col items-center gap-4 pb-14">
       <div className="my-8 w-full overflow-y-hidden border-b border-primary-light/50 text-center text-body-1 font-medium text-white/50">
         <ul className="-mb-[2px] flex w-full overflow-x-scroll">
           {links.map((link, idx) => (

@@ -2,10 +2,10 @@
 import Description from './Description';
 
 // Interfaces
-import { GameInterface, GenresTypes } from '../lib/types/game';
+import { GameInterface, DataType } from '../lib/types/game';
 
 interface Props {
-  data: GenresTypes | GameInterface;
+  data: DataType | GameInterface;
 }
 
 export default function Banner({ data }: Props) {

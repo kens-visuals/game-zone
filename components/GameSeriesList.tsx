@@ -6,8 +6,8 @@ import GamesListContainer from './GamesListContainer';
 
 // Helpers
 import RAWG from '../lib/rawg';
-import LoadingMsg from './LoadingMsg';
-import ErrorMsg from './ErrorMsg';
+import LoadingCard from './LoadingCard';
+import ErrorCard from './ErrorCard';
 
 // Types
 import { GameInterface } from '../lib/types/game';
@@ -32,9 +32,9 @@ export default function GameSeriesList({ gameSlug }: Props) {
     isFetching: isSeriesFetching,
   } = useQuery(['getGameSeries', gameSlug], () => fetchGameSeries(gameSlug));
 
-  if (isSeriesLoading || isSeriesFetching) return <LoadingMsg size={10} />;
+  if (isSeriesLoading || isSeriesFetching) return <LoadingCard size={10} />;
 
-  if (isSeriesError) return <ErrorMsg />;
+  if (isSeriesError) return <ErrorCard />;
 
   return series ? (
     <GamesListContainer>
