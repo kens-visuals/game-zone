@@ -8,7 +8,6 @@ import { db } from '../../firebase/firebase.config';
 
 // Compononents
 import Divider from '../../components/Divider';
-// import GameCard from '../../components/GameCard';
 import FollowButton from '../../components/FollowButton';
 import CollectionItem from '../../components/CollectionItem';
 
@@ -85,22 +84,23 @@ export default function User({ data: user }: Props) {
   const followersList = [followersArr, followingArr];
 
   return (
-    <div className="p-4">
+    <div>
       <h1 className="text-h1">User Profile</h1>
       <Divider />
 
-      <div className="my-4 flex items-center gap-4">
-        <Image
-          src={user.photoURL}
-          height={50}
-          width={50}
-          alt={user.displayName}
-          className="rounded"
-        />
-
-        <div className="flex flex-col">
-          <span>{user.displayName}</span>
-          <span>{user.email}</span>
+      <div className="my-4 flex flex-col  items-start gap-4">
+        <div className="flex items-center gap-4">
+          <Image
+            src={user.photoURL}
+            height={50}
+            width={50}
+            alt={user.displayName}
+            className="rounded"
+          />
+          <div className="flex flex-col">
+            <span>{user.displayName}</span>
+            <span>{user.email}</span>
+          </div>
         </div>
 
         {user.uid !== currentUser?.uid && <FollowButton user={user} />}
