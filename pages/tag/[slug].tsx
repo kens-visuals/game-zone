@@ -83,7 +83,7 @@ export default function Tag() {
     <div>
       {tag && <Banner data={tag} />}
 
-      <div className="p-4">
+      <div>
         <GamesListContainer>
           {games?.pages?.map((page) =>
             page.map((details) => (

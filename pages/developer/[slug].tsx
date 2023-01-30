@@ -88,7 +88,7 @@ export default function Developer() {
     <div>
       {developer && <Banner data={developer} />}
 
-      <div className="p-4">
+      <div>
         <GamesListContainer>
           {games?.pages?.map((page) =>
             page.map((details) => (

@@ -83,7 +83,7 @@ export default function Genre() {
     <div>
       {genre && <Banner data={genre} />}
 
-      <div className="p-4">
+      <div>
         <GamesListContainer>
           {games?.pages?.map((page) =>
             page.map((details) => (

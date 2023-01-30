@@ -74,7 +74,7 @@ export default function Game() {
       <>
         <Banner data={game} />
 
-        <div className="p-4">
+        <div>
           <button
             type="button"
             onClick={() => addNewData(game)}

@@ -85,7 +85,7 @@ export default function Store() {
     <div>
       {store && <Banner data={store} />}
 
-      <div className="p-4">
+      <div>
         <GamesListContainer>
           {games?.pages?.map((page) =>
             page.map((details) => (

@@ -89,7 +89,7 @@ export default function Platform() {
     <div>
       {platform && <Banner data={platform} />}
 
-      <div className="p-4">
+      <div>
         <GamesListContainer>
           {games?.pages?.map((page) =>
             page.map((details) => (
