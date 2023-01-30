@@ -10,8 +10,8 @@ export default function LoadingCard({ size, isHorizontal = false }: Props) {
     <div
       className={
         isHorizontal
-          ? 'grid grid-flow-col items-center gap-4 overflow-x-scroll p-4'
-          : 'my-4 grid w-full grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-4'
+          ? 'grid grid-flow-col items-center gap-4 overflow-x-scroll'
+          : 'my-4 grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'
       }
     >
       {emptyArray.map((el) => (

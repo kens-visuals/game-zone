@@ -17,7 +17,7 @@ export default function FollowButton({ user }: Props) {
     <button
       type="button"
       onClick={() => manageFollow('unfollow', user.uid, user)}
-      className="text-secondary"
+      className="w-full rounded-md bg-secondary py-2.5 px-4 transition-all duration-300 hover:opacity-70"
     >
       Unfollow
     </button>
@@ -25,7 +25,7 @@ export default function FollowButton({ user }: Props) {
     <button
       type="button"
       onClick={() => manageFollow('follow', user.uid, user)}
-      className="text-white/80"
+      className="w-full rounded-md bg-primary-light py-2.5 px-4 transition-all duration-300 hover:opacity-70"
     >
       Follow
     </button>
