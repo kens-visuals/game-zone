@@ -6,12 +6,12 @@ import { db } from '../firebase/firebase.config';
 import useUser from './useUser';
 
 // Type
-import { GenresTypes } from '../lib/types/game';
+import { DataType } from '../lib/types/game';
 
 export interface Bookmark {
   name: string;
   slug: string;
-  genres: GenresTypes[];
+  genres: DataType[];
   released: string;
   createdAt: string;
   background_image: string;

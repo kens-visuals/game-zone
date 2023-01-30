@@ -1,4 +1,5 @@
-export type GenresTypes = {
+export type DataType = {
+  id?: number;
   name: string;
   slug: string;
   description: string;
@@ -28,7 +29,7 @@ export interface GameInterface {
   released: string;
   background_image: string;
   description?: string;
-  genres?: GenresTypes[];
+  genres?: DataType[];
   website?: string;
   redditurl?: string;
   ratings?: Ratings;
