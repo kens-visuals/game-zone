@@ -67,7 +67,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
         }`}
       >
         <span
-          className={`mb-4 rounded bg-secondary p-1 text-center font-outfit text-body-2 font-medium uppercase text-white md:w-full ${
+          className={`rounded bg-secondary p-1 text-center font-outfit text-body-2 font-medium uppercase text-white md:mb-4 md:w-full ${
             isSidebarOpen && 'tracking-wider md:p-4 md:text-h2-medium'
           }`}
         >
@@ -114,7 +114,9 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
           ))}
         </ul>
 
-        <Divider />
+        <div className="hidden md:inline-block">
+          <Divider />
+        </div>
 
         <div className="hidden md:inline-block">
           <PagesNav isSidebarOpen={isSidebarOpen} />
