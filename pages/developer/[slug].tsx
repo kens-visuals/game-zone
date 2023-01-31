@@ -72,8 +72,10 @@ export default function Developer() {
     ['getGames', developerSlug],
     ({ pageParam = 1 }) => fetchGames({ developerSlug, pageParam }),
     {
-      getNextPageParam: (_, allPages) => {
-        if (allPages.length < 10) return allPages.length + 1;
+      getNextPageParam: (lastPage, allPages) => {
+        if (lastPage.length < 40) return undefined;
+
+        if (allPages.length) return allPages.length + 1;
 
         return undefined;
       },

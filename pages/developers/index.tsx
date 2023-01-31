@@ -36,7 +36,9 @@ export default function Developers() {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery(['getDevelopers'], fetchDevelopers, {
-    getNextPageParam: (_, allPages) => {
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < 40) return undefined;
+
       if (allPages.length < 10) return allPages.length + 1;
 
       return undefined;

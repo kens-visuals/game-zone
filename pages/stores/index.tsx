@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next';
-import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 // Componentns
 import PageList from '../../components/PageList';
@@ -17,11 +17,11 @@ interface DataProps {
   results: DataType[];
 }
 
-const fetchStores = async ({ pageParam = 1 }): Promise<DataType[]> => {
+const fetchStores = async (): Promise<DataType[]> => {
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
   const { data } = await RAWG.get<DataProps>(
-    `/stores?page_size=40&page=${pageParam}&key=${apiKey}`
+    `/stores?page_size=40&&key=${apiKey}`
   );
 
   return data?.results;
@@ -32,12 +32,11 @@ export default function Stores() {
     isError,
     isLoading,
     isFetching,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(['getStores'], fetchStores, {
-    getNextPageParam: (_, allPages) => {
-      if (allPages.length < 10) return allPages.length + 1;
+  } = useQuery(['getStores'], fetchStores, {
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < 40) return undefined;
+
+      if (allPages.length) return allPages.length + 1;
 
       return undefined;
     },
@@ -48,28 +47,12 @@ export default function Stores() {
   if (isError) return <ErrorCard />;
 
   return (
-    <div className="flex flex-col items-center gap-4 pb-14">
+    <div className="flex w-full flex-col items-center gap-4 pb-14">
       <PageList>
-        {stores?.pages?.map((page) =>
-          page.map((data) => (
-            <PageItem key={data.name} route="store" data={data} />
-          ))
-        )}
+        {stores?.map((data) => (
+          <PageItem key={data.name} route="store" data={data} />
+        ))}
       </PageList>
-
-      <button
-        type="button"
-        disabled={!hasNextPage || isFetchingNextPage}
-        onClick={() => hasNextPage && fetchNextPage()}
-        className="rounded-md bg-primary-light px-6 py-2 text-white"
-      >
-        {/* eslint-disable-next-line no-nested-ternary */}
-        {isFetchingNextPage
-          ? 'Loading more...'
-          : hasNextPage
-          ? 'Load More'
-          : 'Nothing more to load'}
-      </button>
     </div>
   );
 }

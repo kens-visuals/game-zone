@@ -36,8 +36,10 @@ export default function Publishers() {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery(['getPublishers'], fetchPublishers, {
-    getNextPageParam: (_, allPages) => {
-      if (allPages.length < 10) return allPages.length + 1;
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < 40) return undefined;
+
+      if (allPages.length) return allPages.length + 1;
 
       return undefined;
     },
