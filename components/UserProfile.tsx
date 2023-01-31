@@ -17,11 +17,11 @@ export default function UserProfile({ isSidebarOpen = false }) {
     followList('following')?.length;
 
   return isUserLoading ? (
-    <div className="inline-flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white py-2.5 px-5 text-sm font-medium text-gray-900">
+    <div className="inline-flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white py-2.5 px-4 text-sm font-medium text-gray-900">
       <svg
         aria-hidden="true"
         role="status"
-        className="mr-2 inline h-4 w-4 animate-spin text-gray-200"
+        className="inline h-4 w-4 animate-spin text-gray-200"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@ export default function UserProfile({ isSidebarOpen = false }) {
           fill="#1C64F2"
         />
       </svg>
-      Loading...
+      {isSidebarOpen && <span className="ml-2">Loading...</span>}
     </div>
   ) : (
     <>

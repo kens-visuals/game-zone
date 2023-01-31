@@ -70,7 +70,7 @@ export default function PagesNav({ isSidebarOpen = false }) {
   const { pathname } = useRouter();
 
   return (
-    <ul className="flex flex-col items-start gap-4 text-white">
+    <ul className="mt-12 flex flex-col items-start gap-4 text-white md:mt-0">
       {routes.map((route) => (
         <li key={route.name} className="group">
           <Link

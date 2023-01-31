@@ -118,7 +118,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
           ))}
         </ul>
 
-        <div className="invisible w-full md:visible">
+        <div className="hidden w-full md:inline-block ">
           <Divider />
         </div>
 
