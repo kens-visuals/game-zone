@@ -2,7 +2,7 @@ export default function ErrorCard() {
   return (
     <div
       id="alert-additional-content-2"
-      className="my-4 rounded-lg border border-red-300 bg-red-50 text-red-900 dark:border-red-900 dark:bg-gray-800 dark:text-red-400"
+      className="my-4 rounded-lg border border-red-300 bg-red-50 p-4 text-red-900 dark:border-red-900 dark:bg-gray-800 dark:text-red-400"
       role="alert"
     >
       <div className="flex items-center">
