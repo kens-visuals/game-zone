@@ -4,8 +4,18 @@ import { useRouter } from 'next/router';
 
 // Components
 import Drawer from './Drawer';
+import PagesNav from './PagesNav';
+import UserProfile from './UserProfile';
+import SignOutButton from './SignOutButton';
+import Divider from './Divider';
 
-export default function Navbar() {
+// Interface
+interface Props {
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (isSidebarOpen: any) => void;
+}
+
+export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
   const { pathname } = useRouter();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -17,6 +27,7 @@ export default function Navbar() {
 
   const routes = [
     {
+      name: 'Home',
       path: '/',
       icon: (
         <path
@@ -27,6 +38,7 @@ export default function Navbar() {
       ),
     },
     {
+      name: 'Bookmarks',
       path: '/bookmarks',
       icon: (
         <path
@@ -37,6 +49,7 @@ export default function Navbar() {
       ),
     },
     {
+      name: 'Collections',
       path: '/collections',
       icon: (
         <path d="M19.906 9c.382 0 .749.057 1.094.162V9a3 3 0 00-3-3h-3.879a.75.75 0 01-.53-.22L11.47 3.66A2.25 2.25 0 009.879 3H6a3 3 0 00-3 3v3.162A3.756 3.756 0 014.094 9h15.812zM4.094 10.5a2.25 2.25 0 00-2.227 2.568l.857 6A2.25 2.25 0 004.951 21H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-2.227-2.568H4.094z" />
@@ -48,15 +61,30 @@ export default function Navbar() {
     <>
       {isDrawerOpen && <Drawer />}
 
-      <nav className="fixed left-4 z-50 flex w-[calc(100vw_-_2rem)] items-center justify-between rounded-lg bg-primary-dark/50 p-4 backdrop-blur-2xl backdrop-filter md:left-6 md:h-[calc(100vh_-_2rem)] md:w-20 md:flex-col">
-        <span className="rounded bg-secondary p-1 text-center font-outfit text-body-2 font-medium uppercase text-white">
-          Game <br /> Zone
+      <nav
+        className={`fixed left-4 z-50 flex w-[calc(100vw_-_2rem)] items-center justify-between rounded-lg bg-primary-dark/50 p-4 backdrop-blur-2xl backdrop-filter md:static md:left-6 md:h-[calc(100vh_-_2rem)] md:flex-col md:justify-start md:gap-4 ${
+          isSidebarOpen ? 'md:w-fit md:items-start' : 'md:w-20 md:items-center'
+        }`}
+      >
+        <span
+          className={`mb-4 rounded bg-secondary p-1 text-center font-outfit text-body-2 font-medium uppercase text-white md:w-full ${
+            isSidebarOpen && 'tracking-wider md:p-4 md:text-h2-medium'
+          }`}
+        >
+          Game <br className="md:hidden" /> Zone
         </span>
 
-        <ul className="flex items-center justify-between gap-4 md:flex-col">
+        <div className="hidden md:mt-2 md:inline-block">
+          <UserProfile isSidebarOpen={isSidebarOpen} />
+        </div>
+
+        <ul className="flex items-center justify-between gap-4 md:mt-8 md:flex-col md:items-start md:gap-4">
           {routes.map((route) => (
-            <li key={route.path}>
-              <Link href={route.path}>
+            <li key={route.path} className="group">
+              <Link
+                href={route.path}
+                className="md:flex md:items-center md:gap-2"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -64,20 +92,39 @@ export default function Navbar() {
                   className={`h-6 w-6 transition-all duration-300 ${
                     pathname === route.path
                       ? 'fill-white'
-                      : 'fill-primary-light hover:fill-white'
+                      : 'fill-primary-light group-hover:fill-white'
                   }`}
                 >
                   {route.icon}
                 </svg>
+                <span
+                  className={`hidden text-h3 transition-all duration-300 
+                  ${isSidebarOpen ? 'md:inline-block' : 'md:hidden'}
+                  ${
+                    pathname === route.path
+                      ? 'text-white'
+                      : 'text-primary-light group-hover:text-white'
+                  }
+                  `}
+                >
+                  {route.name}
+                </span>
               </Link>
             </li>
           ))}
         </ul>
 
+        <Divider />
+
+        <div className="hidden md:inline-block">
+          <PagesNav isSidebarOpen={isSidebarOpen} />
+        </div>
+
         <button
           type="button"
           aria-label="hamburger"
           onClick={handleDrawerClick}
+          className="md:hidden"
         >
           {/* Hamburger */}
           {isDrawerOpen ? (
@@ -112,6 +159,41 @@ export default function Navbar() {
             </svg>
           )}
         </button>
+
+        <button
+          type="button"
+          onClick={() => setIsSidebarOpen((prevState: boolean) => !prevState)}
+          className={`hidden p-2 transition-all duration-300 md:mt-auto md:gap-2 ${
+            isSidebarOpen ? 'md:flex md:items-center' : 'md:inline-block'
+          } `}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            className={`h-6 w-6 fill-secondary transition-all duration-300 ${
+              isSidebarOpen && 'rotate-180'
+            }`}
+          >
+            <path
+              fillRule="evenodd"
+              d="M4.72 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 010-1.06zm6 0a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 010-1.06z"
+              clipRule="evenodd"
+            />
+          </svg>
+
+          <span
+            className={`hidden text-body-1 text-white ${
+              isSidebarOpen ? 'md:inline-block' : 'md:hidden'
+            }`}
+          >
+            Collapse
+          </span>
+        </button>
+
+        <div className="hidden md:mt-4 md:inline-block md:w-full">
+          <SignOutButton isSidebarOpen={isSidebarOpen} />
+        </div>
       </nav>
     </>
   );
