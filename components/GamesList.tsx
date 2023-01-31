@@ -97,7 +97,7 @@ export default function GamesList() {
 
   return (
     <div className="flex flex-col items-center gap-4 pb-14">
-      <div className="my-8 w-full overflow-y-hidden border-b border-primary-light/50 text-center text-body-1 font-medium text-white/50">
+      <div className="my-8 w-full overflow-y-hidden border-b border-primary-light/50 text-center text-body-1 font-medium text-white/50 md:mb-2">
         <ul className="-mb-[2px] flex w-full overflow-x-scroll">
           {links.map((link, idx) => (
             <li key={link.name}>
@@ -115,7 +115,7 @@ export default function GamesList() {
         </ul>
       </div>
 
-      <div className="relative w-full">
+      <div className="relative w-full md:mb-2">
         <button
           type="button"
           onClick={() => setIsDropdownOpen((prevState) => !prevState)}

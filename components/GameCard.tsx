@@ -58,53 +58,13 @@ export default function GameCard({
         isTrending && 'w-80 max-w-xl'
       }`}
     >
-      <div className="relative">
-        <Image
-          src={backgroundImage || placeholderImage}
-          alt={name}
-          width={200}
-          height={200}
-          className={`w-full ${isTrending && 'h-32 object-cover object-top'}`}
-        />
-
-        <button
-          type="button"
-          onClick={handleClick}
-          className="absolute top-0 left-2 hidden items-center justify-center gap-2 rounded-b-md bg-black/20 p-2  backdrop-blur-xl backdrop-filter transition-all duration-300 hover:backdrop-blur-sm md:flex md:text-h2-light"
-        >
-          {isFromBookmark ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="h-6 w-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="h-6 w-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          )}
-        </button>
-      </div>
+      <Image
+        src={backgroundImage || placeholderImage}
+        alt={name}
+        width={200}
+        height={200}
+        className={`w-full ${isTrending && 'h-32 object-cover object-top'}`}
+      />
 
       <div className="flex flex-col items-start gap-2 p-4">
         <div className="flex w-full flex-col justify-between gap-2 md:flex-row">
@@ -139,7 +99,7 @@ export default function GameCard({
           <button
             type="button"
             onClick={handleClick}
-            className="group flex w-full items-center justify-center gap-2 bg-black/20 p-2 backdrop-blur-lg backdrop-filter transition-all duration-300 hover:backdrop-blur-sm md:hidden md:text-h2-light"
+            className="group flex w-full items-center justify-center gap-2 bg-black/20 p-2 backdrop-blur-lg backdrop-filter transition-all duration-300 hover:backdrop-blur-sm"
           >
             {isFromBookmark ? (
               <>

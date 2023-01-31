@@ -75,13 +75,13 @@ export default function TrendingGamesList() {
         {games?.pages.map((page) =>
           page.map((details) => (
             <li key={details.slug} className="snap-start">
-              <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-lg">
+              <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-lg md:h-60 md:w-96">
                 <Image
                   src={details.background_image || placeholderImg}
                   alt={details.name}
-                  width={200}
-                  height={200}
-                  className="h-48 w-full object-cover object-top"
+                  width={1000}
+                  height={1000}
+                  className="h-48 w-full object-cover object-top md:h-full"
                 />
 
                 <div className="absolute bottom-0 w-full py-4 px-3 backdrop-blur-md backdrop-filter">

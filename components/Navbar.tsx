@@ -78,7 +78,11 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
           <UserProfile isSidebarOpen={isSidebarOpen} />
         </div>
 
-        <ul className="flex items-center justify-between gap-4 md:mt-8 md:flex-col md:items-start md:gap-4">
+        <ul
+          className={`flex items-center justify-between gap-4  md:flex-col md:items-start md:gap-4 ${
+            isSidebarOpen ? 'mt-6' : 'md:mt-20'
+          }`}
+        >
           {routes.map((route) => (
             <li key={route.path} className="group">
               <Link
@@ -114,7 +118,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
           ))}
         </ul>
 
-        <div className="hidden md:inline-block">
+        <div className="invisible w-full md:visible">
           <Divider />
         </div>
 
