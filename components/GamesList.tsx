@@ -4,9 +4,9 @@ import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 
 // Components
 import GameCard from './GameCard';
-import GamesListContainer from './GamesListContainer';
-import LoadingCard from './LoadingCard';
 import ErrorCard from './ErrorCard';
+import LoadingCard from './LoadingCard';
+import GamesListContainer from './GamesListContainer';
 
 // Helpers
 import RAWG from '../lib/rawg';
@@ -86,6 +86,7 @@ export default function GamesList() {
 
         return undefined;
       },
+      keepPreviousData: true,
     }
   );
 

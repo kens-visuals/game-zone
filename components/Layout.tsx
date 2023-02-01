@@ -12,7 +12,7 @@ export default function Layout({ children }: Props) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="bg-primary p-4 md:grid md:min-h-screen md:grid-cols-[auto_1fr] md:justify-center md:gap-4 md:overflow-hidden lg:gap-6 lg:px-8">
+    <div className="min-h-screen bg-primary p-4 md:grid md:grid-cols-[auto_1fr] md:justify-center md:gap-4 md:overflow-hidden lg:gap-6 lg:px-8">
       <Navbar
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}

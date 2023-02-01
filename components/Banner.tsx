@@ -2,7 +2,7 @@
 import Description from './Description';
 
 // Interfaces
-import { GameInterface, DataType } from '../lib/types/game';
+import { DataType, GameInterface } from '../lib/types/game';
 
 interface Props {
   data: DataType | GameInterface;

@@ -83,7 +83,7 @@ export default function SearchResults() {
             type="text"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Search games"
+            placeholder="Search games and users"
             autoComplete="off"
             className="w-full bg-transparent caret-secondary outline-none placeholder:text-body-1 focus:border-b focus:border-primary-light"
           />

@@ -6,6 +6,7 @@ import { useInfiniteQuery } from 'react-query';
 // Components
 import ErrorCard from './ErrorCard';
 import LoadingCard from './LoadingCard';
+import PageHeading from './PageHeading';
 
 // Helpers
 import RAWG from '../lib/rawg';
@@ -69,7 +70,7 @@ export default function TrendingGamesList() {
 
   return (
     <>
-      <span className="mb-4 inline-block text-h1">New and upcoming games</span>
+      <PageHeading heading="New and Upcoming Games" />
 
       <ul className="grid snap-x snap-proximity grid-flow-col items-center gap-4 overflow-x-scroll">
         {games?.pages.map((page) =>
@@ -96,21 +97,21 @@ export default function TrendingGamesList() {
                     <button
                       type="button"
                       onClick={() => handleClick(details)}
-                      className="flex w-fit items-center justify-center gap-1 text-body-1"
+                      className="group flex w-fit items-center justify-center gap-1 text-body-1"
                     >
-                      Add
+                      <span className="hidden md:inline-block">Bookmark</span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="h-4 w-4"
+                        className="h-6 w-6 text-white group-hover:fill-white md:h-4 md:w-4"
                       >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                          d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
                         />
                       </svg>
                     </button>

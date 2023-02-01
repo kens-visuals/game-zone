@@ -41,13 +41,18 @@ export default function UserProfile({ isSidebarOpen = false }) {
     <>
       <div className="flex items-center gap-2">
         {currentUser && (
-          <Image
-            width={100}
-            height={100}
-            src={currentUser?.photoURL}
-            alt={currentUser?.displayName}
-            className="h-14 w-14 rounded-full md:h-auto md:w-full"
-          />
+          <Link
+            href={`/user/${currentUser?.uid}`}
+            className="rounded-full transition-all duration-300 hover:ring hover:ring-secondary hover:ring-offset-4 hover:ring-offset-primary-dark "
+          >
+            <Image
+              width={100}
+              height={100}
+              src={currentUser?.photoURL}
+              alt={currentUser?.displayName}
+              className="h-14 w-14 rounded-full md:h-auto md:w-full"
+            />
+          </Link>
         )}
 
         <div
@@ -80,7 +85,7 @@ export default function UserProfile({ isSidebarOpen = false }) {
 
       <Link
         href={`/user/${currentUser?.uid}`}
-        className={`mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-700 px-3 py-1.5 text-center text-xs font-medium text-white transition-colors duration-300 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 ${
+        className={`mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-secondary px-3 py-1.5 text-center text-xs font-medium text-white shadow-lg transition-colors duration-300 hover:bg-white hover:text-secondary focus:outline-none focus:ring-2 focus:ring-primary-light ${
           isSidebarOpen ? 'w-full md:flex' : 'md:hidden'
         }`}
       >

@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 // Hooks
@@ -8,12 +8,12 @@ import useUser from '../hooks/useUser';
 import useUserBookmarks from '../hooks/useUserBookmarks';
 import useBookmarkMutation from '../hooks/useBookmarkMutation';
 
-// Assets
-import placeholderImage from '../public/assets/placeholder.avif';
-
 // Types
 import { GameInterface } from '../lib/types/game';
+
+// Assets
 import CollectionsDropdown from './CollectionsDropdown';
+import placeholderImage from '../public/assets/placeholder.avif';
 
 interface Props {
   details: GameInterface;

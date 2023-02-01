@@ -8,7 +8,7 @@ export default function SignOutButton({ isSidebarOpen = false }) {
     <button
       type="button"
       onClick={handleUserSignOut}
-      className="mt-auto flex w-full items-center justify-center gap-2 rounded-md bg-primary-dark p-2 text-white md:w-full md:bg-primary-light"
+      className="mt-auto flex w-full items-center justify-center gap-2 rounded-md bg-primary-dark p-2 text-white transition-all duration-300 hover:bg-primary md:w-full md:bg-primary-light"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

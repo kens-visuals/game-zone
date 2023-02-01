@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 // Components
 import Drawer from './Drawer';
+import Footer from './Footer';
+import Divider from './Divider';
 import PagesNav from './PagesNav';
 import UserProfile from './UserProfile';
 import SignOutButton from './SignOutButton';
-import Divider from './Divider';
 
 // Interface
 interface Props {
@@ -62,25 +63,35 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
       {isDrawerOpen && <Drawer />}
 
       <nav
-        className={`fixed left-4 z-50 flex w-[calc(100vw_-_2rem)] items-center justify-between rounded-lg bg-primary-dark/50 p-4 backdrop-blur-2xl backdrop-filter md:static md:left-6 md:h-[calc(100vh_-_2rem)] md:flex-col md:justify-start md:gap-4 ${
+        className={`fixed left-4 z-50 flex w-[calc(100vw_-_2rem)] items-center justify-between rounded-lg bg-primary-dark/50 p-4 shadow-2xl shadow-primary backdrop-blur-2xl backdrop-filter md:static md:left-6 md:h-[calc(100vh_-_2rem)] md:flex-col md:justify-start md:gap-4 ${
           isSidebarOpen ? 'md:w-fit md:items-start' : 'md:w-20 md:items-center'
         }`}
       >
         <span
-          className={`rounded bg-secondary p-1 text-center font-outfit text-body-2 font-medium uppercase text-white md:mb-4 md:w-full ${
-            isSidebarOpen && 'tracking-wider md:p-4 md:text-h2-medium'
+          className={`text-center font-outfit text-body-2 font-medium uppercase text-white md:mb-4 md:w-full ${
+            isSidebarOpen && 'tracking-wider md:text-h2-medium'
           }`}
         >
-          Game <br className="md:hidden" /> Zone
+          <div className="relative">
+            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
+            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
+          </div>
+          <span className="my-1 inline-block md:my-4">
+            Game <br className="md:hidden" /> Zone
+          </span>
+          <div className="relative">
+            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
+            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
+          </div>
         </span>
 
-        <div className="hidden md:mt-2 md:inline-block">
+        <div className="hidden md:mt-2 md:inline-block lg:mt-7">
           <UserProfile isSidebarOpen={isSidebarOpen} />
         </div>
 
         <ul
-          className={`flex items-center justify-between gap-4  md:flex-col md:items-start md:gap-4 ${
-            isSidebarOpen ? 'mt-6' : 'md:mt-20'
+          className={`flex items-center justify-between gap-4 md:flex-col md:items-start ${
+            isSidebarOpen ? 'mt-7' : 'md:mt-14'
           }`}
         >
           {routes.map((route) => (
@@ -169,7 +180,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
         <button
           type="button"
           onClick={() => setIsSidebarOpen((prevState: boolean) => !prevState)}
-          className={`hidden p-2 transition-all duration-300 md:mt-auto md:gap-2 ${
+          className={`hidden transition-all duration-300 md:mt-auto md:gap-2 ${
             isSidebarOpen ? 'md:flex md:items-center' : 'md:inline-block'
           } `}
         >
@@ -197,9 +208,11 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
           </span>
         </button>
 
-        <div className="hidden md:mt-4 md:inline-block md:w-full">
+        <div className="hidden md:mt-3 md:inline-block md:w-full">
           <SignOutButton isSidebarOpen={isSidebarOpen} />
         </div>
+
+        <Footer isSidebarOpen={isSidebarOpen} />
       </nav>
     </>
   );
