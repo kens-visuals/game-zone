@@ -8,6 +8,7 @@ import { db } from '../../firebase/firebase.config';
 
 // Compononents
 import Divider from '../../components/Divider';
+import PageHeading from '../../components/PageHeading';
 import FollowButton from '../../components/FollowButton';
 import CollectionItem from '../../components/CollectionItem';
 
@@ -85,7 +86,7 @@ export default function User({ data: user }: Props) {
 
   return (
     <div>
-      <h1 className="text-h1">User Profile</h1>
+      <PageHeading heading="Profile" />
       <Divider />
 
       <div className="my-4 flex flex-col  items-start gap-4">
@@ -97,7 +98,7 @@ export default function User({ data: user }: Props) {
             alt={user.displayName}
             className="rounded"
           />
-          <div className="flex flex-col">
+          <div className="flex flex-col md:text-h3">
             <span>{user.displayName}</span>
             <span>{user.email}</span>
           </div>
@@ -115,7 +116,7 @@ export default function User({ data: user }: Props) {
             <Tab
               key={follower.name}
               className={({ selected }) =>
-                `flex w-full items-center justify-center gap-2 rounded-lg py-2.5 font-outfit text-sm leading-5 text-white transition-all duration-300 focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-60
+                `flex w-full items-center justify-center gap-2 rounded-lg py-2.5 font-outfit text-sm leading-5 text-white transition-all duration-300 focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-60 md:p-4 md:text-h3
                   ${
                     selected
                       ? 'bg-primary shadow'
@@ -148,12 +149,12 @@ export default function User({ data: user }: Props) {
                           height={50}
                           src={usr.photoURL}
                           alt={usr.displayName}
-                          className="h-10 w-10 rounded-md object-cover"
+                          className="h-10 w-10 rounded-md object-cover md:h-14 md:w-14"
                         />
                       )}
                       <Link
                         href={`/user/${usr.uid}`}
-                        className="rounded-md focus:outline-none focus:ring-2 focus:ring-primary-light"
+                        className="rounded-md focus:outline-none focus:ring-2 focus:ring-primary-light md:text-h3"
                       >
                         {usr.displayName}
                       </Link>
@@ -179,10 +180,10 @@ export default function User({ data: user }: Props) {
       {bookmarkStatus === 'loading' ? (
         <span>Loading bookmars...</span>
       ) : (
-        <div className="my-8">
-          <h2 className="my-4 text-h3">Recent Bookmarks</h2>
+        <div className="my-8 w-full">
+          <h2 className="my-4 text-h3 md:text-h1">Recent Bookmarks</h2>
 
-          <ul className="grid snap-x snap-proximity grid-flow-col items-center gap-4 overflow-x-scroll">
+          <ul className="grid snap-x snap-proximity scroll-px-4 grid-flow-col items-center gap-4 overflow-x-scroll rounded-lg bg-primary-dark p-4">
             {!currentBookmark.length ? (
               <li className="flex flex-col items-center justify-center gap-4 rounded-md bg-primary-dark p-4 py-6">
                 <span className="inline-block w-full text-center">
@@ -193,9 +194,9 @@ export default function User({ data: user }: Props) {
                 </Link>
               </li>
             ) : (
-              currentBookmark?.map((bookmark) => (
+              currentBookmark?.slice(0, 7).map((bookmark) => (
                 <li className="w-full snap-start" key={bookmark.createdAt}>
-                  <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-lg">
+                  <div className="relative h-full  w-72 max-w-xl overflow-hidden rounded-lg">
                     <Image
                       src={bookmark.background_image || placeholderImg}
                       alt={bookmark.name}
@@ -218,6 +219,14 @@ export default function User({ data: user }: Props) {
                 </li>
               ))
             )}
+            <li className="h-full">
+              <Link
+                href="/bookmarks"
+                className="flex h-full items-center rounded-md bg-primary-light px-6 py-2 text-center text-white transition-colors duration-300 hover:bg-primary-light/50"
+              >
+                View More
+              </Link>
+            </li>
           </ul>
         </div>
       )}
@@ -227,9 +236,10 @@ export default function User({ data: user }: Props) {
           <span>Loading collections...</span>
         ) : (
           <>
-            <h2 className="my-4 text-h3">Collections</h2>
+            <h2 className="my-4 text-h3 md:text-h1">Collections</h2>
+
             {collections?.length ? (
-              <ul className="mt-4 flex flex-col gap-4 rounded-lg bg-primary-dark p-4 text-primary-light">
+              <ul className="mt-4 grid gap-4 rounded-lg bg-primary-dark p-4 text-primary-light md:grid-cols-2 lg:grid-cols-4">
                 {currentCollection?.map((col) => (
                   <li key={col.id} className="rounded-lg bg-primary p-4">
                     <CollectionItem
