@@ -183,7 +183,11 @@ export default function User({ data: user }: Props) {
         <div className="my-8 w-full">
           <h2 className="my-4 text-h3 md:text-h1">Recent Bookmarks</h2>
 
-          <ul className="grid snap-x snap-proximity scroll-px-4 grid-flow-col items-center gap-4 overflow-x-scroll rounded-lg bg-primary-dark p-4">
+          <ul
+            className={`grid snap-x snap-proximity scroll-px-4 grid-flow-col items-center gap-4 overflow-x-scroll rounded-lg bg-primary-dark p-4 ${
+              currentBookmark.length <= 4 && 'justify-start'
+            }`}
+          >
             {!currentBookmark.length ? (
               <li className="flex flex-col items-center justify-center gap-4 rounded-md bg-primary-dark p-4 py-6">
                 <span className="inline-block w-full text-center">
@@ -196,7 +200,7 @@ export default function User({ data: user }: Props) {
             ) : (
               currentBookmark?.slice(0, 7).map((bookmark) => (
                 <li className="w-full snap-start" key={bookmark.createdAt}>
-                  <div className="relative h-full  w-72 max-w-xl overflow-hidden rounded-lg">
+                  <div className="relative h-full w-72 max-w-xl overflow-hidden rounded-lg">
                     <Image
                       src={bookmark.background_image || placeholderImg}
                       alt={bookmark.name}
@@ -219,14 +223,16 @@ export default function User({ data: user }: Props) {
                 </li>
               ))
             )}
-            <li className="h-full">
-              <Link
-                href="/bookmarks"
-                className="flex h-full items-center rounded-md bg-primary-light px-6 py-2 text-center text-white transition-colors duration-300 hover:bg-primary-light/50"
-              >
-                View More
-              </Link>
-            </li>
+            {currentBookmark.length > 4 && (
+              <li className="h-full">
+                <Link
+                  href="/bookmarks"
+                  className="flex h-full items-center rounded-md bg-primary-light px-6 py-2 text-center text-white transition-colors duration-300 hover:bg-primary-light/50"
+                >
+                  View More
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       )}
