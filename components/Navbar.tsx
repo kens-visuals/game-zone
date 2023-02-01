@@ -10,6 +10,10 @@ import PagesNav from './PagesNav';
 import UserProfile from './UserProfile';
 import SignOutButton from './SignOutButton';
 
+// Hooks
+import useUser from '../hooks/useUser';
+import SignInButton from './SignInButton';
+
 // Interface
 interface Props {
   isSidebarOpen: boolean;
@@ -17,6 +21,7 @@ interface Props {
 }
 
 export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
+  const { currentUser, isUserLoading } = useUser();
   const { pathname } = useRouter();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -85,9 +90,11 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
           </div>
         </span>
 
-        <div className="hidden md:mt-2 md:inline-block lg:mt-7">
-          <UserProfile isSidebarOpen={isSidebarOpen} />
-        </div>
+        {currentUser && (
+          <div className="hidden md:mt-2 md:inline-block lg:mt-7">
+            <UserProfile isSidebarOpen={isSidebarOpen} />
+          </div>
+        )}
 
         <ul
           className={`flex items-center justify-between gap-4 md:flex-col md:items-start ${
@@ -209,7 +216,14 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
         </button>
 
         <div className="hidden md:mt-3 md:inline-block md:w-full">
-          <SignOutButton isSidebarOpen={isSidebarOpen} />
+          {currentUser ? (
+            <SignOutButton isSidebarOpen={isSidebarOpen} />
+          ) : (
+            <SignInButton
+              isSidebarOpen={isSidebarOpen}
+              isUserLoading={isUserLoading}
+            />
+          )}
         </div>
 
         <Footer isSidebarOpen={isSidebarOpen} />

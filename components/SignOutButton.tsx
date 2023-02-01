@@ -1,13 +1,19 @@
+import { useRouter } from 'next/router';
+
 // Hooks
 import useAuth from '../hooks/useAuth';
 
 export default function SignOutButton({ isSidebarOpen = false }) {
+  const router = useRouter();
   const { handleUserSignOut } = useAuth();
 
   return (
     <button
       type="button"
-      onClick={handleUserSignOut}
+      onClick={() => {
+        handleUserSignOut();
+        router.push('/');
+      }}
       className="mt-auto flex w-full items-center justify-center gap-2 rounded-md bg-primary-dark p-2 text-white transition-all duration-300 hover:bg-primary md:w-full md:bg-primary-light"
     >
       <svg
