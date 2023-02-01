@@ -1,3 +1,5 @@
+import { orderBy, query, Query } from 'firebase/firestore';
+
 export const formatDate = (date: string) => {
   const newDate = new Date(date);
 
@@ -7,3 +9,6 @@ export const formatDate = (date: string) => {
     day: 'numeric',
   });
 };
+
+export const orderByDescQuery = (collRef: Query) =>
+  query(collRef, orderBy('createdAt', 'desc'));

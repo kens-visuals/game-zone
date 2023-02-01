@@ -1,3 +1,4 @@
+import { useFirestore } from 'reactfire';
 import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
 import {
   collection,
@@ -5,14 +6,13 @@ import {
   doc,
   serverTimestamp,
 } from 'firebase/firestore';
-import { useFirestore } from 'reactfire';
 
 // Hooks
 import useUser from './useUser';
+import { Bookmark } from './useUserBookmarks';
 
 // Types
 import { GameInterface } from '../lib/types/game';
-import { Bookmark } from './useUserBookmarks';
 
 export default function useAddBookmark() {
   const { currentUser } = useUser();

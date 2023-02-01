@@ -1,4 +1,3 @@
-import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
 import {
   arrayRemove,
   arrayUnion,
@@ -13,6 +12,7 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { useFirestoreCollectionData } from 'reactfire';
+import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
 import { db } from '../firebase/firebase.config';
 
 // Hooks
@@ -20,6 +20,7 @@ import useUser from './useUser';
 
 // Types
 import { GameInterface } from '../lib/types/game';
+import { orderByDescQuery } from '../lib/helpers';
 
 export interface CollectionInfo {
   id?: string;
@@ -39,10 +40,7 @@ export default function useCollections() {
     db,
     `users/${currentUser?.uid}/collections`
   );
-  const userCollectionsQuery = query(
-    userCollectionsRef,
-    orderBy('createdAt', 'desc')
-  );
+  const userCollectionsQuery = orderByDescQuery(userCollectionsRef);
   const privateCollectionsQuery = query(
     userCollectionsRef,
     where('isPublic', '==', false),
@@ -70,7 +68,6 @@ export default function useCollections() {
   };
 
   const addNewDataMutation = useFirestoreCollectionMutation(userCollectionsRef);
-
   const addNewCollection = (collectionInfo: CollectionInfo) => {
     const createdAt = serverTimestamp();
     const createdBy = currentUser?.displayName;

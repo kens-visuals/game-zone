@@ -1,9 +1,10 @@
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { useFirestore, useFirestoreCollectionData } from 'reactfire';
 import { db } from '../firebase/firebase.config';
 
 // Hooks
 import useUser from './useUser';
+import { orderByDescQuery } from '../lib/helpers';
 
 // Type
 import { DataType } from '../lib/types/game';
@@ -25,19 +26,20 @@ export default function useUserBookmarks() {
     firestore,
     `users/${currentUser?.uid}/bookmarks`
   );
+  const userBookmarksQuery = orderByDescQuery(gamesCollection);
 
   const getCurrentUserBookmarks = (
     userId: string,
     callback: (d: any) => void
   ) => {
     const userCollRef = collection(db, `users/${userId}/bookmarks`);
-    const userCollQuery = query(userCollRef, orderBy('createdAt', 'desc'));
+    const userCollQuery = orderByDescQuery(userCollRef);
 
     return onSnapshot(userCollQuery, callback);
   };
 
   const { status, data: bookmarks } = useFirestoreCollectionData(
-    gamesCollection,
+    userBookmarksQuery,
     { idField: 'id' }
   );
   const bookmarksData = bookmarks as Bookmark[];

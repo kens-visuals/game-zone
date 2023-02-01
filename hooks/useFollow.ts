@@ -18,7 +18,7 @@ export default function useFollow() {
 
   const followList = (
     type: 'followers' | 'following',
-    currentUserId: string | undefined = currentUser?.uid
+    currentUserId = currentUser?.uid
   ) =>
     usersStatus === 'success'
       ? users

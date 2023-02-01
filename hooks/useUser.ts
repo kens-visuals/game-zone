@@ -1,6 +1,6 @@
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useAuthUser } from '@react-query-firebase/auth';
-import { db, auth } from '../firebase/firebase.config';
+import { auth, db } from '../firebase/firebase.config';
 
 interface UserFollow {
   uid: string;
