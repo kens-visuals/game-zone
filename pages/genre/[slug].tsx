@@ -10,6 +10,7 @@ import {
 // Components
 import Banner from '../../components/Banner';
 import GameCard from '../../components/GameCard';
+import ErrorCard from '../../components/ErrorCard';
 import LoadingCard from '../../components/LoadingCard';
 import GamesListContainer from '../../components/GamesListContainer';
 
@@ -17,8 +18,7 @@ import GamesListContainer from '../../components/GamesListContainer';
 import RAWG from '../../lib/rawg';
 
 // Types
-import { GameInterface, DataType } from '../../lib/types/game';
-import ErrorCard from '../../components/ErrorCard';
+import { DataType, GameInterface } from '../../lib/types/game';
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 

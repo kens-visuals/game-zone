@@ -2,10 +2,12 @@ import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 // Componentns
-import PageList from '../../components/PageList';
+import Divider from '../../components/Divider';
 import PageItem from '../../components/PageItem';
+import PageList from '../../components/PageList';
 import ErrorCard from '../../components/ErrorCard';
 import LoadingCard from '../../components/LoadingCard';
+import PageHeading from '../../components/PageHeading';
 
 // Helpers
 import RAWG from '../../lib/rawg';
@@ -29,19 +31,24 @@ export default function Genres() {
     data: genres,
     isError,
     isLoading,
-    isFetching,
   } = useQuery(['getGenres'], fetchGenres);
 
-  if (isLoading || isFetching) return <LoadingCard size={20} />;
+  if (isLoading) return <LoadingCard size={20} />;
 
   if (isError) return <ErrorCard />;
 
   return (
-    <PageList>
-      {genres?.map((genre) => (
-        <PageItem key={genre.name} route="genre" data={genre} />
-      ))}
-    </PageList>
+    <>
+      <PageHeading heading="Genres" />
+
+      <Divider />
+
+      <PageList>
+        {genres?.map((genre) => (
+          <PageItem key={genre.name} route="genre" data={genre} />
+        ))}
+      </PageList>
+    </>
   );
 }
 

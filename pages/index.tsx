@@ -1,6 +1,7 @@
 import Head from 'next/head';
 
 // Componentns
+import Divider from '../components/Divider';
 import GamesList from '../components/GamesList';
 import TrendingGamesList from '../components/TrendingGamesList';
 
@@ -16,20 +17,7 @@ export default function Home() {
       <div>
         <TrendingGamesList />
 
-        <div className="mt-4 grid gap-4">
-          <div className="relative">
-            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
-            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
-          </div>
-          <div className="relative">
-            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
-            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
-          </div>
-          <div className="relative">
-            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
-            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
-          </div>
-        </div>
+        <Divider />
 
         <GamesList />
       </div>

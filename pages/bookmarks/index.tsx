@@ -1,9 +1,11 @@
 import Link from 'next/link';
 
 // Components
+import Divider from '../../components/Divider';
 import GameCard from '../../components/GameCard';
 import ErrorCard from '../../components/ErrorCard';
 import LoadingCard from '../../components/LoadingCard';
+import PageHeading from '../../components/PageHeading';
 import SignInButton from '../../components/SignInButton';
 import GamesListContainer from '../../components/GamesListContainer';
 
@@ -21,6 +23,10 @@ export default function Bookmarks() {
 
   return (
     <div>
+      <PageHeading heading="Bookmarks" />
+
+      <Divider />
+
       {!currentUser ? (
         <div className="flex flex-col items-center justify-center gap-4">
           <h1>No bookmarks yet!</h1>

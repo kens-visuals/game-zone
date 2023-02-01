@@ -9,8 +9,8 @@ import {
 
 // Components
 import Banner from '../../components/Banner';
-import ErrorCard from '../../components/ErrorCard';
 import GameCard from '../../components/GameCard';
+import ErrorCard from '../../components/ErrorCard';
 import LoadingCard from '../../components/LoadingCard';
 import GamesListContainer from '../../components/GamesListContainer';
 

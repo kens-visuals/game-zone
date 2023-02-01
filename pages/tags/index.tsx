@@ -2,10 +2,12 @@ import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 
 // Componentns
-import PageList from '../../components/PageList';
+import Divider from '../../components/Divider';
 import PageItem from '../../components/PageItem';
+import PageList from '../../components/PageList';
 import ErrorCard from '../../components/ErrorCard';
 import LoadingCard from '../../components/LoadingCard';
+import PageHeading from '../../components/PageHeading';
 
 // Helpers
 import RAWG from '../../lib/rawg';
@@ -31,7 +33,6 @@ export default function Tags() {
     data: tags,
     isError,
     isLoading,
-    isFetching,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -43,36 +44,43 @@ export default function Tags() {
 
       return undefined;
     },
+    keepPreviousData: true,
   });
 
-  if (isLoading || isFetching) return <LoadingCard size={20} />;
+  if (isLoading) return <LoadingCard size={20} />;
 
   if (isError) return <ErrorCard />;
 
   return (
-    <div className="flex flex-col items-center gap-4 pb-14">
-      <PageList>
-        {tags?.pages?.map((page) =>
-          page.map((data) => (
-            <PageItem key={data.name} route="tag" data={data} />
-          ))
-        )}
-      </PageList>
+    <>
+      <PageHeading heading="Tags" />
 
-      <button
-        type="button"
-        disabled={!hasNextPage || isFetchingNextPage}
-        onClick={() => hasNextPage && fetchNextPage()}
-        className="rounded-md bg-primary-light px-6 py-2 text-white"
-      >
-        {/* eslint-disable-next-line no-nested-ternary */}
-        {isFetchingNextPage
-          ? 'Loading more...'
-          : hasNextPage
-          ? 'Load More'
-          : 'Nothing more to load'}
-      </button>
-    </div>
+      <Divider />
+
+      <div className="flex flex-col items-center gap-4 pb-14">
+        <PageList>
+          {tags?.pages?.map((page) =>
+            page.map((data) => (
+              <PageItem key={data.name} route="tag" data={data} />
+            ))
+          )}
+        </PageList>
+
+        <button
+          type="button"
+          disabled={!hasNextPage || isFetchingNextPage}
+          onClick={() => hasNextPage && fetchNextPage()}
+          className="rounded-md bg-primary-light px-6 py-2 text-white"
+        >
+          {/* eslint-disable-next-line no-nested-ternary */}
+          {isFetchingNextPage
+            ? 'Loading more...'
+            : hasNextPage
+            ? 'Load More'
+            : 'Nothing more to load'}
+        </button>
+      </div>
+    </>
   );
 }
 

@@ -5,6 +5,7 @@ import { dehydrate, QueryClient, useQuery } from 'react-query';
 import PageList from '../../components/PageList';
 import PageItem from '../../components/PageItem';
 import ErrorCard from '../../components/ErrorCard';
+import PageHeading from '../../components/PageHeading';
 import LoadingCard from '../../components/LoadingCard';
 
 // Helpers
@@ -12,6 +13,7 @@ import RAWG from '../../lib/rawg';
 
 // Types
 import { DataType } from '../../lib/types/game';
+import Divider from '../../components/Divider';
 
 interface DataProps {
   results: DataType[];
@@ -31,7 +33,6 @@ export default function Stores() {
     data: stores,
     isError,
     isLoading,
-    isFetching,
   } = useQuery(['getStores'], fetchStores, {
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length < 40) return undefined;
@@ -42,18 +43,24 @@ export default function Stores() {
     },
   });
 
-  if (isLoading || isFetching) return <LoadingCard size={20} />;
+  if (isLoading) return <LoadingCard size={20} />;
 
   if (isError) return <ErrorCard />;
 
   return (
-    <div className="flex w-full flex-col items-center gap-4 pb-14">
-      <PageList>
-        {stores?.map((data) => (
-          <PageItem key={data.name} route="store" data={data} />
-        ))}
-      </PageList>
-    </div>
+    <>
+      <PageHeading heading="Stores" />
+
+      <Divider />
+
+      <div className="flex w-full flex-col items-center gap-4 pb-14">
+        <PageList>
+          {stores?.map((data) => (
+            <PageItem key={data.name} route="store" data={data} />
+          ))}
+        </PageList>
+      </div>
+    </>
   );
 }
 

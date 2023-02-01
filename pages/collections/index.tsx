@@ -1,15 +1,16 @@
 import { FormEvent, useId, useState } from 'react';
 
 // Components
+import Divider from '../../components/Divider';
 import ErrorCard from '../../components/ErrorCard';
 import LoadingCard from '../../components/LoadingCard';
-import Divider from '../../components/Divider';
+import PageHeading from '../../components/PageHeading';
+import useCollections from '../../hooks/useCollections';
+import SignInButton from '../../components/SignInButton';
 import CollectionItem from '../../components/CollectionItem';
 
 // Hooks
 import useUser from '../../hooks/useUser';
-import useCollections from '../../hooks/useCollections';
-import SignInButton from '../../components/SignInButton';
 
 export default function AddNewCollection() {
   const initialState = {
@@ -43,13 +44,13 @@ export default function AddNewCollection() {
 
   return (
     <>
-      <div>
-        <h1 className="mb-4 text-h1">Collections</h1>
+      <div className="mb-8">
+        <PageHeading heading="Collections" />
         {currentUser && (
           <form
             action="#"
             onSubmit={handleSubmit}
-            className="flex flex-col gap-2 "
+            className="flex flex-col gap-2"
           >
             <input
               required
@@ -124,7 +125,7 @@ export default function AddNewCollection() {
       <Divider />
 
       <div>
-        <h2 className="mt-4 text-h2-medium">Your collections</h2>
+        <h2 className="mt-8 text-h2-medium">Your Collections</h2>
         {collections.length ? (
           <ul className="mt-4 grid gap-4 rounded-lg bg-primary-dark p-4 text-primary-light md:grid-flow-col md:grid-cols-2 lg:grid-cols-4">
             {collections?.map((collection) => (

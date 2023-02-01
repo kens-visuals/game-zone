@@ -13,12 +13,12 @@ import LoadingCard from '../../components/LoadingCard';
 import GameSeriesList from '../../components/GameSeriesList';
 import CollectionsDropdown from '../../components/CollectionsDropdown';
 
-// Helpers
-import RAWG from '../../lib/rawg';
-import { formatDate } from '../../lib/helpers';
-
 // Hooks
 import useBookmarkMutation from '../../hooks/useBookmarkMutation';
+import { formatDate } from '../../lib/helpers';
+
+// Helpers
+import RAWG from '../../lib/rawg';
 
 // Interfaces
 import { GameInterface, Screenshots } from '../../lib/types/game';
