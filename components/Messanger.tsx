@@ -7,27 +7,28 @@ import MessangerInput from './MessangerInput';
 
 // Hooks
 import useUser from '../hooks/useUser';
-import useUsers from '../hooks/useUsers';
+
+import useFollow from '../hooks/useFollow';
 import useMessages from '../hooks/useMessages';
 
 // Interface
 import { MessageType } from '../lib/types/game';
 
 export default function Messanger() {
-  const { users } = useUsers();
+  const { followList } = useFollow();
   const { currentUser } = useUser();
   const { getMessages } = useMessages();
   const scrollRef = useRef(null);
 
-  const otherUsers = users?.filter((user) => user.uid !== currentUser?.uid);
+  const otherUsers = followList('following') || [];
 
-  const [sendTo, setSendTo] = useState(otherUsers[0].uid);
+  const [sendTo, setSendTo] = useState(otherUsers[0]?.uid || '');
   const [currentMessages, setCurrentMessages] = useState<MessageType[]>([]);
   const [messageLimit, setMessageLimit] = useState(25);
 
-  const otherUser = users?.filter((user) => user.uid === sendTo).at(0);
-
-  console.log(otherUsers);
+  const otherUser = followList('following')
+    ?.filter((user) => user.uid === sendTo)
+    .at(0);
 
   useEffect(() => {
     if (!sendTo) return;
@@ -105,7 +106,11 @@ export default function Messanger() {
           {currentMessages?.map((msg) => (
             <Message key={msg.id} message={msg} />
           ))}
-          <li className="">
+          <li
+            className={`flex w-fit items-center justify-center self-center rounded-md bg-primary-light px-4 py-2 ${
+              messageLimit > currentMessages.length && 'hidden'
+            }`}
+          >
             <button
               type="button"
               onClick={() => setMessageLimit((prevState) => prevState + 25)}
