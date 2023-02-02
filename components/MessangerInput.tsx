@@ -17,7 +17,7 @@ export default function MessangerInput({ sendTo, scrollRef }: Props) {
   const handleClick = (e: SyntheticEvent) => {
     addNewMessage(e, message, sendTo);
     setMessage('');
-    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (

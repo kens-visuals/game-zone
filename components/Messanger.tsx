@@ -23,6 +23,7 @@ export default function Messanger() {
 
   const [sendTo, setSendTo] = useState(otherUsers[0].uid);
   const [currentMessages, setCurrentMessages] = useState<MessageType[]>([]);
+  const [messageLimit, setMessageLimit] = useState(25);
 
   const otherUser = users?.filter((user) => user.uid === sendTo).at(0);
 
@@ -36,11 +37,11 @@ export default function Messanger() {
         d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
       );
 
-    const unsub = getMessages(sendTo, callback, 50);
+    const unsub = getMessages(sendTo, callback, messageLimit);
 
     // eslint-disable-next-line consistent-return
     return () => unsub();
-  }, [sendTo]);
+  }, [sendTo, messageLimit]);
 
   return (
     <>
@@ -69,7 +70,7 @@ export default function Messanger() {
         ))}
       </ul>
 
-      <div className="relative mt-4 overflow-hidden rounded-lg bg-primary-dark ">
+      <div className="relative mt-4 h-full overflow-hidden rounded-lg bg-primary-dark ">
         <div className="grid grid-flow-row border-b border-primary-light px-4 py-2 shadow-lg shadow-black/70">
           {otherUser && (
             <div className="flex items-center gap-2">
@@ -99,11 +100,19 @@ export default function Messanger() {
           )}
         </div>
 
-        <ul className="flex h-[calc(100vh_-_27rem)] flex-col-reverse gap-2 overflow-y-scroll p-4 pb-16">
-          <li ref={scrollRef} className="pb-.5" />
+        <ul className="flex h-[calc(100vh_-_27rem)] flex-col-reverse gap-2 overflow-y-scroll p-4">
+          <li ref={scrollRef} className="mt-8" />
           {currentMessages?.map((msg) => (
             <Message key={msg.id} message={msg} />
           ))}
+          <li className="">
+            <button
+              type="button"
+              onClick={() => setMessageLimit((prevState) => prevState + 25)}
+            >
+              Load More
+            </button>
+          </li>
         </ul>
 
         <MessangerInput sendTo={sendTo} scrollRef={scrollRef} />
