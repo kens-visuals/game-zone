@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from 'react';
+import { RefObject, SyntheticEvent, useState } from 'react';
 
 // Hook
 import useMessages from '../hooks/useMessages';
@@ -6,10 +6,15 @@ import useMessages from '../hooks/useMessages';
 // Interfaces
 interface Props {
   sendTo: string;
-  scrollRef: any;
+  scrollRef: RefObject<HTMLLIElement>;
+  setUnreadMessages: (initialState: []) => void;
 }
 
-export default function MessangerInput({ sendTo, scrollRef }: Props) {
+export default function MessangerInput({
+  sendTo,
+  scrollRef,
+  setUnreadMessages,
+}: Props) {
   const [message, setMessage] = useState('');
 
   const { addNewMessage } = useMessages();
@@ -17,15 +22,19 @@ export default function MessangerInput({ sendTo, scrollRef }: Props) {
   const handleClick = (e: SyntheticEvent) => {
     addNewMessage(e, message, sendTo);
     setMessage('');
-    scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setUnreadMessages([]);
+
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
-    <form className="absolute bottom-0 left-0 z-20 grid w-full grid-cols-[1fr_auto]">
+    <form className="absolute bottom-0 left-0 z-20 grid w-full grid-cols-[1fr_auto] overflow-hidden rounded-b-lg ">
       <input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="w-full bg-primary/90 px-4 text-white outline-none"
+        className="w-full bg-secondary/50 px-4 text-white outline-none"
       />
       <button
         type="submit"

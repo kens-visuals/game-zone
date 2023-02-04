@@ -18,13 +18,13 @@ export default function Messanger() {
   const { getMessages, getMessagesStatus, updateMessagesStatus } =
     useMessages();
 
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLLIElement>(null);
   const otherUsers = followList('following') || [];
 
   const [sendTo, setSendTo] = useState(otherUsers[0]?.uid || '');
   const [currentMessages, setCurrentMessages] = useState<MessageType[]>([]);
   const [messageLimit, setMessageLimit] = useState(50);
-  const [unreadMessages, setUnreadMessages] = useState([]);
+  const [unreadMessages, setUnreadMessages] = useState<MessageType[]>([]);
 
   const otherUser = followList('following')
     ?.filter((user) => user.uid === sendTo)
@@ -124,7 +124,11 @@ export default function Messanger() {
           </li>
         </ul>
 
-        <MessangerInput sendTo={sendTo} scrollRef={scrollRef} />
+        <MessangerInput
+          sendTo={sendTo}
+          scrollRef={scrollRef}
+          setUnreadMessages={setUnreadMessages}
+        />
       </div>
     </>
   );
