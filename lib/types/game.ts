@@ -43,3 +43,14 @@ export interface GameInterface {
 export interface Screenshots {
   image: string;
 }
+
+export interface MessageType {
+  id: string;
+  uid: string;
+  readAt?: { seconds: number };
+  status?: string;
+  message: string;
+  photoURL: string;
+  createdAt: string;
+  displayName: string;
+}

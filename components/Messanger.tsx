@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 
 // Components
@@ -6,8 +7,6 @@ import Message from './Message';
 import MessangerInput from './MessangerInput';
 
 // Hooks
-import useUser from '../hooks/useUser';
-
 import useFollow from '../hooks/useFollow';
 import useMessages from '../hooks/useMessages';
 
@@ -16,15 +15,16 @@ import { MessageType } from '../lib/types/game';
 
 export default function Messanger() {
   const { followList } = useFollow();
-  const { currentUser } = useUser();
-  const { getMessages } = useMessages();
-  const scrollRef = useRef(null);
+  const { getMessages, getMessagesStatus, updateMessagesStatus } =
+    useMessages();
 
+  const scrollRef = useRef(null);
   const otherUsers = followList('following') || [];
 
   const [sendTo, setSendTo] = useState(otherUsers[0]?.uid || '');
   const [currentMessages, setCurrentMessages] = useState<MessageType[]>([]);
-  const [messageLimit, setMessageLimit] = useState(25);
+  const [messageLimit, setMessageLimit] = useState(50);
+  const [unreadMessages, setUnreadMessages] = useState([]);
 
   const otherUser = followList('following')
     ?.filter((user) => user.uid === sendTo)
@@ -33,15 +33,24 @@ export default function Messanger() {
   useEffect(() => {
     if (!sendTo) return;
 
-    const callback = (d: any) =>
+    const messagesCallback = (d: any) =>
       setCurrentMessages(
         d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
       );
 
-    const unsub = getMessages(sendTo, callback, messageLimit);
+    const statusCallback = (d: any) =>
+      setUnreadMessages(
+        d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
+      );
+
+    const statusUnsub = getMessagesStatus(sendTo, statusCallback, messageLimit);
+    const messagesUnsub = getMessages(sendTo, messagesCallback, messageLimit);
 
     // eslint-disable-next-line consistent-return
-    return () => unsub();
+    return () => {
+      statusUnsub();
+      messagesUnsub();
+    };
   }, [sendTo, messageLimit]);
 
   return (
@@ -51,9 +60,13 @@ export default function Messanger() {
           <li key={user.uid}>
             <button
               type="button"
-              onClick={() => setSendTo(user.uid)}
+              onClick={() => {
+                setSendTo(user.uid);
+                updateMessagesStatus(user.uid);
+              }}
               className="flex flex-col items-center justify-center gap-2"
             >
+              <span>{unreadMessages.length}</span>
               <Image
                 width={100}
                 height={100}
@@ -72,32 +85,23 @@ export default function Messanger() {
       </ul>
 
       <div className="relative mt-4 h-full overflow-hidden rounded-lg bg-primary-dark ">
-        <div className="grid grid-flow-row border-b border-primary-light px-4 py-2 shadow-lg shadow-black/70">
+        <div className="flex items-center gap-2 border-b border-primary-light p-4 shadow-lg shadow-black/70">
           {otherUser && (
-            <div className="flex items-center gap-2">
-              <Image
-                height={50}
-                width={50}
-                src={otherUser?.photoURL}
-                alt={otherUser?.displayName}
-                className="h-10 w-10 rounded-full"
-              />
-              <span>{otherUser.displayName.replace(/\s\w*/gi, '')}</span>
-            </div>
-          )}
-
-          {currentUser && (
-            <div className="flex items-center justify-end gap-2">
-              <span>{currentUser.displayName.replace(/\s\w*/gi, '')}</span>
-
-              <Image
-                height={50}
-                width={50}
-                src={currentUser?.photoURL}
-                alt={currentUser?.displayName}
-                className="h-10 w-10 rounded-full"
-              />
-            </div>
+            <>
+              <Link
+                href={`/user/${otherUser?.uid}`}
+                className="flex items-center gap-2"
+              >
+                <Image
+                  height={50}
+                  width={50}
+                  src={otherUser?.photoURL}
+                  alt={otherUser?.displayName}
+                  className="h-10 w-10 rounded-full"
+                />
+              </Link>
+              <span>{otherUser.displayName}</span>
+            </>
           )}
         </div>
 

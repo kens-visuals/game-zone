@@ -2,11 +2,15 @@ import { SyntheticEvent } from 'react';
 import {
   addDoc,
   collection,
+  getDocs,
   limit,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
+  where,
+  doc,
+  writeBatch,
 } from 'firebase/firestore';
 import { db } from '../firebase/firebase.config';
 
@@ -39,6 +43,7 @@ export default function useMessages() {
     const data = {
       message,
       createdAt,
+      status: 'unread',
       uid: currentUser?.uid,
       photoURL: currentUser?.photoURL,
       displayName: currentUser?.displayName,
@@ -69,5 +74,59 @@ export default function useMessages() {
     return onSnapshot(userMessagesQuery, callback);
   };
 
-  return { addNewMessage, getMessages };
+  const getMessagesStatus = (
+    targetUserId: string,
+    callback: (d: any) => void,
+    msgLimit: number = 25
+  ) => {
+    const userMessagesRef = collection(
+      db,
+      `users/${currentUser?.uid}/chats/${targetUserId}/messages`
+    );
+
+    const userMessagesStatusQuery = query(
+      userMessagesRef,
+      orderBy('createdAt', 'desc'),
+      where('status', '==', 'unread'),
+      where('uid', '==', `${targetUserId}`),
+      limit(msgLimit)
+    );
+
+    return onSnapshot(userMessagesStatusQuery, callback);
+  };
+
+  const updateMessagesStatus = async (targetUserId: string) => {
+    const batch = writeBatch(db);
+    const userMessagesRef = collection(
+      db,
+      `users/${currentUser?.uid}/chats/${targetUserId}/messages`
+    );
+
+    const newDocumentBody = {
+      readAt: serverTimestamp(),
+      status: 'read',
+    };
+
+    const userMessagesStatusQuery = query(
+      userMessagesRef,
+      where('status', '==', 'unread')
+    );
+
+    const unreads = await getDocs(userMessagesStatusQuery);
+
+    unreads.forEach((d) => {
+      const docRef = doc(userMessagesRef, d.id);
+
+      batch.update(docRef, newDocumentBody);
+    });
+
+    await batch.commit();
+  };
+
+  return {
+    getMessages,
+    addNewMessage,
+    getMessagesStatus,
+    updateMessagesStatus,
+  };
 }
