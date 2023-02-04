@@ -64,9 +64,11 @@ export default function Messanger() {
                 setSendTo(user.uid);
                 updateMessagesStatus(user.uid);
               }}
-              className="flex flex-col items-center justify-center gap-2"
+              className="relative flex flex-col items-center justify-center gap-2"
             >
-              <span>{unreadMessages.length}</span>
+              <span className="absolute right-2 top-0 w-fit rounded-full bg-primary-light p-0.5 px-1 text-body-2">
+                {unreadMessages.length}
+              </span>
               <Image
                 width={100}
                 height={100}
