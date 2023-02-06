@@ -17,7 +17,7 @@ export default function Layout({ children }: Props) {
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
       />
-      <main className="pt-16 font-outfit text-white md:h-[calc(100vh_-_2rem)] md:w-full md:overflow-y-scroll md:pt-0">
+      <main className="pt-20 font-outfit text-white md:h-[calc(100vh_-_2rem)] md:w-full md:overflow-y-scroll md:pt-0">
         <SearchResults />
         {children}
       </main>

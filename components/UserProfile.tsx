@@ -85,7 +85,7 @@ export default function UserProfile({ isSidebarOpen = false }) {
 
       <Link
         href={`/user/${currentUser?.uid}`}
-        className={`mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-secondary px-3 py-1.5 text-center text-xs font-medium text-white shadow-lg transition-colors duration-300 hover:bg-white hover:text-secondary focus:outline-none focus:ring-2 focus:ring-primary-light ${
+        className={`mt-4 flex w-full items-center justify-center gap-2 rounded-lg border-4 border-secondary px-3 py-1.5 text-center text-xs font-medium text-white shadow-lg transition-colors duration-300 hover:bg-white hover:text-secondary focus:outline-none focus:ring-2 focus:ring-primary-light ${
           isSidebarOpen ? 'w-full md:flex' : 'md:hidden'
         }`}
       >

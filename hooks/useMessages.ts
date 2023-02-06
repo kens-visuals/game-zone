@@ -58,7 +58,7 @@ export default function useMessages() {
   const getMessages = (
     targetUserId: string,
     callback: (d: any) => void,
-    msgLimit: number = 25
+    msgLimit: number = 50
   ) => {
     const userMessagesRef = collection(
       db,

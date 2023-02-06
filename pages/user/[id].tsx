@@ -141,25 +141,33 @@ export default function User({ data: user }: Props) {
                   {users.map((usr) => (
                     <li
                       key={usr.uid}
-                      className="flex items-center gap-2 rounded-md p-2 text-white hover:bg-primary-dark"
+                      className="flex flex-col gap-2 rounded-md p-2 text-white hover:bg-primary-dark md:flex-row"
                     >
-                      {usr.photoURL && (
-                        <Image
-                          width={50}
-                          height={50}
-                          src={usr.photoURL}
-                          alt={usr.displayName}
-                          className="h-10 w-10 rounded-md object-cover md:h-14 md:w-14"
-                        />
-                      )}
-                      <Link
-                        href={`/user/${usr.uid}`}
-                        className="rounded-md focus:outline-none focus:ring-2 focus:ring-primary-light md:text-h3"
-                      >
-                        {usr.displayName}
-                      </Link>
+                      <div className="flex items-center gap-4">
+                        {usr.photoURL && (
+                          <Image
+                            width={50}
+                            height={50}
+                            src={usr.photoURL}
+                            alt={usr.displayName}
+                            className="h-10 w-10 rounded-md object-cover md:h-14 md:w-14"
+                          />
+                        )}
+                        <Link
+                          href={`/user/${usr.uid}`}
+                          className="rounded-md focus:outline-none focus:ring-2 focus:ring-primary-light md:text-h3"
+                        >
+                          {usr.displayName}
+                        </Link>
+                      </div>
 
-                      <div className="ml-auto">
+                      <div className="flex items-center gap-2 md:ml-auto">
+                        <Link
+                          href="/messages"
+                          className="w-full rounded-md bg-primary-light py-2.5 px-4 text-center"
+                        >
+                          Message
+                        </Link>
                         {usr.uid !== currentUser?.uid && (
                           <FollowButton user={usr} />
                         )}

@@ -2,10 +2,10 @@
 import PagesNav from './PagesNav';
 import SignInButton from './SignInButton';
 import SignOutButton from './SignOutButton';
+import UserProfile from './UserProfile';
 
 // Hooks
 import useUser from '../hooks/useUser';
-import UserProfile from './UserProfile';
 
 export default function Drawer() {
   const { currentUser, isUserLoading } = useUser();
@@ -19,7 +19,7 @@ export default function Drawer() {
         <PagesNav />
 
         {!currentUser && !isUserLoading ? (
-          <SignInButton isUserLoading={isUserLoading} />
+          <SignInButton isSidebarOpen isUserLoading={isUserLoading} />
         ) : (
           <SignOutButton />
         )}

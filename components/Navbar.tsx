@@ -8,11 +8,13 @@ import Footer from './Footer';
 import Divider from './Divider';
 import PagesNav from './PagesNav';
 import UserProfile from './UserProfile';
+import SignInButton from './SignInButton';
 import SignOutButton from './SignOutButton';
 
 // Hooks
 import useUser from '../hooks/useUser';
-import SignInButton from './SignInButton';
+
+// import useFollow from '../hooks/useFollow';
 
 // Interface
 interface Props {
@@ -21,12 +23,28 @@ interface Props {
 }
 
 export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
-  const { currentUser, isUserLoading } = useUser();
   const { pathname } = useRouter();
+  const { currentUser, isUserLoading } = useUser();
+
+  // const { followList } = useFollow();
+  // const followers = followList('followers');
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  // const [currentFollowersCount, setCurrentFollowersCount] = useState(
+  //   followers?.length || 0
+  // );
+
+  // console.log(followers);
+
+  // console.log(currentFollowersCount);
 
   useEffect(() => setIsDrawerOpen(false), [pathname]);
+
+  // useEffect(() => {
+  //   if (followers && followers?.length > currentFollowersCount)
+  //     setCurrentFollowersCount(followers?.length);
+  // }, [followers?.length]);
 
   const handleDrawerClick = () =>
     setIsDrawerOpen((drawerState) => !drawerState);
@@ -59,6 +77,16 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
       path: '/collections',
       icon: (
         <path d="M19.906 9c.382 0 .749.057 1.094.162V9a3 3 0 00-3-3h-3.879a.75.75 0 01-.53-.22L11.47 3.66A2.25 2.25 0 009.879 3H6a3 3 0 00-3 3v3.162A3.756 3.756 0 014.094 9h15.812zM4.094 10.5a2.25 2.25 0 00-2.227 2.568l.857 6A2.25 2.25 0 004.951 21H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-2.227-2.568H4.094z" />
+      ),
+    },
+    {
+      name: 'Messages',
+      path: '/messages',
+      icon: (
+        <>
+          <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+          <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
+        </>
       ),
     },
   ];
@@ -110,7 +138,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  fill="currentColor"
+                  fill="none"
                   className={`h-6 w-6 transition-all duration-300 ${
                     pathname === route.path
                       ? 'fill-white'
@@ -134,6 +162,26 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
               </Link>
             </li>
           ))}
+          {/* <li className="relative">
+            <div>
+              <span className="absolute bg-primary-light text-body-2 text-white">
+                {unreadMessages?.length}
+              </span>
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="h-6 w-6 fill-primary-light hover:fill-white"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          </li> */}
         </ul>
 
         <div className="hidden w-full md:inline-block ">
@@ -226,7 +274,9 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
           )}
         </div>
 
-        <Footer isSidebarOpen={isSidebarOpen} />
+        <div className="hidden md:mt-3 md:inline-block md:w-full">
+          <Footer isSidebarOpen={isSidebarOpen} />
+        </div>
       </nav>
     </>
   );
