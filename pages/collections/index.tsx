@@ -1,4 +1,5 @@
 import { FormEvent, useId, useState } from 'react';
+import Head from 'next/head';
 
 // Components
 import Divider from '../../components/Divider';
@@ -30,13 +31,15 @@ export default function AddNewCollection() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    if (collectionInfo.name) {
-      addNewCollection({ ...collectionInfo });
-      setIsError(false);
+    if (!collectionInfo.name || collectionInfo.name === '') {
+      setIsError(true);
     }
 
-    setCollectionInfo(initialState);
-    setIsError(true);
+    if (collectionInfo.name) {
+      addNewCollection({ ...collectionInfo });
+      setCollectionInfo(initialState);
+      setIsError(false);
+    }
   };
 
   if (status === 'loading') return <LoadingCard size={5} />;
@@ -44,6 +47,14 @@ export default function AddNewCollection() {
 
   return (
     <>
+      <Head>
+        <title>GZ | Collections</title>
+        <meta
+          name="description"
+          content="Collections of the games created by the user"
+        />
+      </Head>
+
       <div className="mb-8">
         <PageHeading heading="Collections" />
         <Divider />
@@ -67,7 +78,7 @@ export default function AddNewCollection() {
                   }))
                 }
                 placeholder="Collection name, i.g. Fav Games"
-                className="w-full rounded-lg border-b border-b-transparent bg-transparent bg-primary-dark p-4 text-white placeholder:opacity-50 focus:border-b-white focus-visible:outline-none"
+                className="w-full rounded-lg border border-transparent bg-primary-dark p-4 text-white placeholder:opacity-50 focus:border-white focus-visible:outline-none"
               />
               {isError && (
                 <span className="text-secondary">
@@ -86,7 +97,7 @@ export default function AddNewCollection() {
                 }
                 name="collections_description"
                 placeholder="Description: This collection is..."
-                className="h-28 w-full rounded-lg border-b border-b-transparent bg-transparent bg-primary-dark p-4 text-white placeholder:opacity-50 focus:border-b-white focus-visible:outline-none"
+                className="h-28 w-full rounded-lg border border-transparent bg-primary-dark p-4 text-white placeholder:opacity-50 focus:border-white focus-visible:outline-none"
               />
 
               {currentUser && (

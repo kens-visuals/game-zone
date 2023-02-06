@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -18,6 +19,8 @@ export default function CollectionItem({
   collection,
   removeCollection,
 }: Props) {
+  const [readMore, setReadMore] = useState(false);
+
   return (
     <>
       <div className="mb-4 flex w-full items-start justify-between">
@@ -34,6 +37,28 @@ export default function CollectionItem({
               {collection.createdBy}
             </span>
           </div>
+          {collection.description && (
+            <>
+              <div
+                className={`h-12 overflow-y-hidden text-body-2 ${
+                  readMore && 'h-fit overflow-visible'
+                }`}
+              >
+                <span>Description: </span>
+                <p className="inline-block text-primary-light/70">
+                  {collection.description}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  readMore ? setReadMore(false) : setReadMore(true)
+                }
+              >
+                {readMore ? 'Hide' : 'Read More'}
+              </button>
+            </>
+          )}
         </div>
 
         <div className="flex items-center gap-2 ">
