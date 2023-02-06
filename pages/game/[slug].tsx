@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -72,6 +73,11 @@ export default function Game() {
   return (
     isSuccess && (
       <>
+        <Head>
+          <title>Games | {game?.name}</title>
+          <meta name="description" content={game?.description} />
+        </Head>
+
         <Banner data={game} />
 
         <div>
@@ -209,10 +215,14 @@ export default function Game() {
 
               <div className="flex gap-2">
                 <h3 className="text-primary-light">Links:</h3>
-                {game.website || game.redditurl ? (
+                {game?.website || game?.redditurl ? (
                   <div className="flex items-center gap-2">
                     {game?.redditurl && (
-                      <a href={game.redditurl} target="_blank" rel="noreferrer">
+                      <a
+                        href={game?.redditurl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         Reddit
                       </a>
                     )}

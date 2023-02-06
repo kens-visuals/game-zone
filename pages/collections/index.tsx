@@ -51,7 +51,7 @@ export default function AddNewCollection() {
         <title>GZ | Collections</title>
         <meta
           name="description"
-          content="Collections of the games created by the user"
+          content={`Collections of games created by ${currentUser?.displayName}`}
         />
       </Head>
 

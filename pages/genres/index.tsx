@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
@@ -39,6 +40,11 @@ export default function Genres() {
 
   return (
     <>
+      <Head>
+        <title>GZ | Genres</title>
+        <meta name="description" content="List of genres" />
+      </Head>
+
       <PageHeading heading="Genres" />
 
       <Divider />

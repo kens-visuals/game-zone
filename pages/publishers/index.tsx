@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 
@@ -52,6 +53,11 @@ export default function Publishers() {
 
   return (
     <>
+      <Head>
+        <title>GZ | Publishers</title>
+        <meta name="description" content="List of publishers" />
+      </Head>
+
       <PageHeading heading="Publishers" />
 
       <Divider />

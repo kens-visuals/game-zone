@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
@@ -49,6 +50,11 @@ export default function Stores() {
 
   return (
     <>
+      <Head>
+        <title>GZ | Stores</title>
+        <meta name="description" content="List of stores" />
+      </Head>
+
       <PageHeading heading="Stores" />
 
       <Divider />

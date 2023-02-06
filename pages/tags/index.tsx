@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 
@@ -53,6 +54,11 @@ export default function Tags() {
 
   return (
     <>
+      <Head>
+        <title>GZ | Tags</title>
+        <meta name="description" content="List of tags" />
+      </Head>
+
       <PageHeading heading="Tags" />
 
       <Divider />

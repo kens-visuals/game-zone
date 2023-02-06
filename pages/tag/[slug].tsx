@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import {
@@ -82,35 +83,42 @@ export default function Tag() {
   if (isTagError || isGamesError) return <ErrorCard />;
 
   return (
-    <div>
-      {tag && <Banner data={tag} />}
+    <>
+      <Head>
+        <title>Tags | {tag?.name}</title>
+        <meta name="description" content={tag?.description} />
+      </Head>
 
       <div>
-        <GamesListContainer>
-          {games?.pages?.map((page) =>
-            page.map((details) => (
-              <div key={details.slug}>
-                <GameCard details={details} />
-              </div>
-            ))
-          )}
-        </GamesListContainer>
+        {tag && <Banner data={tag} />}
 
-        <button
-          type="button"
-          disabled={!hasNextPage || isFetchingNextPage}
-          onClick={() => hasNextPage && fetchNextPage()}
-          className="rounded-md bg-primary-light px-6 py-2 text-white"
-        >
-          {/* eslint-disable-next-line no-nested-ternary */}
-          {isFetchingNextPage
-            ? 'Loading more...'
-            : hasNextPage
-            ? 'Load More'
-            : 'Nothing more to load'}
-        </button>
+        <div>
+          <GamesListContainer>
+            {games?.pages?.map((page) =>
+              page.map((details) => (
+                <div key={details.slug}>
+                  <GameCard details={details} />
+                </div>
+              ))
+            )}
+          </GamesListContainer>
+
+          <button
+            type="button"
+            disabled={!hasNextPage || isFetchingNextPage}
+            onClick={() => hasNextPage && fetchNextPage()}
+            className="rounded-md bg-primary-light px-6 py-2 text-white"
+          >
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {isFetchingNextPage
+              ? 'Loading more...'
+              : hasNextPage
+              ? 'Load More'
+              : 'Nothing more to load'}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

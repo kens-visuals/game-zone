@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import {
@@ -87,35 +88,45 @@ export default function Developer() {
   if (isTagError || isGamesError) return <ErrorCard />;
 
   return (
-    <div>
-      {developer && <Banner data={developer} />}
+    <>
+      <Head>
+        <title>Developers | {developer?.name}</title>
+        <meta
+          name="description"
+          content={`Games developed by ${developer?.name}`}
+        />
+      </Head>
 
       <div>
-        <GamesListContainer>
-          {games?.pages?.map((page) =>
-            page.map((details) => (
-              <div key={details.slug}>
-                <GameCard details={details} />
-              </div>
-            ))
-          )}
-        </GamesListContainer>
+        {developer && <Banner data={developer} />}
 
-        <button
-          type="button"
-          disabled={!hasNextPage || isFetchingNextPage}
-          onClick={() => hasNextPage && fetchNextPage()}
-          className="rounded-md bg-primary-light px-6 py-2 text-white"
-        >
-          {/* eslint-disable-next-line no-nested-ternary */}
-          {isFetchingNextPage
-            ? 'Loading more...'
-            : hasNextPage
-            ? 'Load More'
-            : 'Nothing more to load'}
-        </button>
+        <div>
+          <GamesListContainer>
+            {games?.pages?.map((page) =>
+              page.map((details) => (
+                <div key={details.slug}>
+                  <GameCard details={details} />
+                </div>
+              ))
+            )}
+          </GamesListContainer>
+
+          <button
+            type="button"
+            disabled={!hasNextPage || isFetchingNextPage}
+            onClick={() => hasNextPage && fetchNextPage()}
+            className="rounded-md bg-primary-light px-6 py-2 text-white"
+          >
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {isFetchingNextPage
+              ? 'Loading more...'
+              : hasNextPage
+              ? 'Load More'
+              : 'Nothing more to load'}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

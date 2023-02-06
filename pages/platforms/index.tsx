@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 
@@ -52,6 +53,11 @@ export default function Platforms() {
 
   return (
     <>
+      <Head>
+        <title>GZ | Platforms</title>
+        <meta name="description" content="List of platforms" />
+      </Head>
+
       <PageHeading heading="Platforms" />
 
       <Divider />

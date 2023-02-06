@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 
@@ -52,6 +53,11 @@ export default function Developers() {
 
   return (
     <>
+      <Head>
+        <title>GZ | Developers</title>
+        <meta name="description" content="List of developers" />
+      </Head>
+
       <PageHeading heading="Developers" />
 
       <Divider />
