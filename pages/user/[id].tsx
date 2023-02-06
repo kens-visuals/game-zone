@@ -18,6 +18,9 @@ import useUserBookmarks from '../../hooks/useUserBookmarks';
 import useUser, { UserInterface } from '../../hooks/useUser';
 import useCollections, { CollectionInfo } from '../../hooks/useCollections';
 
+// Helpers
+import { formatName } from '../../lib/helpers';
+
 // Assets
 import placeholderImg from '../../public/assets/placeholder.avif';
 
@@ -85,11 +88,11 @@ export default function User({ data: user }: Props) {
   const followersList = [followersArr, followingArr];
 
   return (
-    <div>
+    <div className="pb-8">
       <PageHeading heading="Profile" />
       <Divider />
 
-      <div className="my-4 flex flex-col  items-start gap-4">
+      <div className="my-4 flex flex-col items-start gap-4 rounded-md bg-primary-dark p-4">
         <div className="flex items-center gap-4">
           <Image
             src={user.photoURL}
@@ -104,7 +107,18 @@ export default function User({ data: user }: Props) {
           </div>
         </div>
 
-        {user.uid !== currentUser?.uid && <FollowButton user={user} />}
+        {user.uid !== currentUser?.uid && (
+          <div className="flex w-full items-center justify-center gap-2">
+            <Link
+              href="/messages"
+              className="w-full rounded-md bg-primary-light py-2.5 px-4 text-center transition-all duration-300 hover:bg-primary-light/50"
+            >
+              Message
+            </Link>
+
+            <FollowButton user={user} />
+          </div>
+        )}
       </div>
 
       <Tab.Group>
@@ -160,25 +174,33 @@ export default function User({ data: user }: Props) {
                           {usr.displayName}
                         </Link>
                       </div>
+                      {usr.uid !== currentUser?.uid && (
+                        <div className="flex items-center gap-2 md:ml-auto">
+                          <Link
+                            href="/messages"
+                            className="w-full rounded-md bg-primary-light py-2.5 px-4 text-center transition-all duration-300 hover:bg-primary-light/50"
+                          >
+                            Message
+                          </Link>
 
-                      <div className="flex items-center gap-2 md:ml-auto">
-                        <Link
-                          href="/messages"
-                          className="w-full rounded-md bg-primary-light py-2.5 px-4 text-center"
-                        >
-                          Message
-                        </Link>
-                        {usr.uid !== currentUser?.uid && (
                           <FollowButton user={usr} />
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <span className="inline-block w-full p-4 text-center">
-                  You don&apos;t follow anyone
-                </span>
+                <div className="flex w-full items-center justify-center p-4">
+                  {isOwner ? (
+                    <span className="text-center">
+                      You don&apos;t follow anyone
+                    </span>
+                  ) : (
+                    <span className="text-center">
+                      {formatName(user.displayName)} doesn&apos;t follow anyone
+                    </span>
+                  )}
+                </div>
               )}
             </Tab.Panel>
           ))}
@@ -197,13 +219,24 @@ export default function User({ data: user }: Props) {
             }`}
           >
             {!currentBookmark.length ? (
-              <li className="flex flex-col items-center justify-center gap-4 rounded-md bg-primary-dark p-4 py-6">
-                <span className="inline-block w-full text-center">
-                  You don&apos;t have any bookmarked games
-                </span>
-                <Link href="/" className="rounded-md bg-secondary py-2 px-4 ">
-                  Go to games
-                </Link>
+              <li className="flex flex-col items-center justify-center gap-4 rounded-md bg-primary-dark p-4 py-6 text-primary-light">
+                {isOwner ? (
+                  <>
+                    <span className="inline-block w-full text-center">
+                      You haven&apos;t bookmarked games
+                    </span>
+                    <Link
+                      href="/"
+                      className="rounded-md bg-secondary py-2 px-4 text-white transition-all duration-300 hover:bg-secondary/70"
+                    >
+                      Go to games
+                    </Link>
+                  </>
+                ) : (
+                  <span className="inline-block w-full text-center">
+                    {formatName(user?.displayName)} hasn&apos;t bookmarked games
+                  </span>
+                )}
               </li>
             ) : (
               currentBookmark?.slice(0, 7).map((bookmark) => (
@@ -252,7 +285,7 @@ export default function User({ data: user }: Props) {
           <>
             <h2 className="my-4 text-h3 md:text-h1">Collections</h2>
 
-            {collections?.length ? (
+            {currentCollection?.length ? (
               <ul className="mt-4 grid gap-4 rounded-lg bg-primary-dark p-4 text-primary-light md:grid-cols-2 lg:grid-cols-4">
                 {currentCollection?.map((col) => (
                   <li key={col.id} className="rounded-lg bg-primary p-4">
@@ -265,8 +298,25 @@ export default function User({ data: user }: Props) {
                 ))}
               </ul>
             ) : (
-              <div className="mt-4 flex flex-col items-center justify-start rounded-lg bg-primary-dark p-4 text-primary-light">
-                <span>You have not created any collections yet</span>
+              <div className="mt-4 flex flex-col items-center justify-start gap-4 rounded-lg bg-primary-dark p-4 text-primary-light">
+                {isOwner ? (
+                  <>
+                    <span className="inline-block w-full text-center">
+                      You don&apos;t have any collections
+                    </span>
+                    <Link
+                      href="/collections"
+                      className="rounded-md bg-secondary py-2 px-4 text-white transition-all duration-300 hover:bg-secondary/70"
+                    >
+                      Go to collections
+                    </Link>
+                  </>
+                ) : (
+                  <span className="inline-block w-full text-center">
+                    {formatName(user?.displayName)} hasn&apos;t created
+                    collections yet
+                  </span>
+                )}
               </div>
             )}
           </>

@@ -12,3 +12,5 @@ export const formatDate = (date: string) => {
 
 export const orderByDescQuery = (collRef: Query) =>
   query(collRef, orderBy('createdAt', 'desc'));
+
+export const formatName = (name: string) => name.replace(/\s\w*/gi, '');
