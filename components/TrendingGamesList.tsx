@@ -50,7 +50,7 @@ export default function TrendingGamesList() {
     isFetchingNextPage,
   } = useInfiniteQuery(['getTrendingGames'], fetchGames, {
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < 40) return undefined;
+      if (lastPage.length < 10) return undefined;
 
       if (allPages.length) return allPages.length + 1;
 
@@ -122,12 +122,12 @@ export default function TrendingGamesList() {
           ))
         )}
 
-        <li className="h-full">
+        <li className="h-full w-32">
           <button
             type="button"
             disabled={!hasNextPage || isFetchingNextPage}
             onClick={() => hasNextPage && fetchNextPage()}
-            className="h-full rounded-md bg-primary-light px-6 py-2 text-white"
+            className="h-full w-full rounded-md bg-primary-light px-6 py-2 text-white"
           >
             {/* eslint-disable-next-line no-nested-ternary */}
             {isFetchingNextPage
