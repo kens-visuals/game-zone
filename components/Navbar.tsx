@@ -26,25 +26,9 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
   const { pathname } = useRouter();
   const { currentUser, isUserLoading } = useUser();
 
-  // const { followList } = useFollow();
-  // const followers = followList('followers');
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  // const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  // const [currentFollowersCount, setCurrentFollowersCount] = useState(
-  //   followers?.length || 0
-  // );
-
-  // console.log(followers);
-
-  // console.log(currentFollowersCount);
 
   useEffect(() => setIsDrawerOpen(false), [pathname]);
-
-  // useEffect(() => {
-  //   if (followers && followers?.length > currentFollowersCount)
-  //     setCurrentFollowersCount(followers?.length);
-  // }, [followers?.length]);
 
   const handleDrawerClick = () =>
     setIsDrawerOpen((drawerState) => !drawerState);
@@ -126,7 +110,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
 
         <ul
           className={`flex items-center justify-between gap-4 md:flex-col md:items-start ${
-            isSidebarOpen ? 'mt-7' : 'md:mt-14'
+            isSidebarOpen ? 'mt-10' : 'md:mt-4'
           }`}
         >
           {routes.map((route) => (
@@ -162,26 +146,6 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
               </Link>
             </li>
           ))}
-          {/* <li className="relative">
-            <div>
-              <span className="absolute bg-primary-light text-body-2 text-white">
-                {unreadMessages?.length}
-              </span>
-
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                className="h-6 w-6 fill-primary-light hover:fill-white"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </li> */}
         </ul>
 
         <div className="hidden w-full md:inline-block ">

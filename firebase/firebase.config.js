@@ -3,15 +3,14 @@ import { getApps, getApp, initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 
-// NOTE: Replace with new config
 export const firebaseConfig = {
-  apiKey: 'AIzaSyDWotcGdnRmNIwdonM_YSRdqFn_3qPHykw',
-  authDomain: 'book-test-c365d.firebaseapp.com',
-  projectId: 'book-test-c365d',
-  storageBucket: 'book-test-c365d.appspot.com',
-  messagingSenderId: '913255420980',
-  appId: '1:913255420980:web:f81055289f6ad01fe8a661',
-  measurementId: 'G-RVBGM9F14K',
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
 };
 
 // Initialize Firebase

@@ -115,19 +115,19 @@ export default function SearchResults() {
 
       {/* eslint-disable-next-line no-nested-ternary */}
       {isSearchLoading || isSearchFetching ? (
-        <div className="mx-auto w-[90%] rounded-xl bg-primary-dark p-6">
+        <div className="mx-auto w-full rounded-xl bg-primary-dark p-4">
           <span className="inline-block w-full text-center">Loading...</span>
         </div>
       ) : isSearchError ? (
-        <div className="mx-auto w-[90%] rounded-xl bg-primary-dark p-6">
+        <div className="mx-auto w-full rounded-xl bg-primary-dark p-4">
           <span className="inline-block w-full text-center">Error</span>
         </div>
       ) : (
         isSearchOpen &&
         searchTerm && (
-          <div className="mx-auto w-[90%] rounded-xl bg-primary-dark p-6">
+          <div className="mx-auto w-full rounded-xl bg-primary-dark p-4">
             <ul>
-              <li className="mt-4 mb-2">
+              <li className="mb-2">
                 {data?.length ? (
                   <span className="text-h3">Games</span>
                 ) : (
@@ -178,7 +178,16 @@ export default function SearchResults() {
                     <Link href={`/user/${user.uid}`}>{user.displayName}</Link>
 
                     {user.uid !== currentUser?.uid && (
-                      <FollowButton user={user} />
+                      <div className="flex items-center gap-2 md:ml-auto">
+                        <Link
+                          href="/messages"
+                          className="w-full rounded-md bg-primary-light py-2.5 px-4 text-center transition-all duration-300 hover:bg-primary-light/70 "
+                        >
+                          Message
+                        </Link>
+
+                        <FollowButton user={user} />
+                      </div>
                     )}
                   </li>
                 ))}

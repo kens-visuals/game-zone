@@ -15,46 +15,52 @@ export default function MessangerUsers() {
   const { currentUser, isUserLoading } = useUser();
   const { sendTo, setSendTo, unreadMessages } = useMessageUsers();
 
-  const otherUsers = followList('following') || [];
+  const otherUsers =
+    followList('followers')?.filter(
+      (val) => !followList('following')?.includes(val)
+    ) || [];
 
   return (
-    <div className="rounded-lg bg-primary-dark">
+    <div className="rounded-lg bg-primary-dark p-4">
       {currentUser ? (
-        <ul className="grid grid-flow-col justify-start overflow-x-scroll p-4">
-          {otherUsers?.map((user) => (
-            <li key={user.uid}>
-              <button
-                type="button"
-                onClick={() => {
-                  setSendTo(user.uid);
-                  updateMessagesStatus(user.uid);
-                }}
-                className="relative flex flex-col items-center justify-center gap-2"
-              >
-                <span
-                  className={`absolute top-0 right-2 w-fit rounded-full bg-primary-light p-0.5 px-1 text-body-2 ${
-                    unreadMessages.length ? 'inline-block' : 'hidden'
-                  }`}
+        <>
+          <span className="text-h2-light">Users</span>
+          <ul className="grid grid-flow-col justify-start overflow-x-scroll pt-4">
+            {otherUsers?.map((user) => (
+              <li key={user.uid}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSendTo(user.uid);
+                    updateMessagesStatus(user.uid);
+                  }}
+                  className="relative flex flex-col items-center justify-center gap-2"
                 >
-                  {unreadMessages.length}
-                </span>
+                  <span
+                    className={`absolute top-0 right-2 w-fit rounded-full bg-primary-light p-0.5 px-1 text-body-2 ${
+                      unreadMessages.length ? 'inline-block' : 'hidden'
+                    }`}
+                  >
+                    {unreadMessages.length}
+                  </span>
 
-                <Image
-                  width={100}
-                  height={100}
-                  src={user.photoURL}
-                  alt={user.displayName}
-                  className={`h-14 w-14 rounded-full md:h-auto md:w-full ${
-                    sendTo === user.uid && 'ring-4 ring-secondary'
-                  }`}
-                />
-                <span className="w-20 break-words text-center text-body-2">
-                  {user.displayName}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
+                  <Image
+                    width={100}
+                    height={100}
+                    src={user.photoURL}
+                    alt={user.displayName}
+                    className={`h-14 w-14 rounded-full md:h-auto md:w-full ${
+                      sendTo === user.uid && 'ring-4 ring-secondary'
+                    }`}
+                  />
+                  <span className="w-20 break-words text-center text-body-2">
+                    {user.displayName}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
       ) : (
         <SignInButton isSidebarOpen isUserLoading={isUserLoading} />
       )}

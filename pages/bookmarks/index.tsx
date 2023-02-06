@@ -27,23 +27,32 @@ export default function Bookmarks() {
 
       <Divider />
 
+      {/* eslint-disable-next-line no-nested-ternary */}
       {!currentUser ? (
         <div className="flex flex-col items-center justify-center gap-4">
           <h1>No bookmarks yet!</h1>
 
           <SignInButton isUserLoading={isUserLoading} />
         </div>
+      ) : !bookmarksData.length ? (
+        <div className="mt-8 flex w-full flex-col items-center justify-center gap-4 rounded-md bg-primary-dark p-4">
+          <span className="text-center text-h2-light">
+            You don&apos;t have any bookmarks yet
+          </span>
+          <Link
+            href="/"
+            className="flex w-full items-center justify-center text-body-1 underline hover:text-secondary"
+          >
+            Go to games
+          </Link>
+        </div>
       ) : (
         <GamesListContainer>
-          {!bookmarksData.length ? (
-            <Link href="/">Go to games</Link>
-          ) : (
-            bookmarksData?.map((bookmark) => (
-              <div key={bookmark.createdAt}>
-                <GameCard details={bookmark} isFromBookmark />
-              </div>
-            ))
-          )}
+          {bookmarksData?.map((bookmark) => (
+            <div key={bookmark.createdAt}>
+              <GameCard details={bookmark} isFromBookmark />
+            </div>
+          ))}
         </GamesListContainer>
       )}
     </div>
