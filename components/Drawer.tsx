@@ -13,7 +13,7 @@ export default function Drawer() {
   return (
     <div className="fixed z-50 flex h-[calc(100vh_-_2rem)] w-[calc(100vw_-_2rem)] flex-col items-end">
       {/* NOTE: ADD click outside func */}
-      <aside className="mt-20 flex h-[calc(100vh_-_2rem)] w-60 min-w-max flex-col items-start gap-2 rounded-lg bg-primary-light/40 p-4 shadow-xl shadow-primary-dark backdrop-blur-lg backdrop-filter">
+      <aside className="mt-20 flex h-full w-60 min-w-max flex-col items-start gap-2 rounded-lg bg-primary-light/40 p-4 shadow-xl shadow-primary-dark backdrop-blur-lg backdrop-filter">
         {currentUser && <UserProfile />}
 
         <PagesNav />
