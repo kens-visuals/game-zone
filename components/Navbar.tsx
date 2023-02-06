@@ -77,7 +77,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
 
   return (
     <>
-      {isDrawerOpen && <Drawer />}
+      {isDrawerOpen && <Drawer setIsDrawerOpen={setIsDrawerOpen} />}
 
       <nav
         className={`fixed left-4 z-50 flex w-[calc(100vw_-_2rem)] items-center justify-between rounded-lg bg-primary-dark/50 p-4 shadow-2xl shadow-primary backdrop-blur-2xl backdrop-filter md:static md:left-6 md:h-[calc(100vh_-_2rem)] md:flex-col md:justify-start md:gap-4 ${
