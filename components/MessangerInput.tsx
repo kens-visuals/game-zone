@@ -3,17 +3,21 @@ import { RefObject, SyntheticEvent, useState } from 'react';
 // Hook
 import useUser from '../hooks/useUser';
 import useMessages from '../hooks/useMessages';
-import useMessageUsers from '../hooks/useMessageUsers';
 
 // Interfaces
 interface Props {
+  sendTo: string;
   scrollRef: RefObject<HTMLLIElement>;
+  setUnreadMessages: (msg: any) => void;
 }
 
-export default function MessangerInput({ scrollRef }: Props) {
+export default function MessangerInput({
+  sendTo,
+  scrollRef,
+  setUnreadMessages,
+}: Props) {
   const { currentUser } = useUser();
   const { addNewMessage } = useMessages();
-  const { sendTo, setUnreadMessages } = useMessageUsers();
 
   const [message, setMessage] = useState('');
 

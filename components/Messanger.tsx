@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -9,13 +9,22 @@ import MessangerUsers from './MessangerUsers';
 
 // Hooks
 import useFollow from '../hooks/useFollow';
-import useMessageUsers from '../hooks/useMessageUsers';
+import useMessages from '../hooks/useMessages';
+
+// Interfaces
+import { MessageType } from '../lib/types/game';
 
 export default function Messanger() {
   const { followList } = useFollow();
 
-  const { sendTo, messageLimit, currentMessages, setMessageLimit } =
-    useMessageUsers();
+  const { getMessages, getMessagesStatus } = useMessages();
+
+  const otherUsers = followList('following') || [];
+
+  const [sendTo, setSendTo] = useState(otherUsers[0]?.uid || '');
+  const [currentMessages, setCurrentMessages] = useState<MessageType[]>([]);
+  const [messageLimit, setMessageLimit] = useState(50);
+  const [unreadMessages, setUnreadMessages] = useState<MessageType[]>([]);
 
   const scrollRef = useRef<HTMLLIElement>(null);
 
@@ -23,9 +32,36 @@ export default function Messanger() {
     ?.filter((user) => user.uid === sendTo)
     .at(0);
 
+  useEffect(() => {
+    if (!sendTo) return;
+
+    const messagesCallback = (d: any) =>
+      setCurrentMessages(
+        d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
+      );
+
+    const statusCallback = (d: any) =>
+      setUnreadMessages(
+        d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
+      );
+
+    const statusUnsub = getMessagesStatus(sendTo, statusCallback, messageLimit);
+    const messagesUnsub = getMessages(sendTo, messagesCallback, messageLimit);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      statusUnsub();
+      messagesUnsub();
+    };
+  }, [sendTo, messageLimit]);
+
   return (
     <>
-      <MessangerUsers />
+      <MessangerUsers
+        sendTo={sendTo}
+        setSendTo={setSendTo}
+        unreadMessages={unreadMessages}
+      />
 
       <div className="relative mt-4 h-full overflow-hidden rounded-lg bg-primary-dark ">
         <div className="flex items-center gap-2 border-b border-primary-light p-4 shadow-lg shadow-black/70">
@@ -75,7 +111,11 @@ export default function Messanger() {
           )}
         </ul>
 
-        <MessangerInput scrollRef={scrollRef} />
+        <MessangerInput
+          sendTo={sendTo}
+          scrollRef={scrollRef}
+          setUnreadMessages={setUnreadMessages}
+        />
       </div>
     </>
   );

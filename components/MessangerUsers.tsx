@@ -7,17 +7,27 @@ import SignInButton from './SignInButton';
 import useUser from '../hooks/useUser';
 import useFollow from '../hooks/useFollow';
 import useMessages from '../hooks/useMessages';
-import useMessageUsers from '../hooks/useMessageUsers';
 
-export default function MessangerUsers() {
+import { MessageType } from '../lib/types/game';
+
+interface Props {
+  sendTo: string;
+  setSendTo: (to: string) => void;
+  unreadMessages: MessageType[];
+}
+
+export default function MessangerUsers({
+  sendTo,
+  setSendTo,
+  unreadMessages,
+}: Props) {
   const { followList } = useFollow();
   const { updateMessagesStatus } = useMessages();
   const { currentUser, isUserLoading } = useUser();
-  const { sendTo, setSendTo, unreadMessages } = useMessageUsers();
 
   const otherUsers =
-    followList('followers')?.filter(
-      (val) => !followList('following')?.includes(val)
+    followList('following')?.filter(
+      (el) => !followList('followers')?.includes(el)
     ) || [];
 
   return (
