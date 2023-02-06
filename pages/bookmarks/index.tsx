@@ -29,10 +29,9 @@ export default function Bookmarks() {
 
       {/* eslint-disable-next-line no-nested-ternary */}
       {!currentUser ? (
-        <div className="flex flex-col items-center justify-center gap-4">
-          <h1>No bookmarks yet!</h1>
-
-          <SignInButton isUserLoading={isUserLoading} />
+        <div className="flex flex-col items-center justify-center rounded-md bg-primary-dark p-4">
+          <span className="mb-2 inline-block">Sign In to add bookmarks</span>
+          <SignInButton isSidebarOpen isUserLoading={isUserLoading} />
         </div>
       ) : !bookmarksData.length ? (
         <div className="mt-8 flex w-full flex-col items-center justify-center gap-4 rounded-md bg-primary-dark p-4">

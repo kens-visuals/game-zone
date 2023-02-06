@@ -151,7 +151,7 @@ export default function AddNewCollection() {
                   <span className="mb-2 inline-block">
                     Sign In to create collections
                   </span>
-                  <SignInButton isUserLoading={isUserLoading} />
+                  <SignInButton isSidebarOpen isUserLoading={isUserLoading} />
                 </div>
               ) : (
                 'You have not created any collections yet'
