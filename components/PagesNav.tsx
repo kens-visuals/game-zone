@@ -70,43 +70,14 @@ const routes = [
 export default function PagesNav({ isSidebarOpen = false }) {
   const { pathname } = useRouter();
 
-  const pageNavListVariants: Variants = {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: {
-        duration: 0.9,
-        staggerChildren: 0.1,
-        delayChildren: 0.5,
-      },
-    },
-    exit: {
-      transition: {
-        staggerChildren: 0.1,
-        staggerDirection: -1,
-      },
-    },
-  };
-
   const pageNavItemVariants: Variants = {
     initial: { opacity: 0, x: -50 },
     animate: { opacity: 1, x: 0 },
-    exit: {
-      opacity: 0,
-      x: -20,
-      transition: { opacity: { duration: 0.15 } },
-    },
+    exit: { opacity: 0, x: -10 },
   };
 
   return (
-    <motion.ul
-      key="pageNav"
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageNavListVariants}
-      className="mt-12 flex flex-col items-start gap-4 text-white md:mt-0"
-    >
+    <ul className="mt-12 flex flex-col items-start gap-4 text-white md:mt-0">
       <AnimatePresence>
         {routes.map((route) => (
           <motion.li
@@ -143,6 +114,6 @@ export default function PagesNav({ isSidebarOpen = false }) {
           </motion.li>
         ))}
       </AnimatePresence>
-    </motion.ul>
+    </ul>
   );
 }

@@ -15,7 +15,6 @@ export default function Drawer() {
   const drawerVariants: Variants = {
     initial: {
       x: '100%',
-      opacity: 0,
       backdropFilter: `blur(0px)`,
       WebkitBackdropFilter: `blur(0px)`,
     },
@@ -24,18 +23,25 @@ export default function Drawer() {
       opacity: 1,
       backdropFilter: `blur(16px)`,
       WebkitBackdropFilter: `blur(16px)`,
-      transition: { duration: 0.5, delayChildren: 0.3, staggerChildren: 1 },
+      transition: { duration: 0.5, delayChildren: 0.1, staggerChildren: 0.1 },
     },
     exit: {
       x: '100%',
-      opacity: 0,
-      transition: { delay: 0.3, duration: 0.8 },
+      backdropFilter: `blur(0px)`,
+      WebkitBackdropFilter: `blur(0px)`,
+      transition: {
+        delay: 0.8,
+        duration: 0.35,
+        staggerChildren: 0.1,
+        staggerDirection: -1,
+      },
     },
   };
 
   const buttonVariants: Variants = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
+    exit: { opacity: 0 },
   };
 
   return (
