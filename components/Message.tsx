@@ -21,7 +21,7 @@ export default function Message({ message }: Props) {
         }`}
       >
         <p
-          className={`w-fit max-w-[10rem] break-words text-body-1 ${
+          className={`w-fit max-w-[10rem] break-words text-body-1 md:max-w-xs md:text-h2-light ${
             isCurrentUser ? 'text-right' : 'text-left'
           }`}
         >

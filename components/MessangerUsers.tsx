@@ -4,10 +4,11 @@ import Image from 'next/image';
 import SignInButton from './SignInButton';
 
 // Hooks
-import useUser from '../hooks/useUser';
+import useUser, { UserInterface } from '../hooks/useUser';
 import useFollow from '../hooks/useFollow';
 import useMessages from '../hooks/useMessages';
 
+// Interfaces
 import { MessageType } from '../lib/types/game';
 
 interface Props {
@@ -25,7 +26,6 @@ export default function MessangerUsers({
   const { updateMessagesStatus } = useMessages();
   const { currentUser, isUserLoading } = useUser();
 
-  
   const mergeUsers = function mergeArraysAndDeduplicate() {
     const followers = followList('followers') as UserInterface[];
     const following = followList('following') as UserInterface[];
@@ -38,12 +38,12 @@ export default function MessangerUsers({
   };
 
   return (
-    <div className="rounded-lg bg-primary-dark p-4">
+    <div className="rounded-lg bg-primary-dark py-4 lg:col-start-2 lg:col-end-3 lg:row-span-full lg:px-4">
       {currentUser ? (
         <>
-          <span className="text-h2-light">Users</span>
-          <ul className="grid grid-flow-col justify-start overflow-x-scroll pt-4">
-            {otherUsers?.map((user) => (
+          <span className="inline-block px-4 text-h2-light">Users</span>
+          <ul className="lg:ovy grid grid-flow-col items-center justify-start overflow-x-scroll p-4 md:gap-4 lg:grid-flow-row">
+            {mergeUsers().map((user) => (
               <li key={user.uid}>
                 <button
                   type="button"
@@ -55,10 +55,13 @@ export default function MessangerUsers({
                 >
                   <span
                     className={`absolute top-0 right-2 w-fit rounded-full bg-primary-light p-0.5 px-1 text-body-2 ${
-                      unreadMessages.length ? 'inline-block' : 'hidden'
+                      unreadMessages.length > 0 ? 'inline-block' : 'hidden'
                     }`}
                   >
-                    {unreadMessages.length}
+                    {
+                      unreadMessages?.filter((msg) => msg.uid === user.uid)
+                        .length
+                    }
                   </span>
 
                   <Image

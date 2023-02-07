@@ -3,6 +3,7 @@ import { RefObject, SyntheticEvent, useState } from 'react';
 // Hook
 import useUser from '../hooks/useUser';
 import useMessages from '../hooks/useMessages';
+import { MessageType } from '../lib/types/game';
 
 // Interfaces
 interface Props {
@@ -24,7 +25,9 @@ export default function MessangerInput({
   const handleClick = (e: SyntheticEvent) => {
     addNewMessage(e, message, sendTo);
     setMessage('');
-    setUnreadMessages([]);
+    setUnreadMessages((prevState: MessageType[]) =>
+      prevState.filter((msg) => msg.uid === sendTo)
+    );
 
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -37,7 +40,7 @@ export default function MessangerInput({
         value={message}
         disabled={!currentUser}
         onChange={(e) => setMessage(e.target.value)}
-        className="w-full bg-secondary/50 px-4 text-white outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full bg-secondary/50 px-4 text-white outline-none disabled:cursor-not-allowed disabled:opacity-50 md:px-6 md:py-4 md:text-h3"
       />
       <button
         type="submit"
