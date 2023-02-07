@@ -125,7 +125,7 @@ export default function SearchResults() {
       ) : (
         isSearchOpen &&
         searchTerm && (
-          <div className="mx-auto w-full rounded-xl bg-primary-dark p-4">
+          <div className="mx-auto mb-4 w-full rounded-xl bg-primary-dark p-4">
             <ul>
               <li className="mb-2">
                 {data?.length ? (

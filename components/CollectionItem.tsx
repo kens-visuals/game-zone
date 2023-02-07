@@ -49,14 +49,16 @@ export default function CollectionItem({
                   {collection.description}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() =>
-                  readMore ? setReadMore(false) : setReadMore(true)
-                }
-              >
-                {readMore ? 'Hide' : 'Read More'}
-              </button>
+              {collection.description.length > 40 && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    readMore ? setReadMore(false) : setReadMore(true)
+                  }
+                >
+                  {readMore ? 'Hide' : 'Read More'}
+                </button>
+              )}
             </>
           )}
         </div>
