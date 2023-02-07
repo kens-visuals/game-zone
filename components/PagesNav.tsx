@@ -1,3 +1,4 @@
+import { AnimatePresence, Variants, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -69,38 +70,79 @@ const routes = [
 export default function PagesNav({ isSidebarOpen = false }) {
   const { pathname } = useRouter();
 
+  const pageNavListVariants: Variants = {
+    initial: { opacity: 0 },
+    animate: {
+      opacity: 1,
+      transition: {
+        duration: 0.9,
+        staggerChildren: 0.1,
+        delayChildren: 0.5,
+      },
+    },
+    exit: {
+      transition: {
+        staggerChildren: 0.1,
+        staggerDirection: -1,
+      },
+    },
+  };
+
+  const pageNavItemVariants: Variants = {
+    initial: { opacity: 0, x: -50 },
+    animate: { opacity: 1, x: 0 },
+    exit: {
+      opacity: 0,
+      x: -20,
+      transition: { opacity: { duration: 0.15 } },
+    },
+  };
+
   return (
-    <ul className="mt-12 flex flex-col items-start gap-4 text-white md:mt-0">
-      {routes.map((route) => (
-        <li key={route.name} className="group">
-          <Link
-            href={`/${route.name.toLowerCase()}`}
-            className={`flex items-center justify-between gap-2 text-h3 transition-all duration-300 ${
-              pathname === `/${route.name.toLowerCase()}`
-                ? 'text-secondary md:text-white'
-                : 'text-white hover:text-white md:text-primary-light'
-            }`}
+    <motion.ul
+      key="pageNav"
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageNavListVariants}
+      className="mt-12 flex flex-col items-start gap-4 text-white md:mt-0"
+    >
+      <AnimatePresence>
+        {routes.map((route) => (
+          <motion.li
+            variants={pageNavItemVariants}
+            key={route.name}
+            className="group"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className={`h-6 w-6 transition-all duration-300 ${
+            <Link
+              href={`/${route.name.toLowerCase()}`}
+              className={`flex items-center justify-between gap-2 text-h3 transition-all duration-300 ${
                 pathname === `/${route.name.toLowerCase()}`
-                  ? 'fill-white md:fill-white'
-                  : 'fill-white group-hover:fill-white md:fill-primary-light'
+                  ? 'text-secondary md:text-white'
+                  : 'text-white hover:text-white md:text-primary-light'
               }`}
             >
-              {route.icon}
-            </svg>
-            <span
-              className={`${isSidebarOpen ? 'md:inline-block' : 'md:hidden'}`}
-            >
-              {route.name}
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className={`h-6 w-6 transition-all duration-300 ${
+                  pathname === `/${route.name.toLowerCase()}`
+                    ? 'fill-white md:fill-white'
+                    : 'fill-white group-hover:fill-white md:fill-primary-light'
+                }`}
+              >
+                {route.icon}
+              </svg>
+              <span
+                className={`${isSidebarOpen ? 'md:inline-block' : 'md:hidden'}`}
+              >
+                {route.name}
+              </span>
+            </Link>
+          </motion.li>
+        ))}
+      </AnimatePresence>
+    </motion.ul>
   );
 }
