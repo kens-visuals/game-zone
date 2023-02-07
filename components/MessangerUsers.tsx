@@ -25,10 +25,17 @@ export default function MessangerUsers({
   const { updateMessagesStatus } = useMessages();
   const { currentUser, isUserLoading } = useUser();
 
-  const otherUsers =
-    followList('following')?.filter(
-      (el) => !followList('followers')?.includes(el)
-    ) || [];
+  
+  const mergeUsers = function mergeArraysAndDeduplicate() {
+    const followers = followList('followers') as UserInterface[];
+    const following = followList('following') as UserInterface[];
+    const mergedArray = [...followers, ...following];
+
+    return mergedArray.filter(
+      (item, index) =>
+        index === mergedArray.findIndex((i) => i.uid === item.uid)
+    );
+  };
 
   return (
     <div className="rounded-lg bg-primary-dark p-4">

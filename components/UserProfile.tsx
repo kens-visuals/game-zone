@@ -69,7 +69,7 @@ export default function UserProfile({ isSidebarOpen = false }) {
                 {followersCount || '0'}
               </span>
               <span className="text-white/50">
-                {followersCount === 1 ? 'Follower' : 'Follower'}
+                {followersCount === 1 ? 'Follower' : 'Followers'}
               </span>
             </li>
 
