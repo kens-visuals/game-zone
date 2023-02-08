@@ -1,6 +1,7 @@
-import { AnimatePresence, Variants, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { fadeInOut } from '../lib/animations';
 
 const routes = [
   {
@@ -70,21 +71,11 @@ const routes = [
 export default function PagesNav({ isSidebarOpen = false }) {
   const { pathname } = useRouter();
 
-  const pageNavItemVariants: Variants = {
-    initial: { opacity: 0, x: -50 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -10 },
-  };
-
   return (
     <ul className="mt-12 flex flex-col items-start gap-4 text-white md:mt-0">
       <AnimatePresence>
         {routes.map((route) => (
-          <motion.li
-            variants={pageNavItemVariants}
-            key={route.name}
-            className="group"
-          >
+          <motion.li variants={fadeInOut} key={route.name} className="group">
             <Link
               href={`/${route.name.toLowerCase()}`}
               className={`flex items-center justify-between gap-2 text-h3 transition-all duration-300 ${

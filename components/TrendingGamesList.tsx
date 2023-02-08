@@ -69,10 +69,10 @@ export default function TrendingGamesList() {
   if (isError) return <ErrorCard />;
 
   return (
-    <>
+    <div>
       <PageHeading heading="New and Upcoming Games" />
 
-      <ul className="scrollbar-hide grid snap-x snap-proximity grid-flow-col items-center gap-4 overflow-x-scroll">
+      <ul className=" scrollbar-hide grid snap-x snap-proximity grid-flow-col items-center gap-4 overflow-x-scroll ">
         {games?.pages.map((page) =>
           page.map((details) => (
             <li key={details.slug} className="snap-start">
@@ -138,6 +138,6 @@ export default function TrendingGamesList() {
           </button>
         </li>
       </ul>
-    </>
+    </div>
   );
 }

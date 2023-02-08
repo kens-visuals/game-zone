@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, Variants, motion } from 'framer-motion';
 
 // Components
+import Logo from './Logo';
 import Drawer from './Drawer';
 import Footer from './Footer';
 import Divider from './Divider';
@@ -14,6 +15,10 @@ import SignOutButton from './SignOutButton';
 
 // Hooks
 import useUser from '../hooks/useUser';
+import useMediaQuery from '../hooks/useMediaQuery';
+
+// Animations
+import { fadeIn, fadeInOut } from '../lib/animations';
 
 // Interface
 interface Props {
@@ -24,6 +29,7 @@ interface Props {
 export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
   const { pathname } = useRouter();
   const { currentUser, isUserLoading } = useUser();
+  const matches = useMediaQuery('(min-width: 768px)');
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -74,32 +80,59 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
     },
   ];
 
+  const navDesktopVariants: Variants = {
+    closed: {
+      y: 0,
+      width: isSidebarOpen ? 250 : 80,
+      transition: {
+        staggerChildren: 0.2,
+        staggerDirection: -1,
+        delayChildren: 1.5,
+      },
+    },
+    open: {
+      width: isSidebarOpen ? 250 : 80,
+      transition: {
+        staggerChildren: 0.2,
+        staggerDirection: 1,
+        delayChildren: 1.5,
+      },
+    },
+  };
+
+  const navMobileVariants: Variants = {
+    closed: {
+      y: -50,
+      transition: {
+        staggerChildren: 0.2,
+        staggerDirection: -1,
+        delayChildren: 1.5,
+      },
+    },
+    open: {
+      y: 0,
+      transition: {
+        staggerChildren: 0.2,
+        staggerDirection: 1,
+        delayChildren: 1.5,
+      },
+    },
+  };
+
   return (
     <>
       <AnimatePresence>{isDrawerOpen && <Drawer />}</AnimatePresence>
 
-      <nav
+      <motion.nav
+        layout
+        initial="closed"
+        animate="open"
+        variants={matches ? navDesktopVariants : navMobileVariants}
         className={`fixed left-4 z-50 flex w-[calc(100vw_-_2rem)] items-center justify-between rounded-lg bg-primary-dark/50 p-4 shadow-2xl shadow-primary backdrop-blur-2xl backdrop-filter md:static md:left-6 md:h-[calc(100vh_-_2rem)] md:flex-col md:justify-start md:gap-4 ${
           isSidebarOpen ? 'md:w-fit md:items-start' : 'md:w-20 md:items-center'
         }`}
       >
-        <span
-          className={`text-center font-outfit text-body-2 font-medium uppercase text-white md:mb-4 md:w-full ${
-            isSidebarOpen && 'tracking-wider md:text-h2-medium'
-          }`}
-        >
-          <div className="relative">
-            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
-            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
-          </div>
-          <span className="my-1 inline-block md:my-4">
-            Game <br className="md:hidden" /> Zone
-          </span>
-          <div className="relative">
-            <div className="absolute inset-0 h-1 w-full bg-secondary blur" />
-            <div className="absolute inset-0 h-0.5 w-full bg-secondary" />
-          </div>
-        </span>
+        <Logo isSidebarOpen={isSidebarOpen} />
 
         {currentUser && (
           <div className="hidden md:mt-2 md:inline-block lg:mt-7">
@@ -107,13 +140,18 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
           </div>
         )}
 
-        <ul
+        <motion.ul
+          key={isSidebarOpen}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={fadeInOut}
           className={`flex items-center justify-between gap-4 md:flex-col md:items-start ${
             isSidebarOpen ? 'mt-10' : 'md:mt-4'
           }`}
         >
           {routes.map((route) => (
-            <li key={route.path} className="group">
+            <motion.li variants={fadeIn} key={route.path} className="group">
               <Link
                 href={route.path}
                 className="md:flex md:items-center md:gap-2"
@@ -143,9 +181,9 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
                   {route.name}
                 </span>
               </Link>
-            </li>
+            </motion.li>
           ))}
-        </ul>
+        </motion.ul>
 
         <div className="hidden w-full md:inline-block ">
           <Divider />
@@ -240,7 +278,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
         <div className="hidden md:mt-3 md:inline-block md:w-full">
           <Footer isSidebarOpen={isSidebarOpen} />
         </div>
-      </nav>
+      </motion.nav>
     </>
   );
 }
