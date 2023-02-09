@@ -29,22 +29,28 @@ export default function GameSeriesList({ gameSlug }: Props) {
     data: series,
     isError: isSeriesError,
     isLoading: isSeriesLoading,
-    isFetching: isSeriesFetching,
   } = useQuery(['getGameSeries', gameSlug], () => fetchGameSeries(gameSlug));
 
-  if (isSeriesLoading || isSeriesFetching) return <LoadingCard size={10} />;
+  if (isSeriesLoading) return <LoadingCard size={10} />;
 
   if (isSeriesError) return <ErrorCard />;
 
-  return series ? (
-    <GamesListContainer>
-      {series?.map((seria) => (
-        <div key={seria.id} className="mt-4">
-          <GameCard details={seria} />
+  return (
+    <div className="mt-6">
+      <span className="mb-4 inline-block text-h2-medium">Game Series</span>
+      {series?.length ? (
+        <GamesListContainer>
+          {series?.map((seria) => (
+            <div key={seria.id}>
+              <GameCard details={seria} />
+            </div>
+          ))}
+        </GamesListContainer>
+      ) : (
+        <div className="w-full rounded-lg bg-primary-dark p-4 text-center">
+          <span>No series available</span>
         </div>
-      ))}
-    </GamesListContainer>
-  ) : (
-    <span>No series available</span>
+      )}
+    </div>
   );
 }
