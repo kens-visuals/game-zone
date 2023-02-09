@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Variants, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // Hooks
 import useUser from '../hooks/useUser';
 import useFollow from '../hooks/useFollow';
+
+// Animations
+import { fadeInOut } from '../lib/animations';
 
 // Interfaces
 interface Props {
@@ -14,12 +17,6 @@ interface Props {
 export default function UserProfile({ isSidebarOpen = false }: Props) {
   const { currentUser, isUserLoading } = useUser();
   const { followList } = useFollow();
-
-  const item: Variants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-  };
 
   const followersCount =
     typeof followList('followers') !== undefined &&
@@ -50,7 +47,7 @@ export default function UserProfile({ isSidebarOpen = false }: Props) {
       {isSidebarOpen && <span className="ml-2">Loading...</span>}
     </div>
   ) : (
-    <motion.div variants={item}>
+    <motion.div variants={fadeInOut}>
       <div className="flex items-center gap-2">
         {currentUser && (
           <Link

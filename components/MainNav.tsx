@@ -24,7 +24,7 @@ export default function PagesNav({ isSidebarOpen = false }) {
       animate="animate"
       variants={matches ? fadeInOut : {}}
       className={`flex items-center justify-between gap-4 md:flex-col md:items-start ${
-        isSidebarOpen ? 'mt-10' : 'md:mt-4'
+        isSidebarOpen ? 'md:mt-4' : 'md:mt-8'
       }`}
     >
       {mainRoutes.map((route) => (

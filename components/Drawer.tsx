@@ -18,13 +18,12 @@ import { drawerVariants, fadeIn, fadeInOut } from '../lib/animations';
 import { pageRoutes } from '../lib/routes';
 
 export default function Drawer() {
-  const { currentUser, isUserLoading } = useUser();
   const { pathname } = useRouter();
-
+  const { currentUser, isUserLoading } = useUser();
   const matches = useMediaQuery('(min-width: 768px;)');
 
   return (
-    <div className="fixed z-50 flex h-[96%] w-[calc(100vw_-_2rem)] flex-col items-end">
+    <div className="fixed z-50 flex h-[96%] w-[calc(100vw_-_2rem)] flex-col items-end md:hidden">
       <motion.aside
         key="drawer"
         initial="initial"
@@ -35,13 +34,13 @@ export default function Drawer() {
       >
         {currentUser && <UserProfile />}
 
-        <ul className="mt-12 flex flex-col items-start gap-4 text-white md:mt-0">
+        <ul className="mt-12 flex flex-col items-start gap-4 text-white md:mt-0 ">
           <AnimatePresence>
             {pageRoutes.map((route) => (
               <motion.li
-                variants={fadeInOut}
                 key={route.name}
                 className="group"
+                variants={matches ? fadeInOut : {}}
               >
                 <Link
                   href={`/${route.name.toLowerCase()}`}

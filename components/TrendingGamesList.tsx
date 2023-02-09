@@ -69,7 +69,7 @@ export default function TrendingGamesList() {
   if (isError) return <ErrorCard />;
 
   return (
-    <div>
+    <div className="md:mb-8">
       <PageHeading heading="New and Upcoming Games" />
 
       <ul className=" scrollbar-hide grid snap-x snap-proximity grid-flow-col items-center gap-4 overflow-x-scroll ">

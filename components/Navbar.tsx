@@ -55,7 +55,11 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: Props) {
         <Logo isSidebarOpen={isSidebarOpen} />
 
         {currentUser && (
-          <div className="hidden md:mt-2 md:inline-block lg:mt-7">
+          <div
+            className={`hidden md:mt-2 md:inline-block ${
+              isSidebarOpen ? 'lg:mt-2' : 'lg:mt-7'
+            }`}
+          >
             <UserProfile isSidebarOpen={isSidebarOpen} />
           </div>
         )}

@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 // Interfaces
 import { DataType } from '../lib/types/game';
+import { itemVariants } from '../lib/animations';
 
 interface Props {
   route: string;
@@ -11,7 +13,10 @@ interface Props {
 
 export default function PageItem({ route, data }: Props) {
   return (
-    <li className="relative flex items-center overflow-hidden rounded-lg">
+    <motion.li
+      variants={itemVariants}
+      className="relative flex items-center overflow-hidden rounded-lg"
+    >
       <Image
         src={data?.image_background}
         alt={data.name}
@@ -30,6 +35,6 @@ export default function PageItem({ route, data }: Props) {
           Games count: {data?.games_count}
         </span>
       </Link>
-    </li>
+    </motion.li>
   );
 }
