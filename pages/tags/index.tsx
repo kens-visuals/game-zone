@@ -1,6 +1,9 @@
+import { useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
+import { nanoid } from 'nanoid';
+import { useInView } from 'framer-motion';
 
 // Componentns
 import Divider from '../../components/Divider';
@@ -30,6 +33,9 @@ const fetchTags = async ({ pageParam = 1 }): Promise<DataType[]> => {
   return data?.results;
 };
 export default function Tags() {
+  const ref = useRef(null);
+  const isInView = useInView(ref);
+
   const {
     data: tags,
     isError,
@@ -48,6 +54,10 @@ export default function Tags() {
     keepPreviousData: true,
   });
 
+  useEffect(() => {
+    fetchNextPage();
+  }, [isInView]);
+
   if (isLoading) return <LoadingCard size={20} />;
 
   if (isError) return <ErrorCard />;
@@ -64,15 +74,16 @@ export default function Tags() {
       <Divider />
 
       <div className="flex flex-col items-center gap-4 pb-14">
-        <PageList>
+        <PageList key={nanoid()}>
           {tags?.pages?.map((page) =>
             page.map((data) => (
-              <PageItem key={data.name} route="tag" data={data} />
+              <PageItem key={data.slug} route="tag" data={data} />
             ))
           )}
         </PageList>
 
         <button
+          ref={ref}
           type="button"
           disabled={!hasNextPage || isFetchingNextPage}
           onClick={() => hasNextPage && fetchNextPage()}
@@ -80,7 +91,7 @@ export default function Tags() {
         >
           {/* eslint-disable-next-line no-nested-ternary */}
           {isFetchingNextPage
-            ? 'Loading more...'
+            ? 'Loading...'
             : hasNextPage
             ? 'Load More'
             : 'Nothing more to load'}

@@ -134,11 +134,11 @@ export default function AddNewCollection() {
                 Create new collection
               </button>
             </form>
+
+            <Divider />
           </>
         )}
       </div>
-
-      <Divider />
 
       <div>
         <h2 className="mt-8 text-h2-medium">Your Collections</h2>

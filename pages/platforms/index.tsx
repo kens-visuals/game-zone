@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
+import { nanoid } from 'nanoid';
 
 // Componentns
 import Divider from '../../components/Divider';
@@ -63,7 +64,7 @@ export default function Platforms() {
       <Divider />
 
       <div className="flex flex-col items-center gap-4 pb-14">
-        <PageList>
+        <PageList key={nanoid()}>
           {platforms?.pages?.map((page) =>
             page.map((data) => (
               <PageItem key={data.name} route="platform" data={data} />
