@@ -1,8 +1,24 @@
 import { Variants } from 'framer-motion';
 
+export const pageAnimationVariants: Variants = {
+  initial: {
+    y: -10,
+    opacity: 0,
+  },
+  animate: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, staggerDirection: 0.4, delay: 0.5 },
+  },
+  exit: {
+    y: 10,
+    opacity: 0,
+  },
+};
+
 export const drawerVariants: Variants = {
   initial: {
-    x: '100%',
+    x: '150%',
     backdropFilter: `blur(0px)`,
     WebkitBackdropFilter: `blur(0px)`,
   },
@@ -13,11 +29,11 @@ export const drawerVariants: Variants = {
     transition: { duration: 0.5, delayChildren: 0.1, staggerChildren: 0.1 },
   },
   exit: {
-    x: '100%',
+    x: '150%',
     backdropFilter: `blur(0px)`,
     WebkitBackdropFilter: `blur(0px)`,
     transition: {
-      delay: 0.8,
+      delay: 0.6,
       duration: 0.35,
       staggerChildren: 0.1,
       staggerDirection: -1,
@@ -81,3 +97,42 @@ export const navVariants = ({
           },
         },
       };
+
+export const dividerVariants: Variants = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.8,
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+export const dividerChildrenVariants: Variants = {
+  initial: {
+    width: 0,
+  },
+  animate: {
+    width: '100%',
+    transition: { duration: 0.4 },
+  },
+};
+
+export const listVariants = {
+  initial: { opacity: 0 },
+  animate: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+export const itemVariants = {
+  initial: { opacity: 0, y: -10 },
+  animate: { opacity: 1, y: 0 },
+};
