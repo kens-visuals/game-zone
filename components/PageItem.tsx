@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+
+// Assets
+import placeholderImg from '../public/assets/placeholder.avif';
 
 // Interfaces
 import { DataType } from '../lib/types/game';
-import { itemVariants } from '../lib/animations';
 
 interface Props {
   route: string;
@@ -13,28 +14,26 @@ interface Props {
 
 export default function PageItem({ route, data }: Props) {
   return (
-    <motion.li
-      variants={itemVariants}
-      className="relative flex items-center overflow-hidden rounded-lg"
-    >
+    <li className="relative flex items-center overflow-hidden rounded-lg md:h-40">
       <Image
-        src={data?.image_background}
+        src={data?.image_background || placeholderImg}
         alt={data.name}
-        height={10}
-        width={10}
-        quality={10}
+        height={100}
+        width={100}
         className="absolute h-full w-full object-cover object-top"
       />
       <Link
         href={`/${route}/${data?.slug}`}
-        className="flex h-full w-full flex-col justify-between gap-4 overflow-hidden rounded-md bg-primary/80 p-4 backdrop-blur-sm backdrop-filter transition-all duration-300 hover:cursor-pointer hover:bg-primary/20"
+        className="flex h-full w-full flex-col justify-between gap-4 overflow-hidden rounded-md bg-primary/80 p-4 backdrop-blur-sm backdrop-filter transition-all duration-300 hover:cursor-pointer hover:bg-primary/20 hover:backdrop-blur-sm md:pt-8"
       >
-        <span className="text-h3 capitalize">{data?.name}</span>
+        <span className="text-h3 capitalize md:text-h2-light">
+          {data?.name}
+        </span>
 
         <span className="text-sm text-white/50 ">
           Games count: {data?.games_count}
         </span>
       </Link>
-    </motion.li>
+    </li>
   );
 }

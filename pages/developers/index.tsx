@@ -1,7 +1,9 @@
+import { useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
 import { nanoid } from 'nanoid';
+import { useInView } from 'framer-motion';
 
 // Componentns
 import Divider from '../../components/Divider';
@@ -31,6 +33,9 @@ const fetchDevelopers = async ({ pageParam = 1 }): Promise<DataType[]> => {
   return data?.results;
 };
 export default function Developers() {
+  const ref = useRef(null);
+  const isInView = useInView(ref);
+
   const {
     data: developers,
     isError,
@@ -47,6 +52,10 @@ export default function Developers() {
       return undefined;
     },
   });
+
+  useEffect(() => {
+    fetchNextPage();
+  }, [isInView]);
 
   if (isLoading) return <LoadingCard size={20} />;
 

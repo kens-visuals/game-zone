@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
-import { nanoid } from 'nanoid';
 import { useInView } from 'framer-motion';
 
 // Componentns
@@ -74,7 +73,7 @@ export default function Tags() {
       <Divider />
 
       <div className="flex flex-col items-center gap-4 pb-14">
-        <PageList key={nanoid()}>
+        <PageList>
           {tags?.pages?.map((page) =>
             page.map((data) => (
               <PageItem key={data.slug} route="tag" data={data} />
