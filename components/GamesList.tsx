@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GetStaticProps } from 'next';
 import { dehydrate, QueryClient, useInfiniteQuery } from 'react-query';
+import { AnimatePresence, motion } from 'framer-motion';
 
 // Components
 import GameCard from './GameCard';
@@ -10,6 +11,9 @@ import GamesListContainer from './GamesListContainer';
 
 // Helpers
 import RAWG from '../lib/rawg';
+
+// Animatiions
+import { fadeInDown } from '../lib/animations';
 
 // Types
 import { GameInterface } from '../lib/types/game';
@@ -142,25 +146,33 @@ export default function GamesList() {
           </svg>
         </button>
 
-        {isDropdownOpen && (
-          <div className="absolute top-16 z-10 w-full divide-y divide-gray-100 overflow-hidden rounded-lg bg-white shadow dark:bg-gray-700 md:w-52">
-            <ul className="w-full divide-y divide-primary-dark text-sm text-gray-700 dark:text-gray-200">
-              {options.map((opt) => (
-                <li key={opt} className="w-full">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOption(opt);
-                    }}
-                    className="w-full p-4 capitalize hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >
-                    {opt}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <AnimatePresence>
+          {isDropdownOpen && (
+            <div className="absolute top-16 z-10 w-full divide-y divide-gray-100 overflow-hidden rounded-lg bg-white shadow dark:bg-gray-700 md:w-52">
+              <motion.ul
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={fadeInDown}
+                className="w-full divide-y divide-primary-dark text-sm text-gray-700 dark:text-gray-200"
+              >
+                {options.map((opt) => (
+                  <motion.li variants={fadeInDown} key={opt} className="w-full">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOption(opt);
+                      }}
+                      className="w-full p-4 capitalize hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
+                      {opt}
+                    </button>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
 
       <GamesListContainer>
