@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
@@ -10,6 +9,7 @@ import { dehydrate, QueryClient, useQuery } from 'react-query';
 import Banner from '../../components/Banner';
 import ErrorCard from '../../components/ErrorCard';
 import GameDetail from '../../components/GameDetail';
+import Screenshots from '../../components/Screenshots';
 import LoadingCard from '../../components/LoadingCard';
 import GameSeriesList from '../../components/GameSeriesList';
 import CollectionsDropdown from '../../components/CollectionsDropdown';
@@ -22,22 +22,16 @@ import { formatDate } from '../../lib/helpers';
 import RAWG from '../../lib/rawg';
 
 // Interfaces
-import { GameInterface, Screenshots } from '../../lib/types/game';
-
-const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
+import { GameInterface } from '../../lib/types/game';
 
 const fetchGame = async (slug: string): Promise<GameInterface> => {
+  const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
+
   const { data } = await RAWG.get<GameInterface>(
     `games/${slug}?key=${API_KEY}`
   );
 
   return data;
-};
-
-const fetchScreenshots = async (slug: string): Promise<Screenshots[]> => {
-  const { data } = await RAWG.get(`games/${slug}/screenshots?key=${API_KEY}`);
-
-  return data.results;
 };
 
 export default function Game() {
@@ -58,14 +52,6 @@ export default function Game() {
     enabled: !!gameSlug,
   });
 
-  const {
-    data: screens,
-    isLoading: isScreenLoading,
-    isFetching: isScreenFetching,
-  } = useQuery(['getScreens', gameSlug], () => fetchScreenshots(gameSlug));
-
-  const emptyArray = Array.from({ length: 6 }, () => Math.random());
-
   if (isLoading) return <LoadingCard size={1} />;
 
   if (isError) return <ErrorCard />;
@@ -81,92 +67,60 @@ export default function Game() {
         <Banner data={game} />
 
         <div>
-          <button
-            type="button"
-            onClick={() => addNewData(game)}
-            className="mb-4 flex w-full items-center justify-center gap-2 rounded-md border border-transparent bg-primary-dark p-4 text-center transition-colors duration-300 hover:border-primary-light hover:bg-transparent"
-          >
-            Add to Bookmark
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="h-6 w-6"
+          <div className="md:flex md:items-center md:gap-2 lg:gap-4">
+            <button
+              type="button"
+              onClick={() => addNewData(game)}
+              className="mb-2 flex w-full items-center justify-center gap-2 rounded-md border border-transparent bg-primary-dark p-4 text-center transition-colors duration-300 hover:border-primary-light hover:bg-transparent md:mb-0"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </button>
+              Bookmark
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="h-4 w-4 text-white group-hover:fill-white"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                />
+              </svg>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setIsDropdownOpen((prevState) => !prevState)}
-            className={`inline-flex w-full items-center justify-center gap-2 rounded-md border border-transparent bg-secondary p-4 text-center transition-colors duration-300 hover:border-secondary/70 hover:bg-secondary/70 ${
-              isDropdownOpen && 'bg-secondary/80'
-            } `}
-          >
-            Collections
-            <svg
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-4 w-4 transition-all duration-300 ${
-                isDropdownOpen && 'rotate-180'
-              }`}
+            <button
+              type="button"
+              onClick={() => setIsDropdownOpen((prevState) => !prevState)}
+              className={`inline-flex w-full items-center justify-center gap-2 rounded-md border border-transparent bg-secondary p-4 text-center transition-colors duration-300 hover:border-secondary/70 hover:bg-secondary/70 ${
+                isDropdownOpen && 'bg-secondary/80'
+              } `}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
+              Collections
+              <svg
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`h-4 w-4 transition-all duration-300 ${
+                  isDropdownOpen && 'rotate-180'
+                }`}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+          </div>
 
           <CollectionsDropdown game={game} isDropdownOpen={isDropdownOpen} />
 
-          <ul className="mt-4 grid grid-flow-dense grid-cols-2 gap-2">
-            {isScreenLoading && isScreenFetching
-              ? emptyArray.map((el) => (
-                  <li
-                    key={el}
-                    role="status"
-                    className="animate-pulse space-y-8 md:flex md:items-center md:space-y-0 md:space-x-8"
-                  >
-                    <div className="flex h-24 w-full items-center justify-center rounded bg-gray-300 dark:bg-gray-700 sm:w-96">
-                      <svg
-                        className="h-12 w-12 text-gray-200"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewBox="0 0 640 512"
-                      >
-                        <path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z" />
-                      </svg>
-                    </div>
-                    <span className="sr-only">Loading...</span>
-                  </li>
-                ))
-              : screens?.map(({ image }) => (
-                  <li key={image}>
-                    <Image
-                      key={image}
-                      src={image}
-                      width={1000}
-                      height={1000}
-                      alt="game screenshot"
-                      className="w-full rounded-md"
-                    />
-                  </li>
-                ))}
-          </ul>
+          <Screenshots gameSlug={gameSlug} />
 
           <div className="mt-4 rounded-md bg-primary-dark p-4">
             <h2 className="text-h2-medium">Details</h2>
@@ -176,7 +130,7 @@ export default function Game() {
                   <span className="text-primary-light">Platforms:</span>
                   <ul className="flex gap-1">
                     {game.parent_platforms.map(({ platform }, idx, arr) => (
-                      <li key={platform.name} className="text-body-1 underline">
+                      <li key={platform.name} className="text-body-1">
                         {platform.name}
                         {idx === arr.length - 1 ? '.' : ','}
                       </li>
@@ -190,8 +144,10 @@ export default function Game() {
                   <span className="text-primary-light">Genres:</span>
                   <ul className="flex gap-1">
                     {game.genres.map((genre) => (
-                      <li key={genre.name} className="text-body-1">
-                        {genre.name}
+                      <li key={genre.name} className="text-body-1 underline">
+                        <Link scroll href={`/genre/${genre.slug}`}>
+                          {genre.name}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -202,9 +158,9 @@ export default function Game() {
                 <GameDetail name="Released" info={formatDate(game?.released)} />
               )}
 
-              {game?.metacritic && (
+              {game?.metacritic !== undefined ? (
                 <GameDetail name="Metacritic" info={game.metacritic} />
-              )}
+              ) : null}
 
               {game?.rating && (
                 <GameDetail
@@ -259,7 +215,7 @@ export default function Game() {
                 )}
               </div>
 
-              {game?.tags && (
+              {game?.tags?.length ? (
                 <div className="flex items-baseline gap-2">
                   <span className="inline-block text-primary-light">
                     Tags:{' '}
@@ -267,13 +223,15 @@ export default function Game() {
                   <ul className="flex flex-wrap gap-1 text-body-1">
                     {game?.tags.slice(0, 6).map((tag, idx, arr) => (
                       <li key={tag.name} className="underline">
-                        {tag.name}
+                        <Link scroll href={`/tag/${tag.slug}`}>
+                          {tag.name}
+                        </Link>
                         {idx === arr.length - 1 ? '.' : ','}
                       </li>
                     ))}
                   </ul>
                 </div>
-              )}
+              ) : null}
             </div>
 
             <div className="mt-4  flex w-full overflow-hidden rounded-md">
@@ -314,6 +272,7 @@ export default function Game() {
               Go Back
             </button>
             <Link
+              scroll
               href="/"
               className="w-full rounded-md border-2 border-primary-dark bg-transparent p-4 text-center text-white  transition-colors duration-300 hover:bg-primary-light/70"
             >
