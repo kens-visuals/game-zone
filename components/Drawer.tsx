@@ -9,10 +9,9 @@ import UserProfile from './UserProfile';
 
 // Hooks
 import useUser from '../hooks/useUser';
-import useMediaQuery from '../hooks/useMediaQuery';
 
 // Animatons
-import { drawerVariants, fadeIn, fadeInOut } from '../lib/animations';
+import { drawerVariants, fadeInOut } from '../lib/animations';
 
 // Helpers
 import { pageRoutes } from '../lib/routes';
@@ -20,7 +19,6 @@ import { pageRoutes } from '../lib/routes';
 export default function Drawer() {
   const { pathname } = useRouter();
   const { currentUser, isUserLoading } = useUser();
-  const matches = useMediaQuery('(min-width: 768px;)');
 
   return (
     <div className="fixed z-50 flex h-[96%] w-[calc(100vw_-_2rem)] flex-col items-end md:hidden">
@@ -29,7 +27,7 @@ export default function Drawer() {
         initial="initial"
         animate="animate"
         exit="exit"
-        variants={matches ? fadeInOut : drawerVariants}
+        variants={drawerVariants}
         className="mt-20 flex h-full w-60 min-w-max flex-col items-start gap-2 rounded-lg bg-primary-light/40 p-4 shadow-xl shadow-primary-dark backdrop-blur-lg backdrop-filter"
       >
         {currentUser && <UserProfile />}
@@ -40,7 +38,7 @@ export default function Drawer() {
               <motion.li
                 key={route.name}
                 className="group"
-                variants={matches ? fadeInOut : {}}
+                variants={fadeInOut}
               >
                 <Link
                   href={`/${route.name.toLowerCase()}`}
@@ -69,7 +67,7 @@ export default function Drawer() {
           </AnimatePresence>
         </ul>
 
-        <motion.div variants={fadeIn} className="mt-auto w-full">
+        <motion.div variants={fadeInOut} className="mt-auto w-full">
           {!currentUser && !isUserLoading ? (
             <SignInButton isSidebarOpen isUserLoading={isUserLoading} />
           ) : (
