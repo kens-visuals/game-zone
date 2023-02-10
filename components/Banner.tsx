@@ -20,7 +20,7 @@ export default function Banner({ data }: Props) {
       className="mb-4 rounded-xl bg-auto bg-center bg-no-repeat"
     >
       <div className="h-fit w-full rounded-lg bg-gradient-to-r from-primary-dark/90 to-primary/10 p-4 backdrop-blur-md backdrop-filter">
-        <h1 className="w-full max-w-5xl text-h1 font-medium md:text-7xl">
+        <h1 className="w-full max-w-5xl text-h1 font-medium capitalize md:text-7xl">
           {data?.name}
         </h1>
 
