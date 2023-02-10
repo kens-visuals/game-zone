@@ -3,7 +3,7 @@ import { RefObject, SyntheticEvent, useState } from 'react';
 // Hook
 import useUser from '../hooks/useUser';
 import useMessages from '../hooks/useMessages';
-import { MessageType } from '../lib/types/game';
+import { MessageType } from '../lib/types/index';
 
 // Interfaces
 interface Props {

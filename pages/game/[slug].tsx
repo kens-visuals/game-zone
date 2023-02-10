@@ -22,7 +22,7 @@ import { formatDate } from '../../lib/helpers';
 import RAWG from '../../lib/rawg';
 
 // Interfaces
-import { GameInterface } from '../../lib/types/game';
+import { GameInterface } from '../../lib/types/index';
 
 const fetchGame = async (slug: string): Promise<GameInterface> => {
   const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;

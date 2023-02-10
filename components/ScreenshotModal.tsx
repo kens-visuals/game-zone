@@ -5,7 +5,7 @@ import Image from 'next/image';
 import useOutsideClick from '../hooks/useClickOutside';
 
 // Interfaces
-import { Screenshots } from '../lib/types/game';
+import { Screenshots } from '../lib/types/index';
 
 interface Props {
   screens: Screenshots[] | undefined;

@@ -12,7 +12,7 @@ import useUser from './useUser';
 import { Bookmark } from './useUserBookmarks';
 
 // Types
-import { GameInterface } from '../lib/types/game';
+import { GameInterface } from '../lib/types/index';
 
 export default function useAddBookmark() {
   const { currentUser } = useUser();

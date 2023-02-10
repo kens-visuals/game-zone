@@ -10,7 +10,7 @@ import LoadingCard from './LoadingCard';
 import ErrorCard from './ErrorCard';
 
 // Types
-import { GameInterface } from '../lib/types/game';
+import { GameInterface } from '../lib/types/index';
 
 interface Props {
   gameSlug: string;

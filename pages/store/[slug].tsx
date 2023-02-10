@@ -19,7 +19,7 @@ import GamesListContainer from '../../components/GamesListContainer';
 import RAWG from '../../lib/rawg';
 
 // Types
-import { GameInterface, DataType } from '../../lib/types/game';
+import { GameInterface, DataType } from '../../lib/types/index';
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 

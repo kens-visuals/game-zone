@@ -18,7 +18,7 @@ import RAWG from '../lib/rawg';
 import placeholderImg from '../public/assets/placeholder.avif';
 
 // Interfaces
-import { GameInterface } from '../lib/types/game';
+import { GameInterface } from '../lib/types/index';
 
 interface SearchGame {
   results: GameInterface[];

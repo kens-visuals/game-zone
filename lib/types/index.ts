@@ -19,8 +19,19 @@ export type ParentPlatform = {
 }[];
 
 export type Tags = {
+  slug: string;
   name: string;
 }[];
+
+export interface Bookmark {
+  id?: string;
+  name: string;
+  slug: string;
+  genres: DataType[];
+  released: string;
+  createdAt: string;
+  background_image: string;
+}
 
 export interface GameInterface {
   id?: string;

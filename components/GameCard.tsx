@@ -9,7 +9,7 @@ import useUserBookmarks from '../hooks/useUserBookmarks';
 import useBookmarkMutation from '../hooks/useBookmarkMutation';
 
 // Types
-import { GameInterface } from '../lib/types/game';
+import { GameInterface } from '../lib/types/index';
 
 // Assets
 import CollectionsDropdown from './CollectionsDropdown';

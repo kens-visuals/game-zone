@@ -19,7 +19,7 @@ import { db } from '../firebase/firebase.config';
 import useUser from './useUser';
 
 // Types
-import { GameInterface } from '../lib/types/game';
+import { GameInterface } from '../lib/types/index';
 import { orderByDescQuery } from '../lib/helpers';
 
 export interface CollectionInfo {

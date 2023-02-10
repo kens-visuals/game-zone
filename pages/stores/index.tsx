@@ -13,7 +13,7 @@ import LoadingCard from '../../components/LoadingCard';
 import RAWG from '../../lib/rawg';
 
 // Types
-import { DataType } from '../../lib/types/game';
+import { DataType } from '../../lib/types/index';
 import Divider from '../../components/Divider';
 
 interface DataProps {

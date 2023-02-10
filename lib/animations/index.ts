@@ -52,6 +52,20 @@ export const fadeInOut: Variants = {
   exit: { opacity: 0, x: -10 },
 };
 
+export const fadeInDown: Variants = {
+  initial: { opacity: 0, y: -10 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.2,
+      delayChildren: 0.2,
+      staggerChildren: 0.1,
+    },
+  },
+  exit: { opacity: 0, y: -10 },
+};
+
 export const navVariants = ({
   matches,
   isSidebarOpen,

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import useCollections from '../hooks/useCollections';
 
 // Interfaces
-import { GameInterface } from '../lib/types/game';
+import { GameInterface } from '../lib/types/index';
 
 interface Props {
   game: GameInterface;

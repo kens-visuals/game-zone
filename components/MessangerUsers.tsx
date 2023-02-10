@@ -9,7 +9,7 @@ import useFollow from '../hooks/useFollow';
 import useMessages from '../hooks/useMessages';
 
 // Interfaces
-import { MessageType } from '../lib/types/game';
+import { MessageType } from '../lib/types/index';
 
 interface Props {
   sendTo: string;

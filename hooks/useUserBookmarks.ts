@@ -7,7 +7,7 @@ import useUser from './useUser';
 import { orderByDescQuery } from '../lib/helpers';
 
 // Type
-import { Bookmark } from '../lib/types/game';
+import { Bookmark } from '../lib/types/index';
 
 export default function useUserBookmarks() {
   const { currentUser } = useUser();

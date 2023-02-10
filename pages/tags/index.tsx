@@ -16,7 +16,7 @@ import PageHeading from '../../components/PageHeading';
 import RAWG from '../../lib/rawg';
 
 // Types
-import { DataType } from '../../lib/types/game';
+import { DataType } from '../../lib/types/index';
 
 interface DataProps {
   results: DataType[];

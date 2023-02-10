@@ -2,7 +2,7 @@
 import useUser from '../hooks/useUser';
 
 // Interface
-import { MessageType } from '../lib/types/game';
+import { MessageType } from '../lib/types/index';
 
 interface Props {
   message: MessageType;

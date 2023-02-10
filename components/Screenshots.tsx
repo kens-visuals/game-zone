@@ -9,7 +9,7 @@ import ScreenshotModal from './ScreenshotModal';
 import RAWG from '../lib/rawg';
 
 // Interfaces
-import { Screenshots as ScreenshotsProps } from '../lib/types/game';
+import { Screenshots as ScreenshotsProps } from '../lib/types/index';
 
 interface Props {
   gameSlug: string;

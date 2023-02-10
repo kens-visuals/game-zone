@@ -16,7 +16,7 @@ import RAWG from '../lib/rawg';
 import { fadeInDown } from '../lib/animations';
 
 // Types
-import { GameInterface } from '../lib/types/game';
+import { GameInterface } from '../lib/types/index';
 
 interface Games {
   results: GameInterface[];

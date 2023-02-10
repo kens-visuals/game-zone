@@ -5,7 +5,7 @@ import Image from 'next/image';
 import placeholderImg from '../public/assets/placeholder.avif';
 
 // Interfaces
-import { DataType } from '../lib/types/game';
+import { DataType } from '../lib/types/index';
 
 interface Props {
   route: string;
