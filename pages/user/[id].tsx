@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { collection, getDocs } from 'firebase/firestore';
-import { Tab } from '@headlessui/react';
+
 import { db } from '../../firebase/firebase.config';
 
 // Compononents
@@ -14,16 +14,17 @@ import FollowButton from '../../components/FollowButton';
 import CollectionItem from '../../components/CollectionItem';
 
 // Hooks
-import useFollow from '../../hooks/useFollow';
 import useUserBookmarks from '../../hooks/useUserBookmarks';
 import useUser, { UserInterface } from '../../hooks/useUser';
 import useCollections, { CollectionInfo } from '../../hooks/useCollections';
+import useBookmarkMutation from '../../hooks/useBookmarkMutation';
 
 // Helpers
 import { formatName } from '../../lib/helpers';
 
 // Assets
 import placeholderImg from '../../public/assets/placeholder.avif';
+import FollowersTab from '../../components/FollowersTab';
 
 interface Props {
   data: UserInterface;
@@ -31,7 +32,8 @@ interface Props {
 
 export default function User({ data: user }: Props) {
   const { currentUser } = useUser();
-  const { followList } = useFollow();
+  const { removeBookmark } = useBookmarkMutation();
+
   const {
     status: bookmarkStatus,
     bookmarksData,
@@ -81,12 +83,7 @@ export default function User({ data: user }: Props) {
     const unsub = getCurrentUserBookmarks(user?.uid, callback);
 
     return () => unsub();
-  }, [user?.uid]);
-
-  const followersArr = [...(followList('followers', user?.uid) || [])];
-  const followingArr = [...(followList('following', user?.uid) || [])];
-
-  const followersList = [followersArr, followingArr];
+  }, [user?.uid, bookmarksData]);
 
   return (
     <>
@@ -131,92 +128,13 @@ export default function User({ data: user }: Props) {
           )}
         </div>
 
-        <Tab.Group>
-          <Tab.List className="flex space-x-1 rounded-xl bg-primary-dark p-1">
-            {[
-              { name: 'Followers', count: followersArr.length },
-              { name: 'Following', count: followingArr.length },
-            ].map((follower) => (
-              <Tab
-                key={follower.name}
-                className={({ selected }) =>
-                  `flex w-full items-center justify-center gap-2 rounded-lg py-2.5 font-outfit text-sm leading-5 text-white transition-all duration-300 focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-60 md:p-4 md:text-h3
-                  ${
-                    selected
-                      ? 'bg-primary shadow'
-                      : 'text-white/70 hover:bg-white/[0.12] hover:text-white'
-                  }`
-                }
-              >
-                <span>{follower.name}:</span>
-                <span>{follower.count}</span>
-              </Tab>
-            ))}
-          </Tab.List>
-          <Tab.Panels className="mt-2">
-            {followersList.map((users, idx) => (
-              <Tab.Panel
-                // eslint-disable-next-line react/no-array-index-key
-                key={idx}
-                className="rounded-lg bg-primary-dark p-2 focus:outline-none focus:ring focus:ring-primary-light focus:ring-opacity-60"
-              >
-                {users.length ? (
-                  <ul>
-                    {users.map((usr) => (
-                      <li
-                        key={usr.uid}
-                        className="flex flex-col gap-2 rounded-md p-2 text-white hover:bg-primary-dark md:flex-row"
-                      >
-                        <div className="flex items-center gap-4">
-                          {usr.photoURL && (
-                            <Image
-                              width={50}
-                              height={50}
-                              src={usr.photoURL}
-                              alt={usr.displayName}
-                              className="h-10 w-10 rounded-md object-cover md:h-14 md:w-14"
-                            />
-                          )}
-                          <Link
-                            href={`/user/${usr.uid}`}
-                            className="rounded-md focus:outline-none focus:ring-2 focus:ring-primary-light md:text-h3"
-                          >
-                            {usr.displayName}
-                          </Link>
-                        </div>
-                        {usr.uid !== currentUser?.uid && (
-                          <div className="flex items-center gap-2 md:ml-auto">
-                            <Link
-                              href="/messages"
-                              className="w-full rounded-md bg-primary-light py-2.5 px-4 text-center transition-all duration-300 hover:bg-primary-light/50"
-                            >
-                              Message
-                            </Link>
-
-                            <FollowButton user={usr} />
-                          </div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="flex w-full items-center justify-center p-4">
-                    {isOwner ? (
-                      <span className="text-center">
-                        You don&apos;t follow anyone
-                      </span>
-                    ) : (
-                      <span className="text-center">
-                        {formatName(user.displayName)} doesn&apos;t follow
-                        anyone
-                      </span>
-                    )}
-                  </div>
-                )}
-              </Tab.Panel>
-            ))}
-          </Tab.Panels>
-        </Tab.Group>
+        {currentUser && (
+          <FollowersTab
+            user={user}
+            isOwner={isOwner}
+            currentUser={currentUser}
+          />
+        )}
 
         {bookmarkStatus === 'loading' ? (
           <span>Loading bookmars...</span>
@@ -262,7 +180,7 @@ export default function User({ data: user }: Props) {
                         className="h-48 w-full object-cover object-top"
                       />
 
-                      <div className="absolute bottom-0 w-full py-4 px-3 backdrop-blur-md backdrop-filter">
+                      <div className="absolute bottom-0 w-full py-2 px-3 backdrop-blur-md backdrop-filter">
                         <div className="flex items-center justify-between gap-6">
                           <Link
                             href={`/game/${bookmark.slug}`}
@@ -270,13 +188,37 @@ export default function User({ data: user }: Props) {
                           >
                             {bookmark.name}
                           </Link>
+
+                          {isOwner && (
+                            <button
+                              type="button"
+                              onClick={() => removeBookmark(bookmark.id!)}
+                              className="group flex w-fit items-center justify-center gap-2"
+                            >
+                              Remove
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="h-4 w-4 fill-white group-hover:fill-none"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                                />
+                              </svg>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
                   </li>
                 ))
               )}
-              {currentBookmark.length > 4 && (
+              {currentBookmark.length > 7 && (
                 <li className="h-full">
                   <Link
                     href="/bookmarks"
