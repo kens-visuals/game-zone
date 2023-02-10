@@ -37,14 +37,14 @@ export default function Screenshots({ gameSlug }: Props) {
 
   if (isScreenLoading || isScreenFetching)
     return (
-      <ul className="mt-4 grid grid-flow-dense grid-cols-2 gap-2 md:grid-cols-4 lg:gap-4">
+      <ul className="mt-4 grid grid-flow-dense grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-4">
         {emptyArray.map((el) => (
           <li
             key={el}
             role="status"
             className="animate-pulse space-y-8 md:flex md:items-center md:space-y-0 md:space-x-8"
           >
-            <div className="flex h-24 w-full items-center justify-center rounded bg-gray-300 sm:w-96">
+            <div className="flex h-24 w-full items-center justify-center rounded bg-gray-300 sm:w-96 md:h-48 ">
               <svg
                 className="h-12 w-12 text-gray-200"
                 xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@ export default function Screenshots({ gameSlug }: Props) {
 
   return (
     <>
-      <ul className="mt-4 grid grid-flow-dense grid-cols-2 gap-2 md:grid-cols-4 lg:gap-4">
+      <ul className="mt-4 grid grid-flow-dense grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-4">
         {screens?.map(({ image }, idx) => (
           <li key={image}>
             <button
@@ -78,6 +78,7 @@ export default function Screenshots({ gameSlug }: Props) {
                 src={image}
                 width={1000}
                 height={1000}
+                priority
                 alt="game screenshot"
                 className="w-full rounded-md"
               />

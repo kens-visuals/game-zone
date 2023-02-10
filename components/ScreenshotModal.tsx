@@ -27,14 +27,13 @@ export default function ScreenshotModal({
     setCurrImg(
       screens?.length && currImg === 0 ? screens.length - 1 : currImg - 1
     );
-
   const nextImg = () =>
     setCurrImg(
       screens?.length && currImg >= screens.length - 1 ? 0 : currImg + 1
     );
 
   return (
-    <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-4">
+    <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-4 lg:px-8">
       <div ref={ref} className="relative">
         <div className="md:hidden">
           {screens?.length && (
@@ -42,8 +41,9 @@ export default function ScreenshotModal({
               src={screens[currImg].image}
               width={500}
               height={500}
+              priority
               alt="game screenshot"
-              className="h-full w-full rounded-md"
+              className="h-full w-full rounded-lg"
             />
           )}
         </div>
@@ -51,10 +51,11 @@ export default function ScreenshotModal({
           {screens?.length && (
             <Image
               src={screens[currImg].image}
-              width={5000}
-              height={5000}
+              width={2500}
+              height={2500}
+              priority
               alt="game screenshot"
-              className="h-full w-full rounded-md"
+              className="h-full w-full rounded-lg"
             />
           )}
         </div>
