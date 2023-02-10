@@ -31,7 +31,7 @@ export default function GameCard({
   const router = useRouter();
   const { currentUser } = useUser();
   const { bookmarksData } = useUserBookmarks();
-  const { handleAddBookmark, removeData } = useBookmarkMutation();
+  const { handleAddBookmark, removeBookmark } = useBookmarkMutation();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -48,7 +48,7 @@ export default function GameCard({
     if (!currentUser) return router.push('/bookmarks');
 
     return isFromBookmark
-      ? removeData(id!)
+      ? removeBookmark(id!)
       : handleAddBookmark(bookmarksData, details);
   };
 
