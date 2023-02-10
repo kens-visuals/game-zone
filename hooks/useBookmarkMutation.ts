@@ -39,7 +39,7 @@ export default function useAddBookmark() {
     });
   };
 
-  const removeData = async (docId: string) => {
+  const removeBookmark = async (docId: string) => {
     try {
       const bookmarkRef = doc(userBookmarkRef, docId);
       await deleteDoc(bookmarkRef);
@@ -60,5 +60,5 @@ export default function useAddBookmark() {
     if (!hasBeenBookmarked) addNewData(bookmarkObj);
   };
 
-  return { addNewData, removeData, handleAddBookmark };
+  return { addNewData, removeBookmark, handleAddBookmark };
 }
