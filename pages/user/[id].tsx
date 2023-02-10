@@ -110,7 +110,9 @@ export default function User({ data: user }: Props) {
             />
             <div className="flex flex-col md:text-h3">
               <span>{user.displayName}</span>
-              <span>{user.email}</span>
+              <span className="text-body-2 text-primary-light lg:text-body-1">
+                {user.email}
+              </span>
             </div>
           </div>
 

@@ -80,7 +80,7 @@ export default function Screenshots({ gameSlug }: Props) {
                 height={1000}
                 priority
                 alt="game screenshot"
-                className="w-full rounded-md transition-all duration-300 hover:scale-105 hover:cursor-zoom-in"
+                className="w-full rounded-md transition-all duration-300 hover:scale-95 hover:cursor-zoom-in"
               />
             </button>
           </li>

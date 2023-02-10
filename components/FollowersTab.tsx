@@ -30,7 +30,7 @@ export default function FollowersTab({ user, currentUser, isOwner }: Props) {
 
   return (
     <Tab.Group>
-      <Tab.List className="flex space-x-1 rounded-xl bg-primary-dark p-1">
+      <Tab.List className="flex gap-2 rounded-xl bg-primary-dark p-1">
         {[
           { name: 'Followers', count: followersArr.length },
           { name: 'Following', count: followingArr.length },
