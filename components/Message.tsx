@@ -11,13 +11,13 @@ interface Props {
 export default function Message({ message }: Props) {
   const { currentUser } = useUser();
 
-  const isCurrentUser = message.uid === currentUser?.uid;
+  const isCurrentUser = message.from === currentUser?.uid;
 
   return (
     <li className={`flex ${isCurrentUser && 'flex-row-reverse'} `}>
       <div
         className={`w-fit rounded-md from-secondary to-secondary/20 px-4 py-2 ${
-          isCurrentUser ? 'bg-gradient-to-r' : 'bg-gradient-to-l'
+          isCurrentUser ? 'bg-secondary' : 'bg-primary-light'
         }`}
       >
         <p

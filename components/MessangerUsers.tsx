@@ -1,30 +1,43 @@
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import Image from 'next/image';
 
 // Components
 import SignInButton from './SignInButton';
 
 // Hooks
-import useUser, { UserInterface } from '../hooks/useUser';
 import useFollow from '../hooks/useFollow';
 import useMessages from '../hooks/useMessages';
+import useUser, { UserInterface } from '../hooks/useUser';
 
 // Interfaces
 import { MessageType } from '../lib/types/index';
 
 interface Props {
   sendTo: string;
-  setSendTo: (to: string) => void;
-  unreadMessages: MessageType[];
+  lastMessage: MessageType | undefined;
+  setSendTo: Dispatch<SetStateAction<string>>;
+  setLastMessage: (d: any) => void;
+  setCurrentMessages: Dispatch<SetStateAction<MessageType[]>>;
 }
 
 export default function MessangerUsers({
   sendTo,
   setSendTo,
-  unreadMessages,
+  lastMessage,
+  setLastMessage,
+  setCurrentMessages,
 }: Props) {
   const { followList } = useFollow();
-  const { updateMessagesStatus } = useMessages();
   const { currentUser, isUserLoading } = useUser();
+  const { getLastMessage, selectChat } = useMessages();
+
+  useEffect(() => {
+    const lastMessageCallback = (doc: any) => setLastMessage(doc?.data());
+
+    const lastMessageUnsub = getLastMessage(sendTo, lastMessageCallback);
+
+    return () => lastMessageUnsub();
+  }, []);
 
   const mergeUsers = function mergeArraysAndDeduplicate() {
     const followers = followList('followers') as UserInterface[];
@@ -43,25 +56,27 @@ export default function MessangerUsers({
         <>
           <span className="inline-block px-4 text-h2-light">Users</span>
           <ul className="lg:ovy grid grid-flow-col items-center justify-start overflow-x-scroll p-4 md:gap-4 lg:grid-flow-row">
-            {mergeUsers().map((user) => (
+            {mergeUsers()?.map((user) => (
               <li key={user.uid}>
                 <button
                   type="button"
                   onClick={() => {
                     setSendTo(user.uid);
-                    updateMessagesStatus(user.uid);
+                    // updateLastMessage(user.uid);
+                    selectChat(user.uid, setSendTo, setCurrentMessages);
                   }}
                   className="relative flex flex-col items-center justify-center gap-2"
                 >
                   <span
-                    className={`absolute top-0 right-2 w-fit rounded-full bg-primary-light p-0.5 px-1 text-body-2 ${
-                      unreadMessages.length > 0 ? 'inline-block' : 'hidden'
-                    }`}
-                  >
-                    {
-                      unreadMessages?.filter((msg) => msg.uid === user.uid)
-                        .length
+                    className={`absolute top-0 right-2 w-fit rounded-full bg-primary-light p-0.5 px-1 text-body-2 
+                    ${
+                      lastMessage?.from === user.uid && !lastMessage?.seen
+                        ? 'inline-block'
+                        : 'hidden'
                     }
+                    `}
+                  >
+                    New
                   </span>
 
                   <Image

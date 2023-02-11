@@ -17,15 +17,14 @@ import { MessageType } from '../../lib/types/index';
 
 export default function Messanger() {
   const { followList } = useFollow();
-
-  const { getMessages, getMessagesStatus } = useMessages();
+  const { getMessages, getLastMessage } = useMessages();
 
   const otherUsers = followList('following') || [];
 
   const [sendTo, setSendTo] = useState(otherUsers[0]?.uid || '');
   const [currentMessages, setCurrentMessages] = useState<MessageType[]>([]);
   const [messageLimit, setMessageLimit] = useState(50);
-  const [unreadMessages, setUnreadMessages] = useState<MessageType[]>([]);
+  const [lastMessage, setLastMessage] = useState<MessageType>();
 
   const scrollRef = useRef<HTMLLIElement>(null);
 
@@ -41,20 +40,20 @@ export default function Messanger() {
         d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
       );
 
-    const statusCallback = (d: any) =>
-      setUnreadMessages(
-        d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
-      );
-
-    const statusUnsub = getMessagesStatus(sendTo, statusCallback, messageLimit);
     const messagesUnsub = getMessages(sendTo, messagesCallback, messageLimit);
+
+    const lastMessageCallback = (doc: any) => setLastMessage(doc.data());
+
+    const lastMessageUnsub = getLastMessage(sendTo, lastMessageCallback);
 
     // eslint-disable-next-line consistent-return
     return () => {
-      statusUnsub();
       messagesUnsub();
+      lastMessageUnsub();
     };
   }, [sendTo, messageLimit]);
+
+  console.log(lastMessage);
 
   return (
     <>
@@ -67,7 +66,9 @@ export default function Messanger() {
         <MessangerUsers
           sendTo={sendTo}
           setSendTo={setSendTo}
-          unreadMessages={unreadMessages}
+          lastMessage={lastMessage}
+          setLastMessage={setLastMessage}
+          setCurrentMessages={setCurrentMessages}
         />
 
         <div className="relative mt-4 h-full overflow-hidden rounded-lg bg-primary-dark lg:mt-0">
@@ -122,11 +123,7 @@ export default function Messanger() {
             )}
           </ul>
 
-          <MessangerInput
-            sendTo={sendTo}
-            scrollRef={scrollRef}
-            setUnreadMessages={setUnreadMessages}
-          />
+          <MessangerInput sendTo={sendTo} scrollRef={scrollRef} />
         </div>
       </div>
     </>

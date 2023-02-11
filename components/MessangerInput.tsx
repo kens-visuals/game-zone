@@ -3,20 +3,14 @@ import { RefObject, SyntheticEvent, useState } from 'react';
 // Hook
 import useUser from '../hooks/useUser';
 import useMessages from '../hooks/useMessages';
-import { MessageType } from '../lib/types/index';
 
 // Interfaces
 interface Props {
   sendTo: string;
   scrollRef: RefObject<HTMLLIElement>;
-  setUnreadMessages: (msg: any) => void;
 }
 
-export default function MessangerInput({
-  sendTo,
-  scrollRef,
-  setUnreadMessages,
-}: Props) {
+export default function MessangerInput({ sendTo, scrollRef }: Props) {
   const { currentUser } = useUser();
   const { addNewMessage } = useMessages();
 
@@ -25,9 +19,6 @@ export default function MessangerInput({
   const handleClick = (e: SyntheticEvent) => {
     addNewMessage(e, message, sendTo);
     setMessage('');
-    setUnreadMessages((prevState: MessageType[]) =>
-      prevState.filter((msg) => msg.uid === sendTo)
-    );
 
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });

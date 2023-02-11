@@ -57,9 +57,9 @@ export interface Screenshots {
 
 export interface MessageType {
   id: string;
-  uid: string;
-  readAt?: { seconds: number };
-  status?: string;
+  to: string;
+  from: string;
+  seen?: boolean;
   message: string;
   photoURL: string;
   createdAt: string;

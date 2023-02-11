@@ -2,15 +2,16 @@ import { SyntheticEvent } from 'react';
 import {
   addDoc,
   collection,
-  getDocs,
   limit,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
-  where,
   doc,
-  writeBatch,
+  setDoc,
+  getDoc,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 import { db } from '../firebase/firebase.config';
 
@@ -30,28 +31,30 @@ export default function useMessages() {
 
     if (message.trim() === '') return;
 
-    const userMessagesRef = collection(
-      db,
-      `users/${currentUser?.uid}/chats/${targetUserId}/messages`
-    );
-    const otherUserMessagesRef = collection(
-      db,
-      `users/${targetUserId}/chats/${currentUser?.uid}/messages`
-    );
+    const currentUserId = currentUser?.uid as string;
+
+    const id =
+      currentUserId > targetUserId
+        ? `${currentUserId + targetUserId}`
+        : `${targetUserId + currentUserId}`;
+
+    const userMessagesRef = collection(db, `messages/${id}/chat`);
+    const lastMessageDocRef = doc(db, `lastMessage/${id}`);
 
     const createdAt = serverTimestamp();
     const data = {
       message,
       createdAt,
-      status: 'unread',
-      uid: currentUser?.uid,
+      seen: false,
       photoURL: currentUser?.photoURL,
       displayName: currentUser?.displayName,
+      from: currentUser?.uid,
+      to: targetUserId,
     };
 
     if (targetUserId && currentUser) {
       await addDoc(userMessagesRef, data);
-      await addDoc(otherUserMessagesRef, data);
+      await setDoc(lastMessageDocRef, data);
     }
   };
 
@@ -60,10 +63,14 @@ export default function useMessages() {
     callback: (d: any) => void,
     msgLimit: number = 50
   ) => {
-    const userMessagesRef = collection(
-      db,
-      `users/${currentUser?.uid}/chats/${targetUserId}/messages`
-    );
+    const currentUserId = currentUser?.uid as string;
+
+    const id =
+      currentUserId > targetUserId
+        ? `${currentUserId + targetUserId}`
+        : `${targetUserId + currentUserId}`;
+
+    const userMessagesRef = collection(db, `messages/${id}/chat`);
 
     const userMessagesQuery = query(
       userMessagesRef,
@@ -74,59 +81,81 @@ export default function useMessages() {
     return onSnapshot(userMessagesQuery, callback);
   };
 
-  const getMessagesStatus = (
-    targetUserId: string,
-    callback: (d: any) => void,
-    msgLimit: number = 25
-  ) => {
-    const userMessagesRef = collection(
-      db,
-      `users/${currentUser?.uid}/chats/${targetUserId}/messages`
-    );
+  const getLastMessage = (targetUserId: string, callback: (d: any) => void) => {
+    const currentUserId = currentUser?.uid as string;
 
-    const userMessagesStatusQuery = query(
-      userMessagesRef,
-      orderBy('createdAt', 'desc'),
-      where('status', '==', 'unread'),
-      where('uid', '==', `${targetUserId}`),
-      limit(msgLimit)
-    );
+    const id =
+      currentUserId > targetUserId
+        ? `${currentUserId + targetUserId}`
+        : `${targetUserId + currentUserId}`;
 
-    return onSnapshot(userMessagesStatusQuery, callback);
+    const lastMessageRef = doc(db, `lastMessage/${id}`);
+
+    return onSnapshot(lastMessageRef, callback);
   };
 
-  const updateMessagesStatus = async (targetUserId: string) => {
-    const batch = writeBatch(db);
-    const userMessagesRef = collection(
-      db,
-      `users/${currentUser?.uid}/chats/${targetUserId}/messages`
-    );
+  const updateLastMessage = async (targetUserId: string) => {
+    const currentUserId = currentUser?.uid as string;
 
-    const newDocumentBody = {
-      readAt: serverTimestamp(),
-      status: 'read',
-    };
+    const id =
+      currentUserId > targetUserId
+        ? `${currentUserId + targetUserId}`
+        : `${targetUserId + currentUserId}`;
 
-    const userMessagesStatusQuery = query(
-      userMessagesRef,
-      where('status', '==', 'unread')
-    );
+    const lastMessageDocRef = doc(db, 'lastMessage', id);
+    const docSnap = await getDoc(lastMessageDocRef);
 
-    const unreads = await getDocs(userMessagesStatusQuery);
+    if (docSnap.data() && docSnap.data()?.from !== currentUser?.uid) {
+      await updateDoc(lastMessageDocRef, { seen: true });
+    }
+  };
 
-    unreads.forEach((d) => {
-      const docRef = doc(userMessagesRef, d.id);
+  const getUnseenMessages = (callback: (d: any) => void) => {
+    const lastMessageRef = collection(db, `lastMessage`);
 
-      batch.update(docRef, newDocumentBody);
+    const lastMessageQuery = query(lastMessageRef, where('seen', '==', false));
+
+    return onSnapshot(lastMessageQuery, callback);
+  };
+
+  const selectChat = async (
+    targetUserId: string,
+    setSendTo: (sendTo: any) => void,
+    setCurrentMessages: (msg: any) => void
+  ) => {
+    setSendTo(targetUserId);
+
+    const currentUserId = currentUser?.uid as string;
+
+    const id =
+      currentUserId > targetUserId
+        ? `${currentUserId + targetUserId}`
+        : `${targetUserId + currentUserId}`;
+
+    const msgsRef = collection(db, 'messages', id, 'chat');
+    const q = query(msgsRef, orderBy('createdAt', 'desc'));
+
+    onSnapshot(q, (d: any) => {
+      setCurrentMessages(
+        d.docs.map((docs: any) => ({ ...docs.data(), id: docs.id }))
+      );
     });
 
-    await batch.commit();
+    // get last message b/w logged in user and selected user
+    // const docSnap = await getDoc(doc(db, 'lastMessage', id));
+    // // if last message exists and message is from selected user
+    // if (docSnap.data() && docSnap.data()?.from !== currentUser?.uid) {
+    //   // update last message doc, set unread to false
+    //   await updateDoc(doc(db, 'lastMessage', id), { seen: true });
+    // }
   };
 
   return {
     getMessages,
     addNewMessage,
-    getMessagesStatus,
-    updateMessagesStatus,
+    getLastMessage,
+    updateLastMessage,
+    selectChat,
+    getUnseenMessages,
   };
 }
