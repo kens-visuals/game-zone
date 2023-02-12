@@ -15,12 +15,14 @@ import { MessageType } from '../lib/types/index';
 interface Props {
   sendTo: string;
   setSendTo: Dispatch<SetStateAction<string>>;
+  setMessageLimit: Dispatch<SetStateAction<number>>;
   setCurrentMessages: Dispatch<SetStateAction<MessageType[]>>;
 }
 
 export default function MessangerUsers({
   sendTo,
   setSendTo,
+  setMessageLimit,
   setCurrentMessages,
 }: Props) {
   const { followList } = useFollow();
@@ -37,7 +39,7 @@ export default function MessangerUsers({
     const lastMessageUnsub = getUnseenMessages(lastMessageCallback);
 
     return () => lastMessageUnsub();
-  }, []);
+  }, [sendTo]);
 
   const unseens = (user: UserInterface) =>
     unseenMessages?.filter((msg) => msg.from === user?.uid && !msg.seen);
@@ -64,6 +66,7 @@ export default function MessangerUsers({
                 <button
                   type="button"
                   onClick={() => {
+                    setMessageLimit(50);
                     setSendTo(user.uid);
                     selectChat(user.uid, setCurrentMessages);
                   }}

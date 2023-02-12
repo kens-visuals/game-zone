@@ -60,6 +60,7 @@ export interface MessageType {
   to: string;
   from: string;
   seen?: boolean;
+  chatId: string;
   message: string;
   photoURL: string;
   createdAt: string;

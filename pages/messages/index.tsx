@@ -17,11 +17,11 @@ import { MessageType } from '../../lib/types/index';
 
 export default function Messanger() {
   const { followList } = useFollow();
-  const { getLastMessage } = useMessages();
+  const { getMessages, getLastMessage } = useMessages();
 
   const [currentMessages, setCurrentMessages] = useState<MessageType[]>([]);
   const [sendTo, setSendTo] = useState('');
-  const [messageLimit, setMessageLimit] = useState(50);
+  const [messageLimit, setMessageLimit] = useState(25);
   const [lastMessage, setLastMessage] = useState<MessageType>();
 
   const scrollRef = useRef<HTMLLIElement>(null);
@@ -29,6 +29,21 @@ export default function Messanger() {
   const otherUser = followList('following')
     ?.filter((user) => user.uid === sendTo)
     .at(0);
+
+  useEffect(() => {
+    const lastMessageCallback = (d: any) =>
+      setCurrentMessages(
+        d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
+      );
+
+    const lastMessageUnsub = getMessages(
+      sendTo,
+      lastMessageCallback,
+      messageLimit
+    );
+
+    return () => lastMessageUnsub();
+  }, [messageLimit]);
 
   useEffect(() => {
     if (!sendTo) return;
@@ -39,7 +54,6 @@ export default function Messanger() {
 
     // eslint-disable-next-line consistent-return
     return () => {
-      // messagesUnsub();
       lastMessageUnsub();
     };
   }, [sendTo, messageLimit]);
@@ -55,11 +69,12 @@ export default function Messanger() {
         <MessangerUsers
           sendTo={sendTo}
           setSendTo={setSendTo}
+          setMessageLimit={setMessageLimit}
           setCurrentMessages={setCurrentMessages}
         />
 
         <div className="relative mt-4 h-full overflow-hidden rounded-lg bg-primary-dark lg:mt-0">
-          <div className="flex flex-col items-center justify-center gap-4 border-b border-primary-light p-4 shadow-lg shadow-black/70 md:flex-row">
+          <div className="flex flex-col justify-center gap-2 border-b border-primary-light p-4 shadow-lg shadow-black/70 md:flex-row md:items-center">
             {otherUser && (
               <>
                 <Link
@@ -78,9 +93,16 @@ export default function Messanger() {
                   </span>
                 </Link>
 
-                <span className="w-80 truncate text-ellipsis md:ml-auto">
-                  Last message: {lastMessage?.message}
-                </span>
+                {lastMessage?.message && (
+                  <span
+                    className={`truncate text-ellipsis text-body-2 text-white/70 md:ml-auto md:text-body-1 ${
+                      lastMessage?.message.length > 40 ? 'w-80' : 'w-fit'
+                    }`}
+                  >
+                    <span className="text-primary-light">Last message:</span>{' '}
+                    {lastMessage?.message}
+                  </span>
+                )}
               </>
             )}
           </div>

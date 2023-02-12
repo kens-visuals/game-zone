@@ -61,11 +61,12 @@ export default function useMessages() {
     const data = {
       message,
       createdAt,
+      chatId: id,
       seen: false,
+      to: targetUserId,
+      from: currentUser?.uid,
       photoURL: currentUser?.photoURL,
       displayName: currentUser?.displayName,
-      from: currentUser?.uid,
-      to: targetUserId,
     };
 
     if (targetUserId && currentUser) {
@@ -77,7 +78,7 @@ export default function useMessages() {
   const getMessages = (
     targetUserId: string,
     callback: (d: any) => void,
-    msgLimit: number = 50
+    msgLimit: number
   ) => {
     const currentUserId = currentUser?.uid as string;
 
@@ -142,11 +143,11 @@ export default function useMessages() {
   };
 
   return {
+    selectChat,
     getMessages,
     addNewMessage,
     getLastMessage,
     updateLastMessage,
-    selectChat,
     getUnseenMessages,
   };
 }
