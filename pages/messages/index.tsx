@@ -19,8 +19,8 @@ export default function Messanger() {
   const { followList } = useFollow();
   const { getLastMessage } = useMessages();
 
-  const [sendTo, setSendTo] = useState('');
   const [currentMessages, setCurrentMessages] = useState<MessageType[]>([]);
+  const [sendTo, setSendTo] = useState('');
   const [messageLimit, setMessageLimit] = useState(50);
   const [lastMessage, setLastMessage] = useState<MessageType>();
 
@@ -55,12 +55,11 @@ export default function Messanger() {
         <MessangerUsers
           sendTo={sendTo}
           setSendTo={setSendTo}
-          lastMessage={lastMessage}
           setCurrentMessages={setCurrentMessages}
         />
 
         <div className="relative mt-4 h-full overflow-hidden rounded-lg bg-primary-dark lg:mt-0">
-          <div className="flex items-center gap-2 border-b border-primary-light p-4 shadow-lg shadow-black/70">
+          <div className="flex flex-col items-center justify-center gap-4 border-b border-primary-light p-4 shadow-lg shadow-black/70 md:flex-row">
             {otherUser && (
               <>
                 <Link
@@ -74,9 +73,13 @@ export default function Messanger() {
                     alt={otherUser?.displayName}
                     className="h-10 w-10 rounded-full"
                   />
+                  <span className="md:text-h2-medium">
+                    {otherUser.displayName}
+                  </span>
                 </Link>
-                <span className="md:text-h2-medium">
-                  {otherUser.displayName}
+
+                <span className="w-80 truncate text-ellipsis md:ml-auto">
+                  Last message: {lastMessage?.message}
                 </span>
               </>
             )}

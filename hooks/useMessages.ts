@@ -120,11 +120,8 @@ export default function useMessages() {
 
   const selectChat = async (
     targetUserId: string,
-    setSendTo: (sendTo: any) => void,
     setCurrentMessages: (msg: any) => void
   ) => {
-    // setSendTo(targetUserId);
-
     const currentUserId = currentUser?.uid as string;
 
     const id =
@@ -141,13 +138,6 @@ export default function useMessages() {
       );
     });
 
-    // get last message b/w logged in user and selected user
-    // const docSnap = await getDoc(doc(db, 'lastMessage', id));
-    // // if last message exists and message is from selected user
-    // if (docSnap.data() && docSnap.data()?.from !== currentUser?.uid) {
-    //   // update last message doc, set unread to false
-    //   await updateDoc(doc(db, 'lastMessage', id), { seen: true });
-    // }
     updateLastMessage(targetUserId);
   };
 
