@@ -14,17 +14,15 @@ import { MessageType } from '../lib/types/index';
 
 interface Props {
   sendTo: string;
-  // lastMessage: MessageType | undefined;
+  lastMessage: MessageType | undefined;
   setSendTo: Dispatch<SetStateAction<string>>;
-  // setLastMessage: (d: any) => void;
   setCurrentMessages: Dispatch<SetStateAction<MessageType[]>>;
 }
 
 export default function MessangerUsers({
   sendTo,
   setSendTo,
-  // lastMessage,
-  // setLastMessage,
+  lastMessage,
   setCurrentMessages,
 }: Props) {
   const { followList } = useFollow();
@@ -43,8 +41,17 @@ export default function MessangerUsers({
     return () => lastMessageUnsub();
   }, []);
 
+  const currentUserFromMessages = lastMessage?.from as string;
+  const otherUserFromMessages = lastMessage?.to as string;
+  const id =
+    lastMessage && currentUserFromMessages > otherUserFromMessages
+      ? `${currentUserFromMessages + otherUserFromMessages}`
+      : `${otherUserFromMessages + currentUserFromMessages}`;
+
   const unseens = (user: UserInterface) =>
-    unseenMessages?.filter((msg) => msg.from === user?.uid && !msg.seen);
+    unseenMessages?.filter(
+      (msg) => msg.id === id && msg.from === user?.uid && !msg.seen
+    );
 
   const mergeUsers = function mergeArraysAndDeduplicate() {
     const followers = followList('followers') as UserInterface[];
