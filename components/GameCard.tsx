@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 // Hooks
@@ -34,6 +34,7 @@ export default function GameCard({
   const { handleAddBookmark, removeBookmark } = useBookmarkMutation();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [wasBookmarked, setWasBookmarked] = useState(false);
 
   const {
     id,
@@ -47,10 +48,18 @@ export default function GameCard({
   const handleClick = () => {
     if (!currentUser) return router.push('/bookmarks');
 
+    setWasBookmarked(true);
+
     return isFromBookmark
       ? removeBookmark(id!)
       : handleAddBookmark(bookmarksData, details);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => setWasBookmarked(false), 1500);
+
+    return () => clearTimeout(timer);
+  }, [wasBookmarked]);
 
   return (
     <div
@@ -121,7 +130,7 @@ export default function GameCard({
               </>
             ) : (
               <>
-                Bookmark
+                {wasBookmarked ? 'Bookmarked' : 'Bookmark'}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
