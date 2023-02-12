@@ -10,6 +10,8 @@ interface Props {
 
 export default function Message({ message }: Props) {
   const { currentUser } = useUser();
+  const date = new Date(message.createdAt.seconds * 1000);
+  const time = date.toLocaleTimeString('en-US', { timeStyle: 'short' });
 
   const isCurrentUser = message.from === currentUser?.uid;
 
@@ -21,11 +23,12 @@ export default function Message({ message }: Props) {
         }`}
       >
         <p
-          className={`w-fit max-w-[10rem] break-words text-body-1 md:max-w-xs md:text-h2-light ${
+          className={`flex w-fit max-w-[10rem] flex-col break-words text-body-1 md:max-w-xs md:text-h2-light ${
             isCurrentUser ? 'text-right' : 'text-left'
           }`}
         >
           {message.message}
+          <small className="text-xs italic">{time}</small>
         </p>
       </div>
     </li>

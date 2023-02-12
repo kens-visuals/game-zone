@@ -63,6 +63,6 @@ export interface MessageType {
   chatId: string;
   message: string;
   photoURL: string;
-  createdAt: string;
   displayName: string;
+  createdAt: { seconds: number };
 }
