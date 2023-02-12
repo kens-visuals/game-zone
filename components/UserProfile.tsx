@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 
 // Hooks
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function UserProfile({ isSidebarOpen = false }: Props) {
+  const { pathname } = useRouter();
   const { currentUser, isUserLoading } = useUser();
   const { followList } = useFollow();
 
@@ -52,14 +54,16 @@ export default function UserProfile({ isSidebarOpen = false }: Props) {
         {currentUser && (
           <Link
             href={`/user/${currentUser?.uid}`}
-            className="rounded-full transition-all duration-300 hover:ring hover:ring-secondary hover:ring-offset-4 hover:ring-offset-primary-dark "
+            className="rounded-full transition-all duration-300 hover:ring hover:ring-secondary hover:ring-offset-4 hover:ring-offset-primary-dark"
           >
             <Image
               width={100}
               height={100}
               src={currentUser?.photoURL}
               alt={currentUser?.displayName}
-              className="h-14 w-14 rounded-full md:h-auto md:w-full"
+              className={`h-14 w-14 rounded-full md:h-auto md:w-full ${
+                pathname.startsWith('/user') && 'border-2 border-white'
+              }`}
             />
           </Link>
         )}
