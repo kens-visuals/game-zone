@@ -9,10 +9,9 @@ import {
 
 // Hooks
 import useUser from './useUser';
-import { Bookmark } from './useUserBookmarks';
 
 // Types
-import { GameInterface } from '../lib/types/index';
+import { Bookmark, GameInterface } from '../lib/types/index';
 
 export default function useAddBookmark() {
   const { currentUser } = useUser();
