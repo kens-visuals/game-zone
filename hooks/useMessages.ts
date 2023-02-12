@@ -21,6 +21,22 @@ import useUser from './useUser';
 export default function useMessages() {
   const { currentUser } = useUser();
 
+  const updateLastMessage = async (targetUserId: string) => {
+    const currentUserId = currentUser?.uid as string;
+
+    const id =
+      currentUserId > targetUserId
+        ? `${currentUserId + targetUserId}`
+        : `${targetUserId + currentUserId}`;
+
+    const lastMessageDocRef = doc(db, 'lastMessage', id);
+    const docSnap = await getDoc(lastMessageDocRef);
+
+    if (docSnap.data() && docSnap.data()?.from !== currentUser?.uid) {
+      await updateDoc(lastMessageDocRef, { seen: true });
+    }
+  };
+
   const addNewMessage = async (
     e: SyntheticEvent,
     message: string,
@@ -94,22 +110,6 @@ export default function useMessages() {
     return onSnapshot(lastMessageRef, callback);
   };
 
-  const updateLastMessage = async (targetUserId: string) => {
-    const currentUserId = currentUser?.uid as string;
-
-    const id =
-      currentUserId > targetUserId
-        ? `${currentUserId + targetUserId}`
-        : `${targetUserId + currentUserId}`;
-
-    const lastMessageDocRef = doc(db, 'lastMessage', id);
-    const docSnap = await getDoc(lastMessageDocRef);
-
-    if (docSnap.data() && docSnap.data()?.from !== currentUser?.uid) {
-      await updateDoc(lastMessageDocRef, { seen: true });
-    }
-  };
-
   const getUnseenMessages = (callback: (d: any) => void) => {
     const lastMessageRef = collection(db, `lastMessage`);
 
@@ -123,7 +123,7 @@ export default function useMessages() {
     setSendTo: (sendTo: any) => void,
     setCurrentMessages: (msg: any) => void
   ) => {
-    setSendTo(targetUserId);
+    // setSendTo(targetUserId);
 
     const currentUserId = currentUser?.uid as string;
 
@@ -148,6 +148,7 @@ export default function useMessages() {
     //   // update last message doc, set unread to false
     //   await updateDoc(doc(db, 'lastMessage', id), { seen: true });
     // }
+    updateLastMessage(targetUserId);
   };
 
   return {

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // Components
@@ -14,30 +14,37 @@ import { MessageType } from '../lib/types/index';
 
 interface Props {
   sendTo: string;
-  lastMessage: MessageType | undefined;
+  // lastMessage: MessageType | undefined;
   setSendTo: Dispatch<SetStateAction<string>>;
-  setLastMessage: (d: any) => void;
+  // setLastMessage: (d: any) => void;
   setCurrentMessages: Dispatch<SetStateAction<MessageType[]>>;
 }
 
 export default function MessangerUsers({
   sendTo,
   setSendTo,
-  lastMessage,
-  setLastMessage,
+  // lastMessage,
+  // setLastMessage,
   setCurrentMessages,
 }: Props) {
   const { followList } = useFollow();
   const { currentUser, isUserLoading } = useUser();
-  const { getLastMessage, selectChat } = useMessages();
+  const { getUnseenMessages, selectChat } = useMessages();
+  const [unseenMessages, setUnseenMessages] = useState<MessageType[]>();
 
   useEffect(() => {
-    const lastMessageCallback = (doc: any) => setLastMessage(doc?.data());
+    const lastMessageCallback = (d: any) =>
+      setUnseenMessages(
+        d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
+      );
 
-    const lastMessageUnsub = getLastMessage(sendTo, lastMessageCallback);
+    const lastMessageUnsub = getUnseenMessages(lastMessageCallback);
 
     return () => lastMessageUnsub();
   }, []);
+
+  const unseens = (user: UserInterface) =>
+    unseenMessages?.filter((msg) => msg.from === user?.uid && !msg.seen);
 
   const mergeUsers = function mergeArraysAndDeduplicate() {
     const followers = followList('followers') as UserInterface[];
@@ -62,18 +69,13 @@ export default function MessangerUsers({
                   type="button"
                   onClick={() => {
                     setSendTo(user.uid);
-                    // updateLastMessage(user.uid);
                     selectChat(user.uid, setSendTo, setCurrentMessages);
                   }}
                   className="relative flex flex-col items-center justify-center gap-2"
                 >
                   <span
-                    className={`absolute top-0 right-2 w-fit rounded-full bg-primary-light p-0.5 px-1 text-body-2 
-                    ${
-                      lastMessage?.from === user.uid && !lastMessage?.seen
-                        ? 'inline-block'
-                        : 'hidden'
-                    }
+                    className={`absolute top-0 right-2 w-fit rounded-full bg-primary-light p-0.5 px-1 text-body-2
+                    ${unseens(user)?.length ? 'inline-block' : 'hidden'}
                     `}
                   >
                     New

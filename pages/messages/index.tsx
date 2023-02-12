@@ -17,7 +17,7 @@ import { MessageType } from '../../lib/types/index';
 
 export default function Messanger() {
   const { followList } = useFollow();
-  const { getMessages, getLastMessage } = useMessages();
+  const { getLastMessage } = useMessages();
 
   const otherUsers = followList('following') || [];
 
@@ -35,12 +35,12 @@ export default function Messanger() {
   useEffect(() => {
     if (!sendTo) return;
 
-    const messagesCallback = (d: any) =>
-      setCurrentMessages(
-        d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
-      );
+    // const messagesCallback = (d: any) =>
+    //   setCurrentMessages(
+    //     d.docs.map((doc: any) => ({ ...doc.data(), id: doc.id }))
+    //   );
 
-    const messagesUnsub = getMessages(sendTo, messagesCallback, messageLimit);
+    // const messagesUnsub = getMessages(sendTo, messagesCallback, messageLimit);
 
     const lastMessageCallback = (doc: any) => setLastMessage(doc.data());
 
@@ -48,7 +48,7 @@ export default function Messanger() {
 
     // eslint-disable-next-line consistent-return
     return () => {
-      messagesUnsub();
+      // messagesUnsub();
       lastMessageUnsub();
     };
   }, [sendTo, messageLimit]);
@@ -66,8 +66,8 @@ export default function Messanger() {
         <MessangerUsers
           sendTo={sendTo}
           setSendTo={setSendTo}
-          lastMessage={lastMessage}
-          setLastMessage={setLastMessage}
+          // lastMessage={lastMessage}
+          // setLastMessage={setLastMessage}
           setCurrentMessages={setCurrentMessages}
         />
 
