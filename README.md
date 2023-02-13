@@ -1,4 +1,4 @@
-# Game-Zone
+# Game Zone
 
 ## Table of contents
 
@@ -38,7 +38,6 @@ Users should be able to:
 ### Links
 
 - Live Site URL: [https://game-zone-kens-visuals.vercel.app/](https://game-zone-kens-visuals.vercel.app/)
-- Solution URL: [TO_BE_UPDATED](TO_BE_UPDATED)
 
 ## My process
 
