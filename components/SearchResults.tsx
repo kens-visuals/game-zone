@@ -36,10 +36,9 @@ const fetchSearchedGame = async (
 };
 
 export default function SearchResults() {
-  const { pathname } = useRouter();
-
-  const { currentUser } = useUser();
   const { users } = useUsers();
+  const { pathname } = useRouter();
+  const { currentUser } = useUser();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -153,45 +152,47 @@ export default function SearchResults() {
                 ))}
             </ul>
 
-            <ul>
-              <li className="mt-4 mb-2">
-                {filteredUsers.length ? (
-                  <span className="text-h3">Users</span>
-                ) : (
-                  <span className="inline-block w-full text-center">
-                    No users found!
-                  </span>
-                )}
-              </li>
-              {users &&
-                filteredUsers?.map((user) => (
-                  <li key={user.uid} className="mb-2 flex items-center gap-4">
-                    {user.photoURL && (
-                      <Image
-                        src={user.photoURL}
-                        height={50}
-                        width={50}
-                        alt={user.displayName}
-                        className="h-12 w-10 rounded-md object-cover"
-                      />
-                    )}
-                    <Link href={`/user/${user.uid}`}>{user.displayName}</Link>
+            {currentUser && (
+              <ul>
+                <li className="mt-4 mb-2">
+                  {filteredUsers.length ? (
+                    <span className="text-h3">Users</span>
+                  ) : (
+                    <span className="inline-block w-full text-center">
+                      No users found!
+                    </span>
+                  )}
+                </li>
+                {users &&
+                  filteredUsers?.map((user) => (
+                    <li key={user.uid} className="mb-2 flex items-center gap-4">
+                      {user.photoURL && (
+                        <Image
+                          src={user.photoURL}
+                          height={50}
+                          width={50}
+                          alt={user.displayName}
+                          className="h-12 w-10 rounded-md object-cover"
+                        />
+                      )}
+                      <Link href={`/user/${user.uid}`}>{user.displayName}</Link>
 
-                    {user.uid !== currentUser?.uid && (
-                      <div className="flex items-center gap-2 md:ml-auto">
-                        <Link
-                          href="/messages"
-                          className="w-full rounded-md bg-primary-light py-2.5 px-4 text-center transition-all duration-300 hover:bg-primary-light/70 "
-                        >
-                          Message
-                        </Link>
+                      {user.uid !== currentUser?.uid && (
+                        <div className="flex items-center gap-2 md:ml-auto">
+                          <Link
+                            href="/messages"
+                            className="w-full rounded-md bg-primary-light py-2.5 px-4 text-center transition-all duration-300 hover:bg-primary-light/70 "
+                          >
+                            Message
+                          </Link>
 
-                        <FollowButton user={user} />
-                      </div>
-                    )}
-                  </li>
-                ))}
-            </ul>
+                          <FollowButton user={user} />
+                        </div>
+                      )}
+                    </li>
+                  ))}
+              </ul>
+            )}
           </div>
         )
       )}

@@ -156,18 +156,16 @@ export default function AddNewCollection() {
           </ul>
         ) : (
           <div className="mt-4 flex flex-col items-center justify-start rounded-lg bg-primary-dark p-4 text-primary-light">
-            <span>
-              {!currentUser ? (
-                <div className="flex flex-col items-center justify-center">
-                  <span className="mb-2 inline-block">
-                    Sign In to create collections
-                  </span>
-                  <SignInButton isSidebarOpen isUserLoading={isUserLoading} />
-                </div>
-              ) : (
-                'You have not created any collections yet'
-              )}
-            </span>
+            {!currentUser ? (
+              <div className="flex flex-col items-center justify-center">
+                <span className="mb-2 inline-block">
+                  Sign In to create collections
+                </span>
+                <SignInButton isSidebarOpen isUserLoading={isUserLoading} />
+              </div>
+            ) : (
+              'You have not created any collections yet'
+            )}
           </div>
         )}
       </div>

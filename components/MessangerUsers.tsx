@@ -98,7 +98,18 @@ export default function MessangerUsers({
           </ul>
         </>
       ) : (
-        <SignInButton isSidebarOpen isUserLoading={isUserLoading} />
+        <div className="flex flex-col items-center justify-start rounded-lg bg-primary-dark p-4 text-primary-light">
+          {!currentUser ? (
+            <div className="flex flex-col items-center justify-center">
+              <span className="mb-2 inline-block">
+                Sign In to chat with others!
+              </span>
+              <SignInButton isSidebarOpen isUserLoading={isUserLoading} />
+            </div>
+          ) : (
+            'You have not created any collections yet'
+          )}
+        </div>
       )}
     </div>
   );
