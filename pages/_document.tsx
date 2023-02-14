@@ -16,47 +16,47 @@ export default function Document() {
         />
 
         {/* <!-- HTML Meta Tags --> */}
-        {/* <meta name="title" content="Pomodoro App" />
+        <meta name="title" content="Game Zone" />
         <meta
           name="description"
-          content="Pomodoro App built with Next.JS, TypeScript, Tailwind CSS, and Framer Motion"
-        /> */}
+          content="Game Zone built with Next.JS, TypeScript, Tailwind CSS, Firebase, React Query and Framer Motion"
+        />
 
         {/* <!-- Facebook Meta Tags --> */}
-        {/* <meta
+        <meta
           property="og:url"
           content="https://pomodoro-app-mu-seven.vercel.app/"
         />
-        <meta property="og:title" content="Pomodoro App" />
+        <meta property="og:title" content="Game Zone" />
         <meta
           property="og:description"
-          content="Pomodoro App built with Next.JS, TypeScript, Tailwind CSS, and Framer Motion"
+          content="Game Zone built with Next.JS, TypeScript, Tailwind CSS, Firebase, React Query and Framer Motion"
         />
         <meta
           property="og:image"
           content="https://raw.githubusercontent.com/kens-visuals/ken.engineer/main/public/assets/seo-img.png"
-        /> */}
+        />
 
         {/* <!-- Twitter Meta Tags --> */}
-        {/* <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary_large_image" />
 
-        <meta property="twitter:domain" content="Pomodoro App" />
+        <meta property="twitter:domain" content="Game Zone" />
         <meta
           property="twitter:url"
           content="https://pomodoro-app-mu-seven.vercel.app/"
         />
-        <meta name="twitter:title" content="Pomodoro App" />
+        <meta name="twitter:title" content="Game Zone" />
         <meta
           name="twitter:description"
-          content="Pomodoro App built with Next.JS, TypeScript, Tailwind CSS, and Framer Motion"
+          content="Game Zone built with Next.JS, TypeScript, Tailwind CSS, Firebase, React Query and Framer Motion"
         />
         <meta
           name="twitter:image"
           content="https://raw.githubusercontent.com/kens-visuals/ken.engineer/main/public/assets/seo-img.png"
-        /> */}
+        />
 
         {/* Favicon */}
-        {/* <link
+        <link
           rel="apple-touch-icon"
           sizes="180x180"
           href="/apple-touch-icon.png"
@@ -73,7 +73,7 @@ export default function Document() {
           sizes="16x16"
           href="/favicon-16x16.png"
         />
-        <link rel="manifest" href="/site.webmanifest" /> */}
+        <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <body>
         <Main />
