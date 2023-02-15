@@ -11,7 +11,7 @@ interface Props {
 export default function Message({ message }: Props) {
   const { currentUser } = useUser();
   const date = new Date(message.createdAt.seconds * 1000);
-  const time = date.toLocaleTimeString('en-US', { timeStyle: 'short' });
+  const time = date?.toLocaleTimeString('en-US', { timeStyle: 'short' });
 
   const isCurrentUser = message.from === currentUser?.uid;
 
@@ -28,7 +28,7 @@ export default function Message({ message }: Props) {
           }`}
         >
           {message.message}
-          <small className="text-xs italic">{time}</small>
+          {time && <small className="text-xs italic">{time}</small>}
         </p>
       </div>
     </li>
