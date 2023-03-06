@@ -41,7 +41,6 @@ export default function ScreenshotModal({
               src={screens[currImg].image}
               width={500}
               height={500}
-              priority
               alt="game screenshot"
               className="h-full w-full rounded-lg"
             />
@@ -53,7 +52,6 @@ export default function ScreenshotModal({
               src={screens[currImg].image}
               width={2500}
               height={2500}
-              priority
               alt="game screenshot"
               className="h-full w-full rounded-lg"
             />

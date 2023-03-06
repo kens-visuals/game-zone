@@ -78,7 +78,6 @@ export default function Screenshots({ gameSlug }: Props) {
                 src={image}
                 width={1000}
                 height={1000}
-                priority
                 alt="game screenshot"
                 className="w-full rounded-md transition-all duration-300 hover:scale-95 hover:cursor-zoom-in"
               />

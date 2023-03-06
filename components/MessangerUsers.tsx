@@ -83,6 +83,7 @@ export default function MessangerUsers({
                   <Image
                     width={100}
                     height={100}
+                    unoptimized
                     src={user.photoURL}
                     alt={user.displayName}
                     className={`h-14 w-14 rounded-full md:h-auto md:w-full ${

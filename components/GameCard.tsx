@@ -72,6 +72,7 @@ export default function GameCard({
         alt={name}
         width={200}
         height={200}
+        unoptimized
         className={`w-full ${isTrending && 'h-32 object-cover object-top'}`}
       />
 

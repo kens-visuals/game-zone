@@ -59,6 +59,7 @@ export default function UserProfile({ isSidebarOpen = false }: Props) {
             <Image
               width={100}
               height={100}
+              unoptimized
               src={currentUser?.photoURL}
               alt={currentUser?.displayName}
               className={`h-14 w-14 rounded-full md:h-auto md:w-full ${

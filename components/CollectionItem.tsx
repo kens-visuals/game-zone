@@ -124,10 +124,11 @@ export default function CollectionItem({
           <li key={game.id} className="h-full w-16">
             <Link href={`/game/${game.slug}`}>
               <Image
-                src={game?.background_image || placeholderImg}
-                height={100}
+                unoptimized
                 width={100}
+                height={100}
                 alt={game.name}
+                src={game?.background_image || placeholderImg}
                 className="h-full w-full rounded-lg transition-all duration-200 hover:scale-110"
               />
             </Link>

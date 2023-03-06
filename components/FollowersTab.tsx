@@ -70,6 +70,7 @@ export default function FollowersTab({ user, currentUser, isOwner }: Props) {
                         <Image
                           width={50}
                           height={50}
+                          unoptimized
                           src={usr.photoURL}
                           alt={usr.displayName}
                           className="h-10 w-10 rounded-md object-cover md:h-14 md:w-14"
